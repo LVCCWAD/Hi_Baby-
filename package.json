@@ -15,7 +15,11 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/react": "^2.0.8",
+        "@mantine/core": "^7.17.5",
+        "@mantine/hooks": "^7.17.5",
+        "@tabler/icons-react": "^3.31.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0"
     }

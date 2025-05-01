@@ -16,6 +16,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
+            '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
+
         },
     },
 });

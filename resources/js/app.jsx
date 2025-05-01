@@ -1,6 +1,7 @@
 import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
+import '@mantine/core/styles.css';
 
 createInertiaApp({
   resolve: name => {
