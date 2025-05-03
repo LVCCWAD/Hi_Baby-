@@ -20,6 +20,12 @@ Route::middleware(['guest'])->group(function () {
 
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/products', [AdminController::class, 'products'])->name('admin.products');
+        Route::get('/messages', [AdminController::class, 'messages'])->name('admin.messages');
+        Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+
+        
+        
         // Route::post
     });
 

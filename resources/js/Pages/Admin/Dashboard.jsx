@@ -1,53 +1,13 @@
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import {
-    ActionIcon,
-    Anchor,
-    Avatar,
-    Badge,
-    Group,
+
     Table,
     Text,
-    MantineProvider,
+    MantineProvider, Grid, Card
 } from "@mantine/core";
-import AuthHeader from "../../Components/AuthHeader.jsx";
+import { LineChart } from '@mantine/charts';
+import  AdminHeader from "../../Components/AdminHeader.jsx";
 
-const data = [
-    {
-        avatar: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-        name: "Robert Wolfkisser",
-        job: "Engineer",
-        email: "rob_wolf@gmail.com",
-        phone: "+44 (452) 886 09 12",
-    },
-    {
-        avatar: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png",
-        name: "Jill Jailbreaker",
-        job: "Engineer",
-        email: "jj@breaker.com",
-        phone: "+44 (934) 777 12 76",
-    },
-    {
-        avatar: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png",
-        name: "Henry Silkeater",
-        job: "Designer",
-        email: "henry@silkeater.io",
-        phone: "+44 (901) 384 88 34",
-    },
-    {
-        avatar: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
-        name: "Bill Horsefighter",
-        job: "Designer",
-        email: "bhorsefighter@gmail.com",
-        phone: "+44 (667) 341 45 22",
-    },
-    {
-        avatar: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png",
-        name: "Jeremy Footviewer",
-        job: "Manager",
-        email: "jeremy@foot.dev",
-        phone: "+44 (881) 245 65 65",
-    },
-];
 
 const jobColors = {
     engineer: "blue",
@@ -55,64 +15,162 @@ const jobColors = {
     designer: "pink",
 };
 
-function Dashboard() {
-    const rows = data.map((item) => (
-        <Table.Tr key={item.name}>
-            <Table.Td>
-                <Group gap="sm">
-                    <Avatar size={30} src={item.avatar} radius={30} />
-                    <Text fz="sm" fw={500}>
-                        {item.name}
-                    </Text>
-                </Group>
-            </Table.Td>
+const dataCharts = [
+    {
+        date: 'Mar 22',
+        Apples: 2890,
+        Oranges: 2338,
+        Tomatoes: 2452,
+    },
+    {
+        date: 'Mar 23',
+        Apples: 2756,
+        Oranges: 2103,
+        Tomatoes: 2402,
+    },
+    {
+        date: 'Mar 24',
+        Apples: 3322,
+        Oranges: 986,
+        Tomatoes: 1821,
+    },
+    {
+        date: 'Mar 25',
+        Apples: 3470,
+        Oranges: 2108,
+        Tomatoes: 2809,
+    },
+    {
+        date: 'Mar 26',
+        Apples: 3129,
+        Oranges: 1726,
+        Tomatoes: 2290,
+    },
+];
 
-            <Table.Td>
-                <Badge
-                    color={jobColors[item.job.toLowerCase()]}
-                    variant="light"
-                >
-                    {item.job}
-                </Badge>
-            </Table.Td>
-            <Table.Td>
-                <Anchor component="button" size="sm">
-                    {item.email}
-                </Anchor>
-            </Table.Td>
-            <Table.Td>
-                <Text fz="sm">{item.phone}</Text>
-            </Table.Td>
-            <Table.Td>
-                <Group gap={0} justify="flex-end">
-                    <ActionIcon variant="subtle" color="gray">
-                        <IconPencil size={16} stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon variant="subtle" color="red">
-                        <IconTrash size={16} stroke={1.5} />
-                    </ActionIcon>
-                </Group>
-            </Table.Td>
+const elements = [
+    { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
+    { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
+    { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
+    { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
+    { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
+];
+
+
+function Dashboard() {
+    const rows = elements.map((element) => (
+        <Table.Tr key={element.name}>
+            <Table.Td>{element.position}</Table.Td>
+            <Table.Td>{element.name}</Table.Td>
+            <Table.Td>{element.symbol}</Table.Td>
+            <Table.Td>{element.mass}</Table.Td>
         </Table.Tr>
     ));
 
     return (
         <MantineProvider>
-            <AuthHeader />
-            <Table.ScrollContainer minWidth={800}>
-                <Table verticalSpacing="sm">
+            <AdminHeader/>
+            <h1>Analytics</h1>
+            <Grid grow gutter="xl">
+                <Grid.Col span={3}> <Card
+                    shadow="sm"
+                    padding="xl"
+                    component="a"
+                    target="_blank"
+                >
+                    <Card.Section>
+
+                    </Card.Section>
+
+                    <Text fw={500} size="lg" mt="md">
+                        You&apos;ve won a million dollars in cash!
+                    </Text>
+
+                    <Text mt="xs" c="dimmed" size="sm">
+                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
+                    </Text>
+                </Card> </Grid.Col>
+                <Grid.Col span={3}> <Card
+                    shadow="sm"
+                    padding="xl"
+                    component="a"
+                    target="_blank"
+                >
+                    <Card.Section>
+
+                    </Card.Section>
+
+                    <Text fw={500} size="lg" mt="md">
+                        You&apos;ve won a million dollars in cash!
+                    </Text>
+
+                    <Text mt="xs" c="dimmed" size="sm">
+                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
+                    </Text>
+                </Card> </Grid.Col>
+                <Grid.Col span={3}> <Card
+                    shadow="sm"
+                    padding="xl"
+                    component="a"
+                    target="_blank"
+                >
+                    <Card.Section>
+
+                    </Card.Section>
+
+                    <Text fw={500} size="lg" mt="md">
+                        You&apos;ve won a million dollars in cash!
+                    </Text>
+
+                    <Text mt="xs" c="dimmed" size="sm">
+                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
+                    </Text>
+                </Card> </Grid.Col>
+                <Grid.Col span={3}> <Card
+                    shadow="sm"
+                    padding="xl"
+                    component="a"
+                    target="_blank"
+                >
+                    <Card.Section>
+
+                    </Card.Section>
+
+                    <Text fw={500} size="lg" mt="md">
+                        You&apos;ve won a million dollars in cash!
+                    </Text>
+
+                    <Text mt="xs" c="dimmed" size="sm">
+                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
+                    </Text>
+                </Card> </Grid.Col>
+                <Grid.Col span={6}><LineChart
+                    h={300}
+                    data={dataCharts}
+                    dataKey="date"
+                    series={[
+                        { name: 'Apples', color: 'indigo.6' },
+                        { name: 'Oranges', color: 'blue.6' },
+                        { name: 'Tomatoes', color: 'teal.6' },
+                    ]}
+                    curveType="bump"
+                    gridAxis="y"
+                /></Grid.Col>
+                
+                <Grid.Col span={2} offset={.5}><Table>
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Employee</Table.Th>
-                            <Table.Th>Job title</Table.Th>
-                            <Table.Th>Email</Table.Th>
-                            <Table.Th>Phone</Table.Th>
-                            <Table.Th />
+                            <Table.Th>Element position</Table.Th>
+                            <Table.Th>Element name</Table.Th>
+                            <Table.Th>Symbol</Table.Th>
+                            <Table.Th>Atomic mass</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>{rows}</Table.Tbody>
-                </Table>
-            </Table.ScrollContainer>
+                </Table></Grid.Col>
+            </Grid>
+
+
         </MantineProvider>
     );
 }

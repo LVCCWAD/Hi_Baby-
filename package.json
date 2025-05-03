@@ -17,6 +17,10 @@
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/react": "^2.0.8",
+<<<<<<< HEAD
+=======
+        "@mantine/charts": "^7.17.7",
+>>>>>>> 2bc5fb2e4c7fecd177c5f1ebe4594c0d640ac8ed
         "@mantine/core": "^7.17.7",
         "@mantine/hooks": "^7.17.7",
         "@tabler/icons-react": "^3.31.0",
