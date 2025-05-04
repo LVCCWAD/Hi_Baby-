@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('user_type')->default('user'); // Default value is 'user'
-            $table->boolean('status')->default(true); // active status
+        Schema::create('product_size', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('size_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
+
     }
 
     /**
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('product_size');
     }
 };

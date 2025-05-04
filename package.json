@@ -8,21 +8,21 @@
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
         "@vitejs/plugin-react": "^4.4.1",
-        "axios": "^1.8.2",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
         "tailwindcss": "^4.0.0",
         "vite": "^6.2.4"
     },
     "dependencies": {
+        "@emotion/react": "^11.14.0",
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/react": "^2.0.8",
-<<<<<<< HEAD
-=======
+        "@mantine/carousel": "^7.17.7",
         "@mantine/charts": "^7.17.7",
->>>>>>> 2bc5fb2e4c7fecd177c5f1ebe4594c0d640ac8ed
         "@mantine/core": "^7.17.7",
+        "@mantine/form": "^7.17.7",
         "@mantine/hooks": "^7.17.7",
+        "@mantine/notifications": "^7.17.7",
         "@tabler/icons-react": "^3.31.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0"

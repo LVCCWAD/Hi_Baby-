@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('user_type')->default('user'); // Default value is 'user'
-            $table->boolean('status')->default(true); // active status
+        Schema::create('sizes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); // Size name
+            $table->timestamps();
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('sizes');
     }
 };

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('user_type')->default('user'); // Default value is 'user'
-            $table->boolean('status')->default(true); // active status
+        Schema::create('colors', function (Blueprint $table) {
+            $table->id();
+            $table->string('name'); // Color name
+            $table->string('hex_code', 7); // Color code in hex format (e.g., #FFFFFF for white)
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('colors');
     }
 };

@@ -2,6 +2,9 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
+import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 createInertiaApp({
   resolve: name => {
@@ -9,6 +12,11 @@ createInertiaApp({
     return pages[`./Pages/${name}.jsx`]
   },
   setup({ el, App, props }) {
-    createRoot(el).render(<App {...props} />)
+    createRoot(el).render(
+      <MantineProvider>
+        <Notifications />
+        <App {...props} />
+      </MantineProvider>
+    )
   },
-})
+});
