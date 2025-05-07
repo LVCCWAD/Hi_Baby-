@@ -11,6 +11,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 
 class ProductController extends Controller
@@ -18,8 +19,12 @@ class ProductController extends Controller
 
     public function index()
     {
-        return Inertia::render('User/Home');
+        return Inertia::render('User/Home', [
+            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+        ]);
     }
+
+
     public function show(Product $products)
     {
         $products = Product::with(['categories', 'colors', 'sizes', 'gender'])->get();
@@ -65,20 +70,15 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
 
-        // Handle file upload and product creation logic here
         try {
-            // Extract relationship IDs from validated data
             $categoryIds = $validated['category_ids'];
             $colorIds = $validated['color_ids'];
             $sizeIds = $validated['size_ids'];
 
-            // Remove relationship fields from validated data
             unset($validated['category_ids'], $validated['color_ids'], $validated['size_ids']);
 
-            // Create the product
             $product = Auth::user()->products()->create($validated);
 
-            // Sync all relationships
             $product->categories()->sync($categoryIds);
             $product->colors()->sync($colorIds);
             $product->sizes()->sync($sizeIds);
@@ -90,6 +90,9 @@ class ProductController extends Controller
     }
     public function edit(Product $product)
     {
+        $product->load('categories');
+        $product->load('colors');
+        $product->load('sizes');
         return Inertia::render('Admin/EditProduct', [
             'product' => $product,
             'categories' => Category::all(),
@@ -119,20 +122,28 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
-        }
 
-        // Extract relationship IDs
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+            $file = $request->file('image');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/products'), $fileName);
+            $validated['image'] = 'products/' . $fileName;
+        }
+else {
+            $validated['image'] = $product->image;
+        }
+        $product->update($validated);
+
         $categoryIds = $validated['category_ids'];
         $colorIds = $validated['color_ids'];
         $sizeIds = $validated['size_ids'];
 
-        // Remove relationship fields from validated data
         unset($validated['category_ids'], $validated['color_ids'], $validated['size_ids']);
 
-        // Update the product
         $product->update($validated);
 
-        // Sync all relationships
         $product->categories()->sync($categoryIds);
         $product->colors()->sync($colorIds);
         $product->sizes()->sync($sizeIds);

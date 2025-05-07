@@ -109,12 +109,12 @@ function AdminHeader() {
                             Analytics
                         </a>
 
-                        <a href="/products" className={classes.link}>
+                        <a href="/show-products" className={classes.link}>
                             <Center inline>
                                 <Box component="span" mr={5}>
                                     Products
                                 </Box>
-                               
+
                             </Center>
                         </a>
 

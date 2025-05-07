@@ -185,7 +185,7 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
                         placeholder="Select colors"
                         description="Select at least one color"
                     />
-
+                    <img src={`http://localhost:8000/storage/${product.image}`}  />
                     <FileInput
                         label="Product Image"
                         onChange={(file) => setData("image", file)}

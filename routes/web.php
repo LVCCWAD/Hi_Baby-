@@ -27,7 +27,7 @@ Route::middleware(['guest'])->group(function () {
 
         Route::get('/add-product', [ProductController::class, 'create'])->name('admin.add-product');
         Route::post('/add-product', [ProductController::class, 'store'])->name('admin.add-product.store');
-        Route::get('/products', [ProductController::class, 'show'])->name('admin.products');
+        Route::get('/show-products', [ProductController::class, 'show'])->name('admin.products');
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
         Route::post('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
         Route::delete('/products/{product}', [ProductController::class, 'delete'])->name('products.delete');
@@ -37,7 +37,7 @@ Route::middleware(['guest'])->group(function () {
 
     Route::middleware(['auth'])->group(function () {
 
-        Route::get('/home', [UserController::class, 'home'])->name('user.home');
+        Route::get('/home', [ProductController::class, 'index'])->name('user.home');
     });
 
     Route::post('/logout', function(){
