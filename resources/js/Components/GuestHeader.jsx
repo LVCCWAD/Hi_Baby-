@@ -7,6 +7,8 @@ import {
     IconFingerprint,
     IconNotification,
     IconSearch,
+    IconShoppingCart,
+    IconUser,
 } from "@tabler/icons-react";
 import {
     Anchor,
@@ -89,7 +91,7 @@ function GuestHeader() {
     ));
 
     return (
-        <Box pb={30}>
+        <Box pb={30} bg="yellow.1">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
@@ -166,8 +168,8 @@ function GuestHeader() {
                     />
 
                     <Group visibleFrom="sm">
-                        <Button variant="default"><a href="/login">Log in</a></Button>
-                        <Button><a href="/register">Sign up</a></Button>
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
                     </Group>
 
                     <Burger

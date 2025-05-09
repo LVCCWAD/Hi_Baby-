@@ -6,7 +6,7 @@ import Footer from "../Components/Footer";
 function LandingPage() {
     return (
         <MantineProvider>
-            <GuestHeader />
+            <GuestHeader  />
             <HeroHeader />
             <Footer/>
         </MantineProvider>

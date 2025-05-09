@@ -41,7 +41,7 @@ function Register() {
             <GuestHeader />
             <div className={classes.wrapper}>
                 <form onSubmit={submit}>
-                    <Paper className={classes.form} radius={0} p={30}>
+                    <Paper className={classes.form} radius={0} p={30} bg="yellow.1">
                         <Title
                             order={2}
                             className={classes.title}

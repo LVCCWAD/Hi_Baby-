@@ -9,6 +9,8 @@ import {
     IconFingerprint,
     IconNotification,
     IconSearch,
+    IconShoppingCart,
+    IconUser,
 } from "@tabler/icons-react";
 import {
     Anchor,
@@ -100,20 +102,17 @@ function AuthHeader() {
       };
 
     return (
-        <Box pb={30}>
+        <Box pb={30} bg="yellow.1">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
                     <Group h="100%" gap={0} visibleFrom="sm">
-                        <a href="/home" className={classes.link}>
-                            Home
-                        </a>
 
                         <a href="#" className={classes.link}>
-                            Collections
+                            Collection
                         </a>
                         <a href="/about-us" className={classes.link}>
-                            About us
+                            About Us
                         </a>
                     </Group>
                     <Autocomplete
@@ -133,6 +132,8 @@ function AuthHeader() {
                     />
 
                     <Group visibleFrom="sm">
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
                         <Button><a href="/login"  onClick={handleLogout} >Logout</a></Button>
                     </Group>
 
@@ -155,17 +156,13 @@ function AuthHeader() {
             >
                 <ScrollArea h="calc(100vh - 80px" mx="-md">
                     <Divider my="sm" />
-
-                    <a href="#" className={classes.link}>
-                        Home
-                    </a>
                     <UnstyledButton
                         className={classes.link}
                         onClick={toggleLinks}
                     >
                         <Center inline>
                             <Box component="span" mr={5}>
-                                Features
+                                Collection
                             </Box>
                             <IconChevronDown
                                 size={16}
@@ -175,17 +172,15 @@ function AuthHeader() {
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
                     <a href="#" className={classes.link}>
-                        Learn
+                        About Us
                     </a>
-                    <a href="#" className={classes.link}>
-                        Academy
-                    </a>
+                    
 
                     <Divider my="sm" />
 
                     <Group justify="center" grow pb="xl" px="md">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
                     </Group>
                 </ScrollArea>
             </Drawer>

@@ -3,7 +3,7 @@ import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, Box } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
 createInertiaApp({
@@ -15,7 +15,10 @@ createInertiaApp({
     createRoot(el).render(
       <MantineProvider>
         <Notifications />
-        <App {...props} />
+        <Box bg="yellow.1">
+        <App {...props}/>
+        </Box>
+        
       </MantineProvider>
     )
   },
