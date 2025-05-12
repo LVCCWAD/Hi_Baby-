@@ -19,7 +19,9 @@ function Home({ products = [] }) {
     return (
         <Container size="xl" mt="lg">
             <AuthHeader />
-
+            <Button component="a" href="/girls-products" variant="outline">
+                        View More{" "}
+                    </Button>
             <Text size="xl" weight={700} align="center" mb="md">
                 Shop Our Products
             </Text>
@@ -40,6 +42,7 @@ function ProductCard({ product }) {
 
     return (
         <MantineProvider>
+
             <Card shadow="sm" padding="lg" radius="md" withBorder>
                 <Card.Section>
                     <Image

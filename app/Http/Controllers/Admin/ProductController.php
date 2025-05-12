@@ -27,12 +27,14 @@ class ProductController extends Controller
 
     public function show(Product $products)
     {
-        $products = Product::with(['categories', 'colors', 'sizes', 'gender'])->get();
+        $products = Product::with(['categories', 'colors', 'sizes', 'gender'])->latest()->get();
 
         return Inertia::render('Admin/Products', [
             'products' => $products
         ]);
     }
+
+
     public function create()
     {
         return Inertia::render('Admin/AddProduct', [
@@ -130,8 +132,7 @@ class ProductController extends Controller
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('storage/products'), $fileName);
             $validated['image'] = 'products/' . $fileName;
-        }
-else {
+        } else {
             $validated['image'] = $product->image;
         }
         $product->update($validated);
@@ -152,12 +153,33 @@ else {
     }
 
 
-
-
     public function delete(Product $product)
     {
         $product->delete();
 
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
+
+
+    //USER
+
+    public function showGirlsProducts()
+    {
+        return Inertia::render('User/Girls', [
+            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+        ]);
+    }
+    public function productDetail(Product $product)
+    {
+        $product->load(['categories', 'colors', 'sizes', 'gender']);
+
+        return Inertia::render('User/ProductDetail', [
+            'product' => $product
+        ]);
+    }
+
+
+
+
 }
+

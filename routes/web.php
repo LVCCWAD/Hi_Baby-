@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\Admin\ProductController;
+
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -38,6 +41,19 @@ Route::middleware(['guest'])->group(function () {
     Route::middleware(['auth'])->group(function () {
 
         Route::get('/home', [ProductController::class, 'index'])->name('user.home');
+        Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
+        Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
+
+        Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
+        Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
+        Route::delete('/cart/{product}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
+
+        Route::get('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout');
+        Route::post('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout.post');
+        Route::get('/orders', [\App\Http\Controllers\User\OrderController::class, 'orders'])->name('user.orders');
+        Route::get('/orders/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('user.orders.show');
+        Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+        Route::post('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
     });
 
     Route::post('/logout', function(){

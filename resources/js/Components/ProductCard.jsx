@@ -1,72 +1,152 @@
-import { IconStarFilled } from '@tabler/icons-react';
-import { Carousel } from '@mantine/carousel';
-import { Button, Card, Group, Image, Text } from '@mantine/core';
-import classes from '../../css/Components/ProductCard.module.css';
+import { Table, MantineProvider, Grid, Button, Image } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { router } from "@inertiajs/react";
 
-const images = [
-  'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-  'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-  'https://images.unsplash.com/photo-1605774337664-7a846e9cdf17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-  'https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-  'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-];
+import { IconCheck } from "@tabler/icons-react"; // Optional icon
 
-function ProductCard() {
-  const slides = images.map((image) => (
-    <Carousel.Slide key={image}>
-      <Image src={image} height={220} />
-    </Carousel.Slide>
-  ));
+import AdminHeader from "../Components/AdminHeader";
 
-  return (
-    <Card radius="md" withBorder padding="xl">
-      <Card.Section>
-        <Carousel
-          withIndicators
-          emblaOptions={{ loop: true }}
-          classNames={{
-            root: classes.carousel,
-            controls: classes.carouselControls,
-            indicator: classes.carouselIndicator,
-          }}
-        >
-          {slides}
-        </Carousel>
-      </Card.Section>
+function Products({ products = [] }) {
+    const handleDelete = (id) => {
+        if (confirm("Are you sure you want to delete this product?")) {
+            router.delete(`/products/${id}`, {
+                onSuccess: () => {
+                    showNotification({
+                        title: "Deleted",
+                        message: "Product has been deleted successfully.",
+                        color: "green",
+                        icon: <IconCheck />,
+                    });
+                },
+                onError: () => {
+                    showNotification({
+                        title: "Error",
+                        message: "Failed to delete product.",
+                        color: "red",
+                    });
+                },
+            });
+        }
+    };
 
-      <Group justify="space-between" mt="lg">
-        <Text fw={500} fz="lg">
-          Forde, Norway
-        </Text>
+    const rows = products.map((product) => (
+        <Table.Tr key={product.id}>
+            <Table.Td>
+                <Image
+                    src={`/storage/${product.image}`}
+                    width={60}
+                    height={60}
+                    alt={product.name}
+                />
+            </Table.Td>
+            <Table.Td>{product.name}</Table.Td>
+            <Table.Td>{product.description}</Table.Td>
+            <Table.Td>{product.gender?.name || "N/A"}</Table.Td>
+            <Table.Td>
+                {product.categories && product.categories.length > 0
+                    ? product.categories.map((category, idx) => (
+                          <div
+                              key={idx}
+                              className="mr-1 inline-block bg-blue-100 px-2 py-1 rounded"
+                          >
+                              {category.name}
+                          </div>
+                      ))
+                    : "N/A"}
+            </Table.Td>
+            <Table.Td>
+                {product.sizes && product.sizes.length > 0
+                    ? product.sizes.map((size, idx) => (
+                          <div
+                              key={idx}
+                              className="mr-1 inline-block bg-gray-200 px-2 py-1 rounded"
+                          >
+                              {size.name}
+                          </div>
+                      ))
+                    : "N/A"}
+            </Table.Td>
 
-        <Group gap={5}>
-          <IconStarFilled size={16} color="var(--mantine-color-yellow-6)" />
-          <Text fz="sm" fw={600}>
-            4.78
-          </Text>
-        </Group>
-      </Group>
+            <Table.Td>
+                <div className="flex flex-wrap gap-2">
+                    {product.colors && product.colors.length > 0
+                        ? product.colors.map((color, idx) => (
+                              <div
+                                  key={idx}
+                                  className="flex items-center gap-2"
+                              >
+                                  <span>{color.name}</span>
+                                  <div
+                                      style={{
+                                          width: 16,
+                                          height: 16,
+                                          backgroundColor: color.hex_code,
+                                          borderRadius: "50%",
+                                      }}
+                                  />
+                              </div>
+                          ))
+                        : "N/A"}
+                </div>
+            </Table.Td>
 
-      <Text fz="sm" c="dimmed" mt="sm">
-        Relax, rejuvenate and unplug in this unique contemporary Birdbox. Feel close to nature in
-        ultimate comfort. Enjoy the view of the epic mountain range of Blegja and the Førdefjord.
-      </Text>
+            <Table.Td>{product.quantity}</Table.Td>
+            <Table.Td>${product.price}</Table.Td>
+            <Table.Td>
+                <Button
+                    component="a"
+                    href={`/products/${product.id}/edit`}
+                    variant="outline"
+                    color="teal"
+                >
+                    Edit
+                </Button>
+            </Table.Td>
+            <Table.Td>
+                <Button onClick={() => handleDelete(product.id)} color="red">
+                    Delete
+                </Button>
+            </Table.Td>
+        </Table.Tr>
+    ));
 
-      <Group justify="space-between" mt="md">
-        <div>
-          <Text fz="xl" span fw={500} className={classes.price}>
-            397$
-          </Text>
-          <Text span fz="sm" c="dimmed">
-            {' '}
-            / night
-          </Text>
-        </div>
+    const ths = (
+        <Table.Tr>
+            <Table.Th>Image</Table.Th>
+            <Table.Th>Name</Table.Th>
+            <Table.Th>Description</Table.Th>
+            <Table.Th>Gender</Table.Th>
+            <Table.Th>Category</Table.Th>
+            <Table.Th>Size</Table.Th>
+            <Table.Th>Color</Table.Th>
+            <Table.Th>Quantity</Table.Th>
+            <Table.Th>Price</Table.Th>
+        </Table.Tr>
+    );
 
-        <Button radius="md">Book now</Button>
-      </Group>
-    </Card>
-  );
+    return (
+        <MantineProvider>
+            <AdminHeader />
+
+            <Grid>
+                <Grid.Col span={2}>
+                    <h1>Products</h1>
+                </Grid.Col>
+                <Grid.Col span={2} offset={5}>
+                    <Button component="a" href="/add-product" variant="outline">
+                        Add Product{" "}
+                    </Button>
+                </Grid.Col>
+            </Grid>
+
+            <Table captionSide="bottom">
+                {/* <Table.Caption>Some elements from periodic table</Table.Caption> */}
+                <Table.Thead>{ths}</Table.Thead>
+                <Table.Tbody>{rows}</Table.Tbody>
+                {/* <Table.Tfoot>{ths}</Table.Tfoot> */}
+            </Table>
+        </MantineProvider>
+    );
 }
 
-export default ProductCard;
+export default Products;
