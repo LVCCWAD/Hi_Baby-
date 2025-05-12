@@ -7,8 +7,12 @@ import {
     IconFingerprint,
     IconNotification,
     IconSearch,
+    IconShoppingCart,
+    IconUser,
+    IconBell
 } from "@tabler/icons-react";
 import {
+    Flex,
     Anchor,
     Autocomplete,
     Box,
@@ -89,7 +93,7 @@ function GuestHeader() {
     ));
 
     return (
-        <Box pb={30}>
+        <Box pb={30} bg="yellow.1">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
@@ -152,7 +156,12 @@ function GuestHeader() {
                     <Autocomplete
                         className={classes.search}
                         placeholder="Search"
-                        leftSection={<IconSearch size={16} stroke={1.5} />}
+                        rightSection={
+                            <div className={classes.search}>
+                            <IconSearch size={35} />
+                            </div>
+                        }
+
                         data={[
                             "React",
                             "Angular",
@@ -165,10 +174,12 @@ function GuestHeader() {
                         visibleFrom="xs"
                     />
 
-                    <Group visibleFrom="sm">
-                        <Button variant="default"><a href="/login">Log in</a></Button>
-                        <Button><a href="/register">Sign up</a></Button>
-                    </Group>
+                    <Flex visibleFrom="sm" w={200} justify="space-between" align="center">
+                       
+                        <IconBell size={16} stroke={1.5}/>
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
+                    </Flex>
 
                     <Burger
                         opened={drawerOpened}

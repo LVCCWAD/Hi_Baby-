@@ -10,7 +10,10 @@ import {
     Text,
     TextInput,
     Title,
+    Image
 } from "@mantine/core";
+
+import image from "../Assets/Register.png";
 import classes from "../../css/Components/Login.module.css";
 import GuestHeader from "../Components/GuestHeader";
 
@@ -39,9 +42,11 @@ function Register() {
     return (
         <MantineProvider>
             <GuestHeader />
+            <div className={classes.container}>
             <div className={classes.wrapper}>
                 <form onSubmit={submit}>
-                    <Paper className={classes.form} radius={0} p={30}>
+                    <Paper className={classes.form} radius={24} p={30} bg="yellow.1" w="455" h="740">
+                    
                         <Title
                             order={2}
                             className={classes.title}
@@ -58,6 +63,7 @@ function Register() {
                             name="name"
                             id="name"
                             required
+                            fullWidth
                             onChange={(e) => setData("name", e.target.value)}
                             value={data.name}
                             size="md"
@@ -68,6 +74,7 @@ function Register() {
                             placeholder="hello@gmail.com"
                             name="email"
                             id="email"
+                            fullWidth
                             autoComplete="email"
                             required
                             onChange={(e) => setData("email", e.target.value)}
@@ -92,6 +99,7 @@ function Register() {
                             placeholder="confirm password"
                             name="confirmPassword"
                             id="confirmPassword"
+                            fullWidth
                             required
                             onChange={(e) =>
                                 setData("confirmPassword", e.target.value)
@@ -102,7 +110,7 @@ function Register() {
                             size="md"
                         />
                         <Checkbox label="Keep me logged in" mt="xl" size="md" />
-                        <Button type="submit" fullWidth mt="xl" size="md">
+                        <Button type="submit" fullWidth mt="xl" size="md" className={classes.button}>
                             Register
                         </Button>
 
@@ -112,8 +120,12 @@ function Register() {
                                 Login
                             </Anchor>
                         </Text>
+                       
                     </Paper>
-                </form>
+                    </form>
+            </div>
+            
+            <Image src={image} className={classes.image} />
             </div>
         </MantineProvider>
     );

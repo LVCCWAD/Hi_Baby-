@@ -9,8 +9,12 @@ import {
     IconFingerprint,
     IconNotification,
     IconSearch,
+    IconShoppingCart,
+    IconUser,
+    IconBell
 } from "@tabler/icons-react";
 import {
+    Flex,
     Anchor,
     Autocomplete,
     Box,
@@ -28,6 +32,7 @@ import {
     ThemeIcon,
     UnstyledButton,
     useMantineTheme,
+    
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Logo from "../Assets/Logo.png";
@@ -100,26 +105,27 @@ function AuthHeader() {
       };
 
     return (
-        <Box pb={30}>
+        <Box pb={30} bg="yellow.1">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
                     <Group h="100%" gap={0} visibleFrom="sm">
-                        <a href="/home" className={classes.link}>
-                            Home
-                        </a>
 
                         <a href="#" className={classes.link}>
-                            Collections
+                            Collection
                         </a>
                         <a href="/about-us" className={classes.link}>
-                            About us
+                            About Us
                         </a>
                     </Group>
                     <Autocomplete
                         className={classes.search}
                         placeholder="Search"
-                        leftSection={<IconSearch size={16} stroke={1.5} />}
+                        rightSection={
+                            <div className={classes.search}>
+                            <IconSearch size={35} />
+                            </div>
+                        }
                         data={[
                             "React",
                             "Angular",
@@ -132,9 +138,14 @@ function AuthHeader() {
                         visibleFrom="xs"
                     />
 
-                    <Group visibleFrom="sm">
-                        <Button><a href="/login"  onClick={handleLogout} >Logout</a></Button>
-                    </Group>
+                    <Flex visibleFrom="sm" w={300} justify="space-between" align="center">
+                       
+                        <IconBell size={16} stroke={1.5}/>
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
+                        <Button component="a" href="/login" bg="#abc32f" onClick={handleLogout} >Logout</Button>
+                    
+                    </Flex>
 
                     <Burger
                         opened={drawerOpened}
@@ -155,17 +166,13 @@ function AuthHeader() {
             >
                 <ScrollArea h="calc(100vh - 80px" mx="-md">
                     <Divider my="sm" />
-
-                    <a href="#" className={classes.link}>
-                        Home
-                    </a>
                     <UnstyledButton
                         className={classes.link}
                         onClick={toggleLinks}
                     >
                         <Center inline>
                             <Box component="span" mr={5}>
-                                Features
+                                Collection
                             </Box>
                             <IconChevronDown
                                 size={16}
@@ -175,17 +182,15 @@ function AuthHeader() {
                     </UnstyledButton>
                     <Collapse in={linksOpened}>{links}</Collapse>
                     <a href="#" className={classes.link}>
-                        Learn
+                        About Us
                     </a>
-                    <a href="#" className={classes.link}>
-                        Academy
-                    </a>
+                    
 
                     <Divider my="sm" />
 
                     <Group justify="center" grow pb="xl" px="md">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                        <IconShoppingCart size={16} stroke={1.5}/>
+                        <IconUser size={16} stroke={1.5}/>
                     </Group>
                 </ScrollArea>
             </Drawer>

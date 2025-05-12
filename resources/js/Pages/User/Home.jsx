@@ -17,7 +17,7 @@ function Home({ products = [] }) {
     console.log("Products from Laravel:", products); // 👈 Add this here
 
     return (
-        <Container size="xl" mt="lg">
+        <Container size="xl">
             <AuthHeader />
             <Button component="a" href="/girls-products" variant="outline">
                         View More{" "}

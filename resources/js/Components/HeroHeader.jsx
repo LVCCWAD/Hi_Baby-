@@ -16,9 +16,8 @@ function HeroHeader() {
             Explore our new and popular baby clothes designed for perfect style and comfort.
           </Text>
           <Group mt={30}> 
-            <Button radius="xl" size="md" bg="#abc32f" className={classes.control}>
-              <a href="/login">Shop Now</a>
-              
+            <Button radius="xl" size="md" bg="#abc32f" className={classes.control} component="a" href="/login">
+              Shop Now
             </Button>
           </Group>
         </div>
