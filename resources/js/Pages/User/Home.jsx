@@ -17,7 +17,7 @@ function Home({ products = [] }) {
     console.log("Products from Laravel:", products); // 👈 Add this here
 
     return (
-        <Container size="xl" mt="lg">
+        <Container size="xl">
             <AuthHeader />
 
             <Text size="xl" weight={700} align="center" mb="md">

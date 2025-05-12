@@ -11,8 +11,10 @@ import {
     IconSearch,
     IconShoppingCart,
     IconUser,
+    IconBell
 } from "@tabler/icons-react";
 import {
+    Flex,
     Anchor,
     Autocomplete,
     Box,
@@ -30,6 +32,7 @@ import {
     ThemeIcon,
     UnstyledButton,
     useMantineTheme,
+    
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Logo from "../Assets/Logo.png";
@@ -118,7 +121,11 @@ function AuthHeader() {
                     <Autocomplete
                         className={classes.search}
                         placeholder="Search"
-                        leftSection={<IconSearch size={16} stroke={1.5} />}
+                        rightSection={
+                            <div className={classes.search}>
+                            <IconSearch size={35} />
+                            </div>
+                        }
                         data={[
                             "React",
                             "Angular",
@@ -131,11 +138,14 @@ function AuthHeader() {
                         visibleFrom="xs"
                     />
 
-                    <Group visibleFrom="sm">
+                    <Flex visibleFrom="sm" w={300} justify="space-between" align="center">
+                       
+                        <IconBell size={16} stroke={1.5}/>
                         <IconShoppingCart size={16} stroke={1.5}/>
                         <IconUser size={16} stroke={1.5}/>
-                        <Button><a href="/login"  onClick={handleLogout} >Logout</a></Button>
-                    </Group>
+                        <Button component="a" href="/login" bg="#abc32f" onClick={handleLogout} >Logout</Button>
+                    
+                    </Flex>
 
                     <Burger
                         opened={drawerOpened}
