@@ -104,7 +104,7 @@ function AdminHeader() {
     };
 
     return (
-        <Box pb={30} bg="yellow.1">
+        <Box pb={30} bg="#FBF2E9">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />

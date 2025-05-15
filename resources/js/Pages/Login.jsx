@@ -33,7 +33,7 @@ function Login() {
             <div className={classes.container}>
             <div className={classes.wrapper}>
                 <form onSubmit={submit}>
-                    <Paper className={classes.form} radius={24} p={30} bg="yellow.1" h="600">
+                    <Paper className={classes.form} radius={24} p={30} bg="#FBF2E9" h="600">
                         
                         <Title
                             order={2}

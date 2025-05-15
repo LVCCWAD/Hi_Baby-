@@ -45,7 +45,7 @@ function Register() {
             <div className={classes.container}>
             <div className={classes.wrapper}>
                 <form onSubmit={submit}>
-                    <Paper className={classes.form} radius={24} p={30} bg="yellow.1" w="455" h="740">
+                    <Paper className={classes.form} radius={24} p={30} bg="#FBF2E9" w="455" h="740">
                     
                         <Title
                             order={2}
