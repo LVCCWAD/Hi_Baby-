@@ -1,13 +1,16 @@
 <?php
 
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\User\ReviewsController;
+
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -43,26 +46,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
     Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
 
-    // Show product
-    Route::get('/user/products/{product}', [ReviewsController::class, 'show'])->name('products.show');
-
-    // Review routes
-    Route::post('/user/products/{product}/reviews', [ReviewsController::class, 'store'])->name('reviews.store');
-    Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'update'])->name('reviews.update');
-    Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
-
-
-
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
     Route::delete('/cart/{product}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
 
-    Route::get('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout');
-    Route::post('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout.post');
-    Route::get('/orders', [\App\Http\Controllers\User\OrderController::class, 'orders'])->name('user.orders');
-    Route::get('/orders/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('user.orders.show');
+    Route::get('/checkout', [ProductController::class, 'checkout'])->name('user.checkout');
+    Route::post('/checkout', [ProductController::class, 'checkoutPost'])->name('user.checkout.post');
+    Route::get('/orders', [ProductController::class, 'userOrders'])->name('user.orders');
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
+
+    // Address routes
+
+    Route::get('/addresses/latest', function () {
+        $address = Auth::user()->addresses()->latest()->first();
+
+        return Inertia::render('User/Cart', [
+            'address' => $address,
+        ]);
+    });
+    Route::post('/addresses', [AddressController::class, 'store'])->name('user.addresses.store');
+    Route::get('/addresses/{address}', [AddressController::class, 'show'])->name('user.addresses.show');
+    Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('user.addresses.update');
 });
 
 Route::post('/logout', function () {

@@ -19,7 +19,7 @@ function Checkout({ cart }) {
 
     const handleSubmit = (values) => {
         setLoading(true);
-        router.post("/checkout", values, {
+        router.post("/user/orders", values, {
             onSuccess: () => {
                 setLoading(false);
             },
@@ -74,8 +74,6 @@ function Checkout({ cart }) {
                             required
                             label="Shipping Address"
                             placeholder="Enter your complete shipping address"
-                            description="Please provide a detailed shipping address for delivery"
-                            withAsterisk
                             {...form.getInputProps("shipping_address")}
                         />
 

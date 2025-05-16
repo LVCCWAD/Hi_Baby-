@@ -26,11 +26,14 @@ class CartController extends Controller
             ];
         });
 
+        $addresses = Auth::user()->addresses;
+        $latestAddress = $addresses->sortByDesc('created_at')->first();
+
         return Inertia::render('User/Cart', [
             'cart' => $cartItems,
+            'addresses' => $addresses,
+            'selectedAddress' => $latestAddress,
         ]);
-
-
     }
 
     public function addToCart(Request $request)
@@ -88,5 +91,4 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Item removed from cart.');
     }
-
 }

@@ -92,6 +92,7 @@ class ProductController extends Controller
             dd($e->getMessage());
         }
     }
+
     public function edit(Product $product)
     {
         $product->load('categories');
@@ -173,13 +174,14 @@ class ProductController extends Controller
 
 
     //USER
-
     public function showGirlsProducts()
     {
         return Inertia::render('User/Girls', [
             'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
         ]);
     }
+
+
     public function productDetail(Product $product)
     {
         $product->load(['categories', 'colors', 'sizes', 'gender']);

@@ -23,7 +23,6 @@ class ReviewsController extends Controller
         ]);
     }
 
-
     public function store(Request $request, Product $product)
     {
         $request->validate([
