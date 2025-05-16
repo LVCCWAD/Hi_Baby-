@@ -104,7 +104,7 @@ function AdminHeader() {
     };
 
     return (
-        <Box pb={30} bg="yellow.1">
+        <Box pb={30} bg="#FBF2E9">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
@@ -151,11 +151,11 @@ function AdminHeader() {
                     />
 
                     <Flex visibleFrom="sm" w={300} justify="space-between" align="center">
-                       
+
                         <IconBell size={16} stroke={1.5}/>
                         <IconShoppingCart size={16} stroke={1.5}/>
                         <IconUser size={16} stroke={1.5}/>
-                    
+
                     </Flex>
 
                     <Burger
@@ -178,7 +178,7 @@ function AdminHeader() {
                 <ScrollArea h="calc(100vh - 80px" mx="-md">
                     <Divider my="sm" />
 
-                   
+
                     <UnstyledButton
                         className={classes.link}
                         onClick={toggleLinks}

@@ -29,8 +29,8 @@ class UserController extends Controller
     public function loginPost(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => 'required' | 'email',
+            'password' => 'required',
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -46,10 +46,13 @@ class UserController extends Controller
     public function registerPost(Request $request)
     {
         try {
-            $credentials = request()->validate([
-                'name' => 'required|string|max:255',
+            $credentials = $request->validate([
+                'username' => 'required|string|max:255',
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255',
                 'password' => 'required|string|min:8',
+
             ]);
 
             $credentials['password'] = bcrypt($credentials['password']);
@@ -65,8 +68,8 @@ class UserController extends Controller
                 'password' => 'The provided password do not match our records.',
             ]);
         } catch (\Exception $e) {
-            // Dump the error message for debugging purposes
-            dd($e->getMessage());
+            // debugging 
+            dd("Error while saving user data: " . $e->getMessage());
         }
     }
 

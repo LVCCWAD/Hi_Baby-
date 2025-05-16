@@ -93,12 +93,12 @@ function GuestHeader() {
     ));
 
     return (
-        <Box pb={30} bg="yellow.1">
+        <Box pb={30} bg="#FBF2E9">
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <img src={Logo} alt="Logo" className={classes.logo} />
                     <Group h="100%" gap={0} visibleFrom="sm">
-                        
+
                         <HoverCard
                             width={600}
                             position="bottom"
@@ -151,7 +151,7 @@ function GuestHeader() {
                         <a href="#" className={classes.link}>
                             About Us
                         </a>
-                        
+
                     </Group>
                     <Autocomplete
                         className={classes.search}
@@ -175,7 +175,7 @@ function GuestHeader() {
                     />
 
                     <Flex visibleFrom="sm" w={200} justify="space-between" align="center">
-                       
+
                         <IconBell size={16} stroke={1.5}/>
                         <IconShoppingCart size={16} stroke={1.5}/>
                         <IconUser size={16} stroke={1.5}/>

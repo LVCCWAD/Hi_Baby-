@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,8 @@ class AuthAdminController extends Controller
 
     public function loginPost(Request $request)
     {
+        Log::info('Login POST received', $request->all());
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -29,20 +32,25 @@ class AuthAdminController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            if ($user->user_type === 'admin') {
+            \Log::info('User type check', ['role' => $user->role]);
+
+            if ($user->role === 'admin') {
+                \Log::info('Redirecting to admin dashboard');
+
                 return redirect()->route('admin.dashboard');
             }
 
-            if ($user->user_type === 'user') {
+            if ($user->role === 'user') {
                 return redirect()->route('user.home');
             }
 
             Auth::logout();
-            return redirect()->route('login')->with('error', 'Unauthorized access.');
+            return redirect()->route('login')->withErrors(['default' => 'Unauthorized access.']);
         }
 
-        return redirect()->back()->withErrors('Invalid credentials');
+        return redirect()->back()->withErrors(['default' => 'Invalid credentials']);
     }
+
 
     // public function logout()
     // {

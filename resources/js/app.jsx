@@ -13,13 +13,13 @@ createInertiaApp({
   },
   setup({ el, App, props }) {
     createRoot(el).render(
-      <MantineProvider>
+        <MantineProvider>
         <Notifications />
-        <Box bg="yellow.1">
-        <App {...props}/>
-        </Box>
-        
+        <div style={{ minHeight: '100vh', backgroundColor: '#FBF2E9' }}>
+          <App {...props} />
+        </div>
       </MantineProvider>
+
     )
   },
 });

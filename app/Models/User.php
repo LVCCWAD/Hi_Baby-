@@ -18,9 +18,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'role',
+        'address_id',
+        'phone_number',
+
     ];
 
     /**
@@ -46,14 +52,17 @@ class User extends Authenticatable
         ];
     }
 
-    public function products() {
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 
-    public function carts() {
+    public function carts()
+    {
         return $this->hasMany(Cart::class);
     }
-
-
-
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
 }
