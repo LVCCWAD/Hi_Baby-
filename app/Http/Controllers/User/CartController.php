@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
-use Log;
 use App\Models\Cart;
-use Inertia\Inertia;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -26,13 +24,11 @@ class CartController extends Controller
             ];
         });
 
-        $addresses = Auth::user()->addresses;
-        $latestAddress = $addresses->sortByDesc('created_at')->first();
+        $address = Auth::user()->address;
 
         return Inertia::render('User/Cart', [
             'cart' => $cartItems,
-            'addresses' => $addresses,
-            'selectedAddress' => $latestAddress,
+            'address' => $address,
         ]);
     }
 
@@ -71,9 +67,6 @@ class CartController extends Controller
         return redirect()->route('user.cart')->with('cartCount', $cartCount);
     }
 
-
-
-
     public function remove($id)
     {
         $cartItem = Cart::find($id);
@@ -82,7 +75,6 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Item not found.');
         }
 
-        // Optional: Check if this item belongs to the current user
         if ($cartItem->user_id !== Auth::id()) {
             return redirect()->back()->with('error', 'Unauthorized action.');
         }
@@ -90,5 +82,28 @@ class CartController extends Controller
         $cartItem->delete();
 
         return redirect()->back()->with('success', 'Item removed from cart.');
+    }
+
+    public function updateQuantity(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $cartItem = Cart::find($id);
+
+        if (!$cartItem) {
+            return redirect()->back()->with('error', 'Item not found.');
+        }
+
+        if ($cartItem->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        $cartItem->update([
+            'quantity' => $request->input('quantity'),
+        ]);
+
+        return redirect()->back()->with('success', 'Cart quantity updated.');
     }
 }

@@ -12,13 +12,14 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import AuthHeader from "../../Components/AuthHeader";
+import GuestHeader from "../../Components/GuestHeader";
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products); // 👈 Add this here
 
     return (
         <Container size="xl">
-            <AuthHeader />
+            <GuestHeader />
             <Button component="a" href="/girls-products" variant="outline">
                         View More{" "}
                     </Button>

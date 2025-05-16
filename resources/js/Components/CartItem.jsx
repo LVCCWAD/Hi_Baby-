@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     Card,
     Group,
@@ -11,7 +11,13 @@ import {
 } from "@mantine/core";
 import { IconTrash, IconPlus, IconMinus } from "@tabler/icons-react";
 
-function CartItem({ item, selectedItems, handleSelectItem, handleDelete, handleQuantityChange }) {
+function CartItem({
+    item,
+    selectedItems,
+    handleSelectItem,
+    handleDelete,
+    handleQuantityChange,
+}) {
     return (
         <Card p="md" radius="md" withBorder>
             <Group position="apart" align="flex-start">
@@ -21,17 +27,28 @@ function CartItem({ item, selectedItems, handleSelectItem, handleDelete, handleQ
                         onChange={() => handleSelectItem(item.id)}
                     />
                     <Image
-                        src={`/storage/${item.image}`}
+                        src={
+                            item.image.startsWith("http")
+                                ? item.image
+                                : `/storage/${item.image}`
+                        }
                         alt={item.name}
                         width={120}
                         height={120}
                         fit="cover"
                         radius="md"
                     />
+
                     <Stack spacing={5}>
-                        <Text weight={600} size="lg">{item.name}</Text>
-                        <Text size="sm" color="dimmed">Color: {item.color}</Text>
-                        <Text size="sm" color="dimmed">Size: {item.size}</Text>
+                        <Text weight={600} size="lg">
+                            {item.name}
+                        </Text>
+                        <Text size="sm" color="dimmed">
+                            Color: {item.color}
+                        </Text>
+                        <Text size="sm" color="dimmed">
+                            Size: {item.size}
+                        </Text>
                         <Text weight={700} color="blue" size="lg">
                             ₱{item.price}
                         </Text>
@@ -51,7 +68,10 @@ function CartItem({ item, selectedItems, handleSelectItem, handleDelete, handleQ
                             size="sm"
                             variant="subtle"
                             onClick={() =>
-                                handleQuantityChange(item.id, Math.max(1, item.quantity - 1))
+                                handleQuantityChange(
+                                    item.id,
+                                    Math.max(1, item.quantity - 1)
+                                )
                             }
                         >
                             <IconMinus size={16} />
@@ -60,15 +80,26 @@ function CartItem({ item, selectedItems, handleSelectItem, handleDelete, handleQ
                             value={item.quantity}
                             min={1}
                             max={99}
-                            onChange={(value) => handleQuantityChange(item.id, value)}
-                            styles={{ input: { width: 60, textAlign: "center" } }}
+                            onChange={(value) => {
+                                const qty = Number(value);
+                                if (!isNaN(qty)) {
+                                    handleQuantityChange(item.id, qty);
+                                }
+                            }}
                             hideControls
+                            styles={{
+                                input: { width: 60, textAlign: "center" },
+                            }}
                         />
+
                         <ActionIcon
                             size="sm"
                             variant="subtle"
                             onClick={() =>
-                                handleQuantityChange(item.id, Math.min(99, item.quantity + 1))
+                                handleQuantityChange(
+                                    item.id,
+                                    Math.min(99, item.quantity + 1)
+                                )
                             }
                         >
                             <IconPlus size={16} />

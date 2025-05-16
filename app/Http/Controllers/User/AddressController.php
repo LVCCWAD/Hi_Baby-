@@ -12,7 +12,7 @@ class AddressController extends Controller
 {
     public function index()
     {
-        $addresses = Auth::user()->addresses()->get();
+        $addresses = Auth::user()->address()->get();
 
         return Inertia::render('User/Cart', [
             'addresses' => $addresses
@@ -30,7 +30,7 @@ class AddressController extends Controller
             'country' => 'required|string|max:255',
         ]);
 
-        $address = Auth::user()->addresses()->create([
+        $address = Auth::user()->address()->create([
             'street' => $request->street,
             'barangay' => $request->barangay,
             'city' => $request->city,

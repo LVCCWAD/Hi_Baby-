@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\Admin\ProductController;
 
@@ -46,13 +47,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
     Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
 
+    //Cart
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
-    Route::delete('/cart/{product}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
+    Route::delete('/cart/{product}', [CartController::class, 'remove'])->name('user.cart.remove');
 
-    Route::get('/checkout', [ProductController::class, 'checkout'])->name('user.checkout');
-    Route::post('/checkout', [ProductController::class, 'checkoutPost'])->name('user.checkout.post');
-    Route::get('/orders', [ProductController::class, 'userOrders'])->name('user.orders');
+
+    Route::post('/order/create', [OrderController::class, 'createOrder'])->name('order.create'); // create order
+    Route::get('/orders', [OrderController::class, 'orders'])->name('user.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show'); // show single order detail
+
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::post('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
 

@@ -1,84 +1,45 @@
-import { Card, Text, Group, Container, Stack, Badge, MantineProvider } from "@mantine/core";
-import AuthHeader from "../../Components/AuthHeader";
+import React from 'react';
+import { Container, Title, Card, Text, Group, Divider } from '@mantine/core';
+import GuestHeader from '../../Components/GuestHeader';
 
-function Orders({ orders = [] }) {
+function Orders({ orders }) {
     return (
-        <MantineProvider>
-            <AuthHeader />
-            <Container size="lg" mt="xl">
-                <Text size="xl" weight={700} mb="lg">
-                    My Orders
-                </Text>
+        <Container size="lg" mt="xl">
+            <GuestHeader />
+            <Title order={2} mb="lg">Your Orders</Title>
 
-                <Stack spacing="md">
-                    {orders.map((order) => (
-                        <Card key={order.id} shadow="sm" p="lg" radius="md" withBorder>
-                            <Group position="apart" mb="xs">
-                                <Text weight={500}>Order #{order.id}</Text>
-                                <Badge
-                                    color={
-                                        order.status === "completed"
-                                            ? "green"
-                                            : order.status === "cancelled"
-                                            ? "red"
-                                            : "blue"
-                                    }
-                                >
-                                    {order.status.toUpperCase()}
-                                </Badge>
-                            </Group>
+            {orders.length === 0 ? (
+                <Text>No orders found.</Text>
+            ) : (
+                orders.map((order) => (
+                    <Card key={order.id} shadow="sm" mb="lg" withBorder>
+                        <Group position="apart" mb="sm">
+                            <Text weight={600}>Order #{order.id}</Text>
+                            <Text color="dimmed">{new Date(order.created_at).toLocaleDateString()}</Text>
+                        </Group>
+                        <Text>Total: ₹{order.total_amount.toFixed(2)}</Text>
+                        <Text>Status: {order.status}</Text>
+                        <Text>Payment: {order.payment_status}</Text>
+                        <Text>Address: {order.address}</Text>
 
-                            <Text size="sm" color="dimmed" mb="md">
-                                Placed on: {new Date(order.created_at).toLocaleDateString()}
-                            </Text>
+                        <Divider my="sm" label="Items" />
 
-                            {order.orderItems.map((item) => (
-                                <Card key={item.id} withBorder mb="xs">
-                                    <Group>
-                                        <div style={{ flex: 1 }}>
-                                            <Text weight={500}>{item.product.name}</Text>
-                                            <Text size="sm" color="dimmed">
-                                                Size: {item.size.name}, Color: {item.color.name}
-                                            </Text>
-                                            <Text size="sm">
-                                                Quantity: {item.quantity} x ₱{item.price}
-                                            </Text>
-                                        </div>
-                                        <Text weight={700}>₱{item.quantity * item.price}</Text>
-                                    </Group>
-                                </Card>
-                            ))}
-
-                            <Group position="apart" mt="md">
-                                <Text>Total Amount:</Text>
-                                <Text weight={700} size="lg" color="blue">
-                                    ₱{order.total_amount}
+                        {order.order_items.map((item) => (
+                            <Card key={item.id} p="sm" radius="md" withBorder mb="xs">
+                                <Group position="apart">
+                                    <Text>{item.product.name}</Text>
+                                    <Text>x{item.quantity}</Text>
+                                </Group>
+                                <Text size="sm" color="dimmed">
+                                    Color: {item.color.name}, Size: {item.size.name}
                                 </Text>
-                            </Group>
-
-                            <Text size="sm" mt="md">
-                                Shipping Address: {order.shipping_address}
-                            </Text>
-
-                            <Text size="sm" mt="xs">
-                                Payment Status:{" "}
-                                <Badge
-                                    color={
-                                        order.payment_status === "paid"
-                                            ? "green"
-                                            : order.payment_status === "failed"
-                                            ? "red"
-                                            : "yellow"
-                                    }
-                                >
-                                    {order.payment_status.toUpperCase()}
-                                </Badge>
-                            </Text>
-                        </Card>
-                    ))}
-                </Stack>
-            </Container>
-        </MantineProvider>
+                                <Text size="sm">Price: ₹{item.price}</Text>
+                            </Card>
+                        ))}
+                    </Card>
+                ))
+            )}
+        </Container>
     );
 }
 

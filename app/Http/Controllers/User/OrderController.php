@@ -6,17 +6,19 @@ use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     public function createOrder(Request $request)
     {
         $request->validate([
-            'shipping_address' => 'required|string|min:10'
+            'address' => 'required|string|min:10'
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
         $cartItems = $user->carts()->with(['product', 'color', 'size'])->get();
 
         if ($cartItems->isEmpty()) {
@@ -44,7 +46,7 @@ class OrderController extends Controller
                 'user_id' => $user->id,
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
-                'shipping_address' => $request->shipping_address,
+                'address' => $request->address,
                 'payment_status' => 'pending'
             ]);
 
@@ -58,24 +60,31 @@ class OrderController extends Controller
                     'price' => $item->product->price
                 ]);
             }
+            // dd($order);
+
 
             // Clear the cart after creating the order
             $user->carts()->delete();
 
+
             return redirect()->route('user.orders')->with('success', 'Order placed successfully');
         } catch (\Exception $e) {
+            \Log::error('Order creation error: ' . $e->getMessage());
             return back()->with('error', 'Failed to create order. Please try again.');
         }
     }
 
+    // App\Http\Controllers\User\OrderController.php
+
     public function orders()
     {
-        $orders = auth()->user()->orders()->with(['orderItems.product', 'orderItems.color', 'orderItems.size'])->get();
+        $orders = Auth::user()->orders()->with(['orderItems.product', 'orderItems.color', 'orderItems.size'])->get();
 
         return Inertia::render('User/Orders', [
             'orders' => $orders
         ]);
     }
+
 
     public function show(Order $order)
     {

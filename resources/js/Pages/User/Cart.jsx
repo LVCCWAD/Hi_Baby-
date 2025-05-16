@@ -1,30 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Container, Text, Grid, Paper, Checkbox, Group } from "@mantine/core";
 import CartItem from "../../Components/CartItem";
-// import AddressSection from "../../Components/AddressSection";
 import OrderSummary from "../../Components/OrderSummary";
-import AuthHeader from "../../Components/AuthHeader";
-import { usePage } from "@inertiajs/react";
+import GuestHeader from "../../Components/GuestHeader";
+import { router, usePage } from "@inertiajs/react";
 
-function Cart({ cart = {}, selectedAddress: initialAddress }) {
+function Cart({ cart = [], selectedAddress: initialAddress }) {
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
-    // const [addressModalOpened, setAddressModalOpened] = useState(false);
-    // const [editingAddress, setEditingAddress] = useState(null);
-    // const { props } = usePage();
+    const [cartItems, setCartItems] = useState(cart);
 
-    // const [selectedAddress, setSelectedAddress] = useState(
-    //     initialAddress ?? null
-    // );
+    const handleDelete = (id) => {
+        if (
+            confirm("Are you sure you want to delete this item from your cart?")
+        ) {
+            router.delete(`/cart/${id}`, {
+                onSuccess: () => {
+                    setCartItems((prev) =>
+                        prev.filter((item) => item.id !== id)
+                    );
+                    console.log("Item removed from cart successfully.");
+                },
+                onError: () => {
+                    console.error("Failed to remove item from cart.");
+                },
+            });
+        }
+    };
 
-    // useEffect(() => {
-    //     if (props.selectedAddress) {
-    //         setSelectedAddress(props.selectedAddress);
-    //     }
-    // }, [props.selectedAddress]);
-
-    const cartItems = Array.isArray(cart) ? cart : Object.values(cart || {});
+    const handleQuantityChange = (id, quantity) => {
+        console.log("Changing quantity", { id, quantity });
+        setCartItems((prev) =>
+            prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+        );
+    };
 
     const handleSelectAll = (checked) => {
         setSelectAll(checked);
@@ -50,24 +60,49 @@ function Cart({ cart = {}, selectedAddress: initialAddress }) {
         0
     );
 
-    const handleCheckout = () => {
-        if (!selectedAddress) {
-            // Handle address error notification
-            return;
-        }
+    const { address } = usePage().props;
 
-        setLoading(true);
-        // Handle checkout logic here
-    };
+    const handleCheckout = () => {
+    if (!address) {
+      console.log("Please select a shipping address.");
+      return;
+    }
+
+    // Compose string from address object fields
+    const shippingAddressString = `${address.street}, ${address.city}, ${address.state ?? ''} ${address.zip ?? ''}`.trim();
+
+    if (shippingAddressString.length < 10) {
+      console.log("Shipping address is too short.");
+      return;
+    }
+
+    setLoading(true);
+
+    router.post(
+        "/order/create",
+        {
+            address: shippingAddressString,
+        },
+        {
+            onSuccess: () => {
+                console.log("Order placed successfully!");
+                setLoading(false);
+            },
+            onError: (errors) => {
+                console.error("Failed to place order:", errors);
+                setLoading(false);
+            },
+        }
+    );
+};
+
 
     return (
         <Container size="xl" mt="xl">
-            <AuthHeader />
-
+            <GuestHeader />
             <Text size="xl" weight={700} mb="lg">
                 Your Shopping Cart ({cartItems.length} items)
             </Text>
-
             <Grid>
                 <Grid.Col span={8}>
                     <Paper shadow="sm" radius="md" p="md">
@@ -80,7 +115,6 @@ function Cart({ cart = {}, selectedAddress: initialAddress }) {
                                 }
                             />
                         </Group>
-
                         <div>
                             {cartItems.map((item) => (
                                 <CartItem
@@ -88,21 +122,14 @@ function Cart({ cart = {}, selectedAddress: initialAddress }) {
                                     item={item}
                                     selectedItems={selectedItems}
                                     handleSelectItem={handleSelectItem}
-                                    handleDelete={() => {}}
-                                    handleQuantityChange={() => {}}
+                                    handleDelete={handleDelete}
+                                    handleQuantityChange={handleQuantityChange}
                                 />
                             ))}
                         </div>
                     </Paper>
                 </Grid.Col>
-
                 <Grid.Col span={4}>
-                    {/* <AddressSection
-                        selectedAddress={selectedAddress}
-                        setAddressModalOpened={setAddressModalOpened}
-                        setEditingAddress={setEditingAddress}
-                        addressModalOpened={addressModalOpened}
-                    /> */}
                     <OrderSummary
                         total={total}
                         handleCheckout={handleCheckout}

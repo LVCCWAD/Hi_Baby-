@@ -14,13 +14,14 @@ import { useState } from "react";
 import { Link } from "@inertiajs/react";
 
 import AuthHeader from "../../Components/AuthHeader";
+import GuestHeader from "../../Components/GuestHeader";
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products);
 
     return (
         <Container size="xl" mt="lg">
-            <AuthHeader />
+            <GuestHeader />
             <Button component="a" href="/girls-products" variant="outline">
                 Add Product{" "}
             </Button>

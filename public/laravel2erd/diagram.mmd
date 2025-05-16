@@ -1,0 +1,154 @@
+erDiagram
+    %% Laravel ERD Diagram
+
+    User {
+        bigint id PK
+        string username
+        string first_name
+        string last_name
+        string email
+        string password
+        string role
+        string address_id
+        string phone_number
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Size {
+        bigint id PK
+        string name
+        string product_id
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Review {
+        bigint id PK
+        string product_id
+        string user_id
+        string rating
+        string review
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Product {
+        bigint id PK
+        string name
+        string description
+        string price
+        string quantity
+        string image
+        string gender_id
+        string user_id
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    OrderItem {
+        bigint id PK
+        string order_id
+        string product_id
+        string color_id
+        string size_id
+        string quantity
+        string price
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Order {
+        bigint id PK
+        string user_id
+        string total_amount
+        string status
+        string address
+        string payment_status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Gender {
+        bigint id PK
+        string name
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Color {
+        bigint id PK
+        string name
+        string hex_code
+        string product_id
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Category {
+        bigint id PK
+        string name
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Cart {
+        bigint id PK
+        string user_id
+        string product_id
+        string color_id
+        string size_id
+        string quantity
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Admin {
+        bigint id PK
+        string name
+        string email
+        string password
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Address {
+        bigint id PK
+        string user_id
+        string street
+        string barangay
+        string city
+        string province
+        string zip_code
+        string country
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    User ||--|| Address : "has one"
+    User ||--o{ Product : "has many"
+    User ||--o{ Review : "has many"
+    User ||--o{ Cart : "has many"
+    User ||--o{ Order : "has many"
+    Size ||--|| Product : "belongs to"
+    Review ||--|| User : "belongs to"
+    Product ||--|| Gender : "belongs to"
+    Product ||--o{ Size : "has many"
+    Product ||--o{ Color : "has many"
+    Product ||--o{ User : "has many"
+    Product ||--o{ Review : "has many"
+    Product }o--o{ Category : "has many"
+    OrderItem ||--|| Order : "belongs to"
+    OrderItem ||--|| Product : "belongs to"
+    OrderItem ||--|| Color : "belongs to"
+    OrderItem ||--|| Size : "belongs to"
+    Order ||--|| User : "belongs to"
+    Order ||--o{ OrderItem : "has many"
+    Gender ||--|| Product : "belongs to"
+    Color ||--|| Product : "belongs to"
+    Category }o--o{ Product : "has many"
+    Cart ||--|| User : "belongs to"
+    Cart ||--|| Product : "belongs to"
+    Cart ||--|| Color : "belongs to"
+    Cart ||--|| Size : "belongs to"
+    Address ||--|| User : "belongs to"
