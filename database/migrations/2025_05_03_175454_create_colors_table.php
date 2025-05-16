@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // Color name
             $table->string('hex_code', 7); // Color code in hex format (e.g., #FFFFFF for white)
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

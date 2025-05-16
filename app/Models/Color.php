@@ -9,10 +9,12 @@ class Color extends Model
     protected $fillable = [
         'name',
         'hex_code',
+        'product_id',
+
     ];
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'color_product');
+        return $this->belongsTo(Product::class);
     }
 }

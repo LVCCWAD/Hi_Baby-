@@ -51,6 +51,13 @@ class ProductSeeder extends Seeder
             ]
         ];
 
+        $sizeNames = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        $colorOptions = [
+            ['name' => 'Red', 'hex_code' => '#FF0000'],
+            ['name' => 'Blue', 'hex_code' => '#0000FF'],
+            ['name' => 'Green', 'hex_code' => '#00FF00'],
+        ];
+
         foreach ($products as $productData) {
             $gender = Gender::inRandomOrder()->first();
 
@@ -64,18 +71,37 @@ class ProductSeeder extends Seeder
                 'image' => $productData['image'],
             ]);
 
-            // Attach random sizes (1-3)
-            $sizes = Size::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray();
-            $product->sizes()->attach($sizes);
+            // Create sizes for this product
+            $randomSizes = array_rand($sizeNames, rand(1, 3)); // Randomly select 1 to 3 sizes
+            if (is_array($randomSizes)) {
+                // If multiple sizes were selected
+                foreach ($randomSizes as $sizeIndex) {
+                    $product->sizes()->create([
+                        'name' => $sizeNames[$sizeIndex],
+                    ]);
+                }
+            } else {
+                // If only one size was selected
+                $product->sizes()->create([
+                    'name' => $sizeNames[$randomSizes],
+                ]);
+            }
 
-            // Attach random colors (1-3)
-            $colors = Color::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray();
-            $product->colors()->attach($colors);
+            // Create colors for this product
+            $randomColors = array_rand($colorOptions, rand(1, 3)); // Randomly select 1 to 3 colors
+            if (is_array($randomColors)) {
+                // If multiple colors were selected
+                foreach ($randomColors as $colorIndex) {
+                    $product->colors()->create($colorOptions[$colorIndex]);
+                }
+            } else {
+                // If only one color was selected
+                $product->colors()->create($colorOptions[$randomColors]);
+            }
 
-            // Attach random categories (1-2)
+            // Categories: many-to-many stays as-is
             $categories = Category::inRandomOrder()->take(rand(1, 2))->pluck('id')->toArray();
             $product->categories()->attach($categories);
-            $product->colors()->attach($colors);
         }
     }
 }

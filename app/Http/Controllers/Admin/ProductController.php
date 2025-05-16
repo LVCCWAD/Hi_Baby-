@@ -20,14 +20,14 @@ class ProductController extends Controller
     public function index()
     {
         return Inertia::render('User/Home', [
-            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+            'products' => Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])->get(),
         ]);
     }
 
 
     public function show(Product $products)
     {
-        $products = Product::with(['categories', 'colors', 'sizes', 'gender'])->latest()->get();
+        $products = Product::with(['reviews', 'categories', 'colors', 'sizes', 'gender'])->latest()->get();
 
         return Inertia::render('Admin/Products', [
             'products' => $products
@@ -42,7 +42,6 @@ class ProductController extends Controller
             'colors' => Color::all(),
             'sizes' => Size::all(),
             'genders' => Gender::all(),
-
 
         ]);
     }
@@ -81,9 +80,12 @@ class ProductController extends Controller
 
             $product = Auth::user()->products()->create($validated);
 
+            // Sync many-to-many
             $product->categories()->sync($categoryIds);
-            $product->colors()->sync($colorIds);
-            $product->sizes()->sync($sizeIds);
+
+            // One-to-many update
+            Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
+            Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
 
             return redirect()->route('admin.products')->with('success', 'Product added successfully!');
         } catch (\Throwable $e) {
@@ -104,6 +106,8 @@ class ProductController extends Controller
 
         ]);
     }
+
+
     public function update(Request $request, Product $product)
     {
         $validated = request()->validate([
@@ -135,19 +139,26 @@ class ProductController extends Controller
         } else {
             $validated['image'] = $product->image;
         }
-        $product->update($validated);
 
         $categoryIds = $validated['category_ids'];
         $colorIds = $validated['color_ids'];
         $sizeIds = $validated['size_ids'];
 
+        // Remove relationship fields before updating the product
         unset($validated['category_ids'], $validated['color_ids'], $validated['size_ids']);
 
+        // Update product fields
         $product->update($validated);
 
+        // Sync many-to-many (categories)
         $product->categories()->sync($categoryIds);
-        $product->colors()->sync($colorIds);
-        $product->sizes()->sync($sizeIds);
+
+        $product->colors()->update(['product_id' => null]);
+        $product->sizes()->update(['product_id' => null]);
+
+        // One-to-many update
+        Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
+        Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
 
         return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
     }
@@ -177,9 +188,4 @@ class ProductController extends Controller
             'product' => $product
         ]);
     }
-
-
-
-
 }
-

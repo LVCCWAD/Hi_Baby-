@@ -93,6 +93,26 @@ function Products({ products = [] }) {
             <Table.Td>{product.quantity}</Table.Td>
             <Table.Td>${product.price}</Table.Td>
             <Table.Td>
+                {product.reviews && product.reviews.length > 0 ? (
+                    <>
+                        <div>
+                            Avg:{" "}
+                            {(
+                                product.reviews.reduce(
+                                    (sum, review) => sum + review.rating,
+                                    0
+                                ) / product.reviews.length
+                            ).toFixed(1)}{" "}
+                            / 5
+                        </div>
+                        <div>{product.reviews.length} reviews</div>
+                    </>
+                ) : (
+                    "No reviews"
+                )}
+            </Table.Td>
+
+            <Table.Td>
                 <Button
                     component="a"
                     href={`/products/${product.id}/edit`}
@@ -121,6 +141,7 @@ function Products({ products = [] }) {
             <Table.Th>Color</Table.Th>
             <Table.Th>Quantity</Table.Th>
             <Table.Th>Price</Table.Th>
+            <Table.Th>Reviews</Table.Th>
         </Table.Tr>
     );
 

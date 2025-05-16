@@ -18,8 +18,8 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('image')->nullable();
             $table->integer('quantity')->default(0);
-            $table->foreignId('gender_id')->constrained('genders')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('gender_id')->constrained('genders')->onDelete('cascade');
             $table->timestamps();
         });
     }

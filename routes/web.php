@@ -7,8 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Admin\ProductController;
-
-
+use App\Http\Controllers\User\ReviewsController;
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -22,40 +21,50 @@ Route::middleware(['guest'])->group(function () {
 });
 
 
-    Route::middleware(['auth', 'admin'])->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/messages', [AdminController::class, 'messages'])->name('admin.messages');
-        Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/messages', [AdminController::class, 'messages'])->name('admin.messages');
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
 
 
-        Route::get('/add-product', [ProductController::class, 'create'])->name('admin.add-product');
-        Route::post('/add-product', [ProductController::class, 'store'])->name('admin.add-product.store');
-        Route::get('/show-products', [ProductController::class, 'show'])->name('admin.products');
-        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
-        Route::post('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
-        Route::delete('/products/{product}', [ProductController::class, 'delete'])->name('products.delete');
+    Route::get('/add-product', [ProductController::class, 'create'])->name('admin.add-product');
+    Route::post('/add-product', [ProductController::class, 'store'])->name('admin.add-product.store');
+    Route::get('/show-products', [ProductController::class, 'show'])->name('admin.products');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::post('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'delete'])->name('products.delete');
 
-        // Route::post
-    });
+    // Route::post
+});
 
-    Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
-        Route::get('/home', [ProductController::class, 'index'])->name('user.home');
-        Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
-        Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
+    Route::get('/home', [ProductController::class, 'index'])->name('user.home');
+    Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
+    Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
 
-        Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
-        Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
-        Route::delete('/cart/{product}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
+    // Show product
+    Route::get('/user/products/{product}', [ReviewsController::class, 'show'])->name('products.show');
 
-        Route::get('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout');
-        Route::post('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout.post');
-        Route::get('/orders', [\App\Http\Controllers\User\OrderController::class, 'orders'])->name('user.orders');
-        Route::get('/orders/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('user.orders.show');
-        Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
-        Route::post('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
-    });
+    // Review routes
+    Route::post('/user/products/{product}/reviews', [ReviewsController::class, 'store'])->name('reviews.store');
+    Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'update'])->name('reviews.update');
+    Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
 
-    Route::post('/logout', function(){
-        Auth::logout();
-    });
+
+
+    Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
+    Route::delete('/cart/{product}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
+
+    Route::get('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout');
+    Route::post('/checkout', [\App\Http\Controllers\User\OrderController::class, 'createOrder'])->name('user.checkout.post');
+    Route::get('/orders', [\App\Http\Controllers\User\OrderController::class, 'orders'])->name('user.orders');
+    Route::get('/orders/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('user.orders.show');
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::post('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
+});
+
+Route::post('/logout', function () {
+    Auth::logout();
+});

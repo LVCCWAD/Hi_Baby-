@@ -22,22 +22,28 @@ class Product extends Model
     }
 
     public function categories()
-{
-    return $this->belongsToMany(Category::class);
-}
+    {
+        return $this->belongsToMany(Category::class);
+    }
 
 
     public function sizes()
     {
-        return $this->belongsToMany(Size::class, 'product_size');
+        return $this->hasMany(Size::class);
     }
 
     public function colors()
     {
-        return $this->belongsToMany(Color::class, 'color_product');
+        return $this->hasMany(Color::class);
     }
+
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }
