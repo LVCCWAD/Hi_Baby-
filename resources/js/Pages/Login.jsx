@@ -78,11 +78,11 @@ function Login() {
                                 size="md"
                             />
 
-                            <Checkbox
+                            {/* <Checkbox
                                 label="Keep me logged in"
                                 mt="xl"
                                 size="md"
-                            />
+                            /> */}
 
                             {/* Error Display */}
                             {errors.email && (
