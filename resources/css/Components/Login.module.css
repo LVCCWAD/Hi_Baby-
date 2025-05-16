@@ -4,7 +4,7 @@
   }
   .container{
     display:flex;
-    justify-content: space-around;
+    justify-content: center;
   }
 
   .form {
@@ -29,7 +29,8 @@
   .image {
     width: 376px;
     height: 356px;
-
+    margin: 150px;
+    
     @media (max-width: $mantine-breakpoint-md) {
       display: none;
     }

@@ -22,35 +22,28 @@ function Login() {
     password: "",
   });
 
-  const submit = (e) => {
-    e.preventDefault();
+    // Handle form submission
+    const submit = (e) => {
+        e.preventDefault();
+        post("/login");
+    };
+    return (
+        <MantineProvider>
+            <GuestHeader />
+            <div className={classes.container}>
+            <div className={classes.wrapper}>
+                <form onSubmit={submit}>
+                    <Paper className={classes.form} radius={24} p={30} bg="yellow.1" h="600">
 
-    console.log("Submitting form with data:", data);
-
-    post("/login", {
-      onStart: () => console.log("🔄 Login request started"),
-      onSuccess: (page) => {
-        console.log("✅ Login success:", page);
-      },
-      onError: (err) => {
-        console.error("❌ Validation/Login error:", err);
-      },
-      onFinish: () => {
-        console.log("🏁 Login request finished");
-      },
-    });
-  };
-
-  return (
-    <MantineProvider>
-      <GuestHeader />
-      <div className={classes.container}>
-        <div className={classes.wrapper}>
-          <form onSubmit={submit}>
-            <Paper className={classes.form} radius={24} p={30} bg="#FBF2E9" h="600">
-              <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
-                Welcome back to Mantine!
-              </Title>
+                        <Title
+                            order={2}
+                            className={classes.title}
+                            ta="center"
+                            mt="md"
+                            mb={50}
+                        >
+                            Welcome back to Mantine!
+                        </Title>
 
               <TextInput
                 label="Email address"

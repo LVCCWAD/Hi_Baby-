@@ -46,25 +46,19 @@ function Register() {
         <MantineProvider>
             <GuestHeader />
             <div className={classes.container}>
-                <div className={classes.wrapper}>
-                    <form onSubmit={submit}>
-                        <Paper
-                            className={classes.form}
-                            radius={24}
-                            p={30}
-                            bg="#FBF2E9"
-                            w="455"
-                            h="740"
+            <div className={classes.wrapper}>
+                <form onSubmit={submit}>
+                    <Paper className={classes.form} radius={24} p={30} bg="yellow.1" w="455" h="740">
+
+                        <Title
+                            order={2}
+                            className={classes.title}
+                            ta="center"
+                            mt="md"
+                            mb={50}
                         >
-                            <Title
-                                order={2}
-                                className={classes.title}
-                                ta="center"
-                                mt="md"
-                                mb={50}
-                            >
-                                Hi Baby!
-                            </Title>
+                            Hi Baby!
+                        </Title>
 
                             <TextInput
                                 label="Username"
