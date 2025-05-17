@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\AddressController;
+use App\Http\Controllers\User\ReviewsController;
 use App\Http\Controllers\Admin\ProductController;
 
 
@@ -72,6 +73,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/addresses', [AddressController::class, 'store'])->name('user.addresses.store');
     Route::get('/addresses/{address}', [AddressController::class, 'show'])->name('user.addresses.show');
     Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('user.addresses.update');
+
+
+    // Show product
+    Route::get('/user/products/{product}', [ReviewsController::class, 'show'])->name('products.show');
+    // Review routes
+    Route::post('/user/products/{product}/reviews', [ReviewsController::class, 'store'])->name('reviews.store');
+    Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'update'])->name('reviews.update');
+    Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
 });
 
 Route::post('/logout', function () {
