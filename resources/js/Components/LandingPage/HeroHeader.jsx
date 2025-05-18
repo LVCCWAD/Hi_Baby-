@@ -1,7 +1,7 @@
 import { IconCheck } from '@tabler/icons-react';
 import { Button, Container, Group, Image, List, Text, ThemeIcon, Title } from '@mantine/core';
-import image from '../Assets/HeroHeader.png';
-import classes from '../../css/Components/HeroHeader.module.css';
+import image from '../../Assets/HeroHeader.png';
+import classes from '../../../css/Components/HeroHeader.module.css';
 
 function HeroHeader() {
   return (
@@ -11,11 +11,11 @@ function HeroHeader() {
           <Title className={classes.title}>
             Little Trendsetters Where Classic meets Cute
           </Title>
-          
+
           <Text>
             Explore our new and popular baby clothes designed for perfect style and comfort.
           </Text>
-          <Group mt={30}> 
+          <Group mt={30}>
             <Button radius="xl" size="md" bg="#abc32f" className={classes.control} component="a" href="/login">
               Shop Now
             </Button>
