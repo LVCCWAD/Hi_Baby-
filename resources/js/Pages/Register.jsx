@@ -16,7 +16,6 @@ import {
 
 import image from "../Assets/Register.png";
 import classes from "../../css/Components/Login.module.css";
-import GuestHeader from "../Components/GuestHeader";
 
 function Register() {
     const { data, setData, post, processing, errors } = useForm({
@@ -44,7 +43,6 @@ function Register() {
 
     return (
         <MantineProvider>
-            <GuestHeader />
             <div className={classes.container}>
             <div className={classes.wrapper}>
                 <form onSubmit={submit}>

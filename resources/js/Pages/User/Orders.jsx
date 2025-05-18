@@ -1,11 +1,9 @@
 import React from 'react';
 import { Container, Title, Card, Text, Group, Divider } from '@mantine/core';
-import GuestHeader from '../../Components/GuestHeader';
 
 function Orders({ orders }) {
     return (
         <Container size="lg" mt="xl">
-            <GuestHeader />
             <Title order={2} mb="lg">Your Orders</Title>
 
             {orders.length === 0 ? (

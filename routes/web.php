@@ -25,6 +25,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [UserController::class, 'registerPost'])->name('registerPost');
 });
 
+Route::get('/aboutus', [AuthAdminController::class, 'aboutus'])->name('aboutus');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');

@@ -17,6 +17,11 @@ class AuthAdminController extends Controller
     {
         return  Inertia::render('Admin/Dashboard');
     }
+    public function aboutUs()
+    {
+        return  Inertia::render('AboutUs');
+    }
+
 
     public function loginPost(Request $request)
     {

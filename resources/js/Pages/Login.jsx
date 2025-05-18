@@ -14,7 +14,6 @@ import {
 } from "@mantine/core";
 import image from "../Assets/Login.png";
 import classes from "../../css/Components/Login.module.css";
-import GuestHeader from "../Components/GuestHeader";
 
 function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -29,7 +28,6 @@ function Login() {
     };
     return (
         <MantineProvider>
-            <GuestHeader />
             <div className={classes.container}>
                 <div className={classes.wrapper}>
                     <form onSubmit={submit}>

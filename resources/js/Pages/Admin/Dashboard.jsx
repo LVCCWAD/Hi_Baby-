@@ -6,7 +6,6 @@ import {
     MantineProvider, Grid, Card
 } from "@mantine/core";
 import { LineChart } from '@mantine/charts';
-import  AdminHeader from "../../Components/AdminHeader.jsx";
 
 
 const jobColors = {
@@ -69,7 +68,6 @@ function Dashboard() {
 
     return (
         <MantineProvider>
-            <AdminHeader/>
             <h1>Analytics</h1>
             <Grid grow gutter="xl">
                 <Grid.Col span={3}> <Card
@@ -156,7 +154,7 @@ function Dashboard() {
                     curveType="bump"
                     gridAxis="y"
                 /></Grid.Col>
-                
+
                 <Grid.Col span={2} offset={.5}><Table>
                     <Table.Thead>
                         <Table.Tr>

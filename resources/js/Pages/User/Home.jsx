@@ -11,18 +11,15 @@ import {
     MantineProvider,
 } from "@mantine/core";
 import { useState } from "react";
-import AuthHeader from "../../Components/AuthHeader";
-import GuestHeader from "../../Components/GuestHeader";
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products); // 👈 Add this here
 
     return (
         <Container size="xl">
-            <GuestHeader />
             <Button component="a" href="/girls-products" variant="outline">
-                        View More{" "}
-                    </Button>
+                View More{" "}
+            </Button>
             <Text size="xl" weight={700} align="center" mb="md">
                 Shop Our Products
             </Text>
@@ -43,7 +40,6 @@ function ProductCard({ product }) {
 
     return (
         <MantineProvider>
-
             <Card shadow="sm" padding="lg" radius="md" withBorder>
                 <Card.Section>
                     <Image
@@ -73,5 +69,6 @@ function ProductCard({ product }) {
         </MantineProvider>
     );
 }
+
 
 export default Home;

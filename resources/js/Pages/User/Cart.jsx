@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Text, Grid, Paper, Checkbox, Group } from "@mantine/core";
 import CartItem from "../../Components/CartItem";
 import OrderSummary from "../../Components/OrderSummary";
-import GuestHeader from "../../Components/GuestHeader";
 import { router, usePage } from "@inertiajs/react";
 
 function Cart({ cart = [], selectedAddress: initialAddress }) {
@@ -99,7 +98,6 @@ function Cart({ cart = [], selectedAddress: initialAddress }) {
 
     return (
         <Container size="xl" mt="xl">
-            <GuestHeader />
             <Text size="xl" weight={700} mb="lg">
                 Your Shopping Cart ({cartItems.length} items)
             </Text>

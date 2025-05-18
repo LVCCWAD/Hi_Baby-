@@ -4,8 +4,6 @@ import { router } from "@inertiajs/react";
 
 import { IconCheck } from "@tabler/icons-react"; // Optional icon
 
-import AdminHeader from "../../Components/AdminHeader";
-
 function Products({ products = [] }) {
     const handleDelete = (id) => {
         if (confirm("Are you sure you want to delete this product?")) {
@@ -147,8 +145,6 @@ function Products({ products = [] }) {
 
     return (
         <MantineProvider>
-            <AdminHeader />
-
             <Grid>
                 <Grid.Col span={2}>
                     <h1>Products</h1>

@@ -24,11 +24,16 @@ import {
 import { Link, usePage } from "@inertiajs/react"; // Or use react-router's Link if not using Inertia
 import { Inertia } from "@inertiajs/inertia";
 import Logo from "../Assets/Logo.png";
+import CollectionDropdown from "./CollectionDropdown";
+import NotificationModal from "./NotificationModal";
+
 import { useState } from "react";
 
-function GuestHeader() {
+function NavHeader() {
     const [searchValue, setSearchValue] = useState("");
     const { auth } = usePage().props;
+    const [modalOpen, setModalOpen] = useState(false);
+
     const isAuthenticated = auth && auth.user;
 
     const handleLogout = () => {
@@ -65,10 +70,8 @@ function GuestHeader() {
 
                     {/* Center: Navigation */}
                     <Group gap={rem(40)}>
-                        <Link href="/collection" style={linkStyle}>
-                            Collection
-                        </Link>
-                        <Link href="/about" style={linkStyle}>
+                        <CollectionDropdown />
+                        <Link href="/aboutus" style={linkStyle}>
                             About Us
                         </Link>
                     </Group>
@@ -113,7 +116,9 @@ function GuestHeader() {
                                 variant="transparent"
                                 size={32}
                                 style={{
-                                    color: "#abc32f",
+                                    color: "#fffff",
+                                    backgroundColor: "#abc32f",
+                                    borderRadius: rem(8),
                                 }}
                             >
                                 <IconSearch size={18} />
@@ -124,12 +129,17 @@ function GuestHeader() {
                         <Group gap={rem(20)}>
                             <ActionIcon
                                 variant="transparent"
-                                component={Link}
-                                href="/notifications"
                                 style={{ color: "#555" }}
+                                onClick={() => setModalOpen(true)}
                             >
                                 <IconBell size={20} stroke={1.5} />
                             </ActionIcon>
+
+                            <NotificationModal
+                                opened={modalOpen}
+                                onClose={() => setModalOpen(false)}
+                            />
+
                             <ActionIcon
                                 variant="transparent"
                                 component={Link}
@@ -209,7 +219,6 @@ function GuestHeader() {
 
                                             <Divider my="xs" />
 
-
                                             <Menu.Item
                                                 component="a"
                                                 href="/login"
@@ -274,4 +283,4 @@ const linkStyle = {
     },
 };
 
-export default GuestHeader;
+export default NavHeader;

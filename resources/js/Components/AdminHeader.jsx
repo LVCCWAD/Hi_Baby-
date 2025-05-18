@@ -1,216 +1,254 @@
-import { Inertia } from '@inertiajs/inertia';
-
 import {
-    IconBook,
-    IconChartPie3,
-    IconChevronDown,
-    IconCode,
-    IconCoin,
-    IconFingerprint,
-    IconNotification,
     IconSearch,
+    IconBell,
     IconShoppingCart,
     IconUser,
-    IconBell
+    IconLogin,
+    IconUserCircle,
+    IconLogout,
+    IconSettings,
 } from "@tabler/icons-react";
 import {
-    Flex,
-    Anchor,
     Autocomplete,
     Box,
-    Burger,
-    Button,
-    Center,
-    Collapse,
-    Divider,
-    Drawer,
     Group,
-    HoverCard,
-    ScrollArea,
-    SimpleGrid,
+    Flex,
+    Image,
+    ActionIcon,
+    rem,
+    Container,
     Text,
-    ThemeIcon,
-    UnstyledButton,
-    useMantineTheme,
+    Menu,
+    Divider,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Link, usePage } from "@inertiajs/react"; // Or use react-router's Link if not using Inertia
+import { Inertia } from "@inertiajs/inertia";
 import Logo from "../Assets/Logo.png";
-import classes from "../../css/Components/GuestHeader.module.css";
+import CollectionDropdown from "./CollectionDropdown";
+import NotificationModal from "./NotificationModal";
 
-const mockdata = [
-    {
-        icon: IconCode,
-        title: "Open source",
-        description: "This Pokémon’s cry is very loud and distracting",
-    },
-    {
-        icon: IconCoin,
-        title: "Free for everyone",
-        description: "The fluid of Smeargle’s tail secretions changes",
-    },
-    {
-        icon: IconBook,
-        title: "Documentation",
-        description: "Yanma is capable of seeing 360 degrees without",
-    },
-    {
-        icon: IconFingerprint,
-        title: "Security",
-        description: "The shell’s rounded shape and the grooves on its.",
-    },
-    {
-        icon: IconChartPie3,
-        title: "Analytics",
-        description: "This Pokémon uses its flying ability to quickly chase",
-    },
-    {
-        icon: IconNotification,
-        title: "Notifications",
-        description: "Combusken battles with the intensely hot flames it spews",
-    },
-];
+import { useState } from "react";
 
 function AdminHeader() {
-    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-        useDisclosure(false);
-    const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-    const theme = useMantineTheme();
+    const [searchValue, setSearchValue] = useState("");
+    const { auth } = usePage().props;
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const links = mockdata.map((item) => (
-        <UnstyledButton className={classes.subLink} key={item.title}>
-            <Group wrap="nowrap" align="flex-start">
-                <ThemeIcon size={34} variant="default" radius="md">
-                    <item.icon size={22} color={theme.colors.blue[6]} />
-                </ThemeIcon>
-                <div>
-                    <Text size="sm" fw={500}>
-                        {item.title}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                        {item.description}
-                    </Text>
-                </div>
-            </Group>
-        </UnstyledButton>
-    ));
+    const isAuthenticated = auth && auth.user;
 
     const handleLogout = () => {
-        Inertia.post('/logout', {}, {
-            onSuccess: () => {
-                window.location.href = '/login'; // Force a full reload
+        Inertia.post(
+            "/logout",
+            {},
+            {
+                onSuccess: () => {
+                    window.location.href = "/login"; // Force a full reload
+                },
             }
-        });
-
+        );
     };
 
     return (
-        <Box pb={30} bg="#FBF2E9">
-            <header className={classes.header}>
-                <Group justify="space-between" h="100%">
-                    <img src={Logo} alt="Logo" className={classes.logo} />
-                    <Group h="100%" gap={0} visibleFrom="sm">
-                        <a href="/dashboard" className={classes.link}>
-                            Analytics
-                        </a>
+        <Box
+            bg="white"
+            py="md"
+            style={{
+                borderBottom: "1px solid #f0f0f0",
+            }}
+        >
+            <Container size="xl">
+                <Flex align="center" justify="space-between" wrap="nowrap">
+                    {/* Left: Logo */}
+                    <Link href="/" style={{ textDecoration: "none" }}>
+                        <Image
+                            src={Logo}
+                            alt="HI, BABY!"
+                            h={40}
+                            fit="contain"
+                        />
+                    </Link>
 
-                        <a href="/show-products" className={classes.link}>
-                            <Center inline>
-                                <Box component="span" mr={5}>
-                                    Products
-                                </Box>
-
-                            </Center>
-                        </a>
-
-
-                        <a href="#" className={classes.link}>
-                            Messages
-                        </a>
-                        <a href="#" className={classes.link}>
+                    {/* Center: Navigation */}
+                    <Group gap={rem(40)}>
+                        <Link href="/dashboard" style={linkStyle}>
+                          Analytics
+                        </Link>{" "}
+                        <Link href="/show-products" style={linkStyle}>
+                            Products
+                        </Link>
+                        <Link href="/aboutus" style={linkStyle}>
+                           Messages
+                        </Link>
+                        <Link href="/aboutus" style={linkStyle}>
                             Orders
-                        </a>
+                        </Link>
+
                     </Group>
-                    <Autocomplete
-                        className={classes.search}
-                        placeholder="Search"
-                        rightSection={
-                            <div className={classes.search}>
-                            <IconSearch size={35} />
-                            </div>
-                        }
-                        data={[
-                            "React",
-                            "Angular",
-                            "Vue",
-                            "Next.js",
-                            "Riot.js",
-                            "Svelte",
-                            "Blitz.js",
-                        ]}
-                        visibleFrom="xs"
-                    />
 
-                    <Flex visibleFrom="sm" w={300} justify="space-between" align="center">
-
-                        <IconBell size={16} stroke={1.5}/>
-                        <IconShoppingCart size={16} stroke={1.5}/>
-                        <IconUser size={16} stroke={1.5}/>
-
-                    </Flex>
-
-                    <Burger
-                        opened={drawerOpened}
-                        onClick={toggleDrawer}
-                        hiddenFrom="sm"
-                    />
-                </Group>
-            </header>
-
-            <Drawer
-                opened={drawerOpened}
-                onClose={closeDrawer}
-                size="100%"
-                padding="md"
-                title="Navigation"
-                hiddenFrom="sm"
-                zIndex={1000000}
-            >
-                <ScrollArea h="calc(100vh - 80px" mx="-md">
-                    <Divider my="sm" />
-
-
-                    <UnstyledButton
-                        className={classes.link}
-                        onClick={toggleLinks}
-                    >
-                        <Center inline>
-                            <Box component="span" mr={5}>
-                                Collection
-                            </Box>
-                            <IconChevronDown
-                                size={16}
-                                color={theme.colors.blue[6]}
+                    {/* Right: Search & Icons */}
+                    <Flex align="center" gap={rem(20)}>
+                        {/* Search */}
+                        <Flex
+                            align="center"
+                            style={{
+                                backgroundColor: "#f5f5f5",
+                                borderRadius: rem(20),
+                                padding: `0 ${rem(8)}`,
+                                height: rem(40),
+                                width: rem(240),
+                                overflow: "hidden",
+                            }}
+                        >
+                            <Autocomplete
+                                placeholder="Search"
+                                value={searchValue}
+                                onChange={setSearchValue}
+                                data={["Bibs", "Shoes", "Toys", "Blankets"]}
+                                styles={{
+                                    input: {
+                                        backgroundColor: "transparent",
+                                        border: "none",
+                                        paddingLeft: rem(12),
+                                        fontSize: rem(14),
+                                        width: "100%",
+                                        height: rem(40),
+                                        "&:focus": {
+                                            outline: "none",
+                                        },
+                                    },
+                                    dropdown: {
+                                        borderRadius: rem(8),
+                                    },
+                                }}
                             />
-                        </Center>
-                    </UnstyledButton>
-                    <Collapse in={linksOpened}>{links}</Collapse>
-                    <a href="#" className={classes.link}>
-                        Learn
-                    </a>
-                    <a href="#" className={classes.link}>
-                        Academy
-                    </a>
+                            <ActionIcon
+                                variant="transparent"
+                                size={32}
+                                style={{
+                                    color: "#fffff",
+                                    backgroundColor: "#abc32f",
+                                    borderRadius: rem(8),
+                                }}
+                            >
+                                <IconSearch size={18} />
+                            </ActionIcon>
+                        </Flex>
 
-                    <Divider my="sm" />
+                        {/* Icons */}
+                        <Group gap={rem(20)}>
 
-                    <Group justify="center" grow pb="xl" px="md">
-                        <IconShoppingCart size={16} stroke={1.5}/>
-                        <IconUser size={16} stroke={1.5}/>
-                    </Group>
-                </ScrollArea>
-            </Drawer>
+
+
+                            <Menu
+                                position="bottom-end"
+                                shadow="md"
+                                width={200}
+                                styles={{
+                                    dropdown: {
+                                        borderRadius: rem(8),
+                                        boxShadow:
+                                            "0 2px 10px rgba(0, 0, 0, 0.1)",
+                                    },
+                                    item: {
+                                        fontSize: rem(14),
+                                        padding: `${rem(8)} ${rem(12)}`,
+                                        "&:hover": {
+                                            backgroundColor: "#f5f5f5",
+                                        },
+                                    },
+                                }}
+                            >
+                                <Menu.Target>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        style={{ color: "#555" }}
+                                    >
+                                        <IconUser size={20} stroke={1.5} />
+                                    </ActionIcon>
+                                </Menu.Target>
+
+                                <Menu.Dropdown>
+                                    {isAuthenticated ? (
+                                        <>
+                                            <Menu.Label>
+                                                Signed in as
+                                                <Text
+                                                    fw={500}
+                                                    size="sm"
+                                                    ml={4}
+                                                    span
+                                                >
+                                                    {auth.user.name ||
+                                                        auth.user.email}
+                                                </Text>
+                                            </Menu.Label>
+
+
+
+                                            <Divider my="xs" />
+
+                                            <Menu.Item
+                                                component="a"
+                                                href="/login"
+                                                onClick={handleLogout}
+                                                leftSection={
+                                                    <IconLogout
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                                color="red"
+                                            >
+                                                Logout
+                                            </Menu.Item>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/login"
+                                                leftSection={
+                                                    <IconLogin
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
+                                                Login
+                                            </Menu.Item>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/register"
+                                                leftSection={
+                                                    <IconUserCircle
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
+                                                Register
+                                            </Menu.Item>
+                                        </>
+                                    )}
+                                </Menu.Dropdown>
+                            </Menu>
+                        </Group>
+                    </Flex>
+                </Flex>
+            </Container>
         </Box>
     );
 }
+
+const linkStyle = {
+    fontSize: "15px",
+    fontWeight: 500,
+    color: "#333",
+    textDecoration: "none",
+    transition: "color 0.2s ease",
+    "&:hover": {
+        color: "#abc32f",
+    },
+};
 
 export default AdminHeader;
