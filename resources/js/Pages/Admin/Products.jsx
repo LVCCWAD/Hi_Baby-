@@ -1,4 +1,4 @@
-import { Table, MantineProvider, Grid, Button, Image } from "@mantine/core";
+import { Table, MantineProvider, Grid, Flex, Button, Image } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { router } from "@inertiajs/react";
 
@@ -145,17 +145,13 @@ function Products({ products = [] }) {
 
     return (
         <MantineProvider>
-            <Grid>
-                <Grid.Col span={2}>
-                    <h1>Products</h1>
-                </Grid.Col>
-                <Grid.Col span={2} offset={5}>
-                    <Button component="a" href="/add-product" variant="outline">
-                        Add Product{" "}
-                    </Button>
-                </Grid.Col>
-            </Grid>
+            <Flex justify="space-between" align="center" mb="md">
+                <h1>Products</h1>
 
+                <Button component="a" href="/add-product" variant="outline">
+                    Add Product
+                </Button>
+            </Flex>
             <Table captionSide="bottom">
                 {/* <Table.Caption>Some elements from periodic table</Table.Caption> */}
                 <Table.Thead>{ths}</Table.Thead>

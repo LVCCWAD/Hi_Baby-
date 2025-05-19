@@ -1,174 +1,153 @@
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import {
-
-    Table,
-    Text,
-    MantineProvider, Grid, Card
-} from "@mantine/core";
-import { LineChart } from '@mantine/charts';
-
-
-const jobColors = {
-    engineer: "blue",
-    manager: "cyan",
-    designer: "pink",
-};
-
-const dataCharts = [
-    {
-        date: 'Mar 22',
-        Apples: 2890,
-        Oranges: 2338,
-        Tomatoes: 2452,
-    },
-    {
-        date: 'Mar 23',
-        Apples: 2756,
-        Oranges: 2103,
-        Tomatoes: 2402,
-    },
-    {
-        date: 'Mar 24',
-        Apples: 3322,
-        Oranges: 986,
-        Tomatoes: 1821,
-    },
-    {
-        date: 'Mar 25',
-        Apples: 3470,
-        Oranges: 2108,
-        Tomatoes: 2809,
-    },
-    {
-        date: 'Mar 26',
-        Apples: 3129,
-        Oranges: 1726,
-        Tomatoes: 2290,
-    },
-];
-
-const elements = [
-    { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
-    { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-    { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-    { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-    { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
-];
-
+import { MantineProvider, Container, Title, Paper, Grid, Text, Group, Box, Tabs, Button, Table } from "@mantine/core";
+import { IconArrowUpRight, IconArrowDownRight, IconFileExport } from "@tabler/icons-react";
+import { LineChart } from "@mantine/charts";
+import { useState } from "react";
 
 function Dashboard() {
-    const rows = elements.map((element) => (
-        <Table.Tr key={element.name}>
-            <Table.Td>{element.position}</Table.Td>
-            <Table.Td>{element.name}</Table.Td>
-            <Table.Td>{element.symbol}</Table.Td>
-            <Table.Td>{element.mass}</Table.Td>
-        </Table.Tr>
-    ));
+    const [timeFilter, setTimeFilter] = useState('12 Months');
+
+    // Sample data for the stat cards
+    const statCards = [
+        { title: "TODAY'S SALE", value: "₱12,426", change: 36, isPositive: true },
+        { title: "TOTAL SALES", value: "₱2,383,485", change: 14, isPositive: false },
+        { title: "TOTAL ORDERS", value: "84,382", change: 36, isPositive: true },
+        { title: "TOTAL CUSTOMERS", value: "33,493", change: 36, isPositive: true },
+    ];
+
+    // Sample data for the line chart
+    const chartData = [
+        { date: "Feb", Sales: 45000, Orders: 25000 },
+        { date: "Mar", Sales: 52000, Orders: 28000 },
+        { date: "Apr", Sales: 48000, Orders: 26000 },
+        { date: "May", Sales: 61000, Orders: 32000 },
+        { date: "Jun", Sales: 65000, Orders: 35000 },
+        { date: "Jul", Sales: 68000, Orders: 37000 },
+        { date: "Aug", Sales: 75000, Orders: 40000 },
+        { date: "Sep", Sales: 83000, Orders: 45000 },
+        { date: "Oct", Sales: 87000, Orders: 48000 },
+        { date: "Nov", Sales: 91000, Orders: 51000 },
+        { date: "Dec", Sales: 99000, Orders: 55000 },
+        { date: "Jan", Sales: 105000, Orders: 58000 },
+    ];
+
+    // Sample data for search terms table
+    const searchTerms = [
+        { term: "bodysuits", results: 172, uses: 569 },
+        { term: "sweater", results: 151, uses: 579 },
+        { term: "polo", results: 147, uses: 463 },
+        { term: "sleepsuits", results: 123, uses: 247 },
+        { term: "rompers", results: 94, uses: 191 },
+    ];
 
     return (
         <MantineProvider>
-            <h1>Analytics</h1>
-            <Grid grow gutter="xl">
-                <Grid.Col span={3}> <Card
-                    shadow="sm"
-                    padding="xl"
-                    component="a"
-                    target="_blank"
-                >
-                    <Card.Section>
+            <Container size="xl" py="xl" style={{ backgroundColor: "#faf5ef", minHeight: "100vh" }}>
+                <Title order={1} mb="xl" style={{ color: "#b5b063" }}>Analytics</Title>
 
-                    </Card.Section>
+                {/* Stat Cards */}
+                <Grid mb="xl">
+                    {statCards.map((card, index) => (
+                        <Grid.Col span={{ base: 12, sm: 6, md: 3 }} key={index}>
+                            <Paper p="md" radius="md" withBorder>
+                                <Text size="xs" c="dimmed" fw={500}>
+                                    {card.title}
+                                </Text>
+                                <Group justify="space-between" align="flex-end" mt={5}>
+                                    <Text fw={700} size="xl">{card.value}</Text>
+                                    <Text
+                                        c={card.isPositive ? "teal" : "red"}
+                                        fw={700}
+                                        size="sm"
+                                        style={{ display: "flex", alignItems: "center" }}
+                                    >
+                                        {card.isPositive ? "+ " : "- "}{card.change}%
+                                        {card.isPositive ? (
+                                            <IconArrowUpRight size={16} style={{ marginLeft: 5 }} />
+                                        ) : (
+                                            <IconArrowDownRight size={16} style={{ marginLeft: 5 }} />
+                                        )}
+                                    </Text>
+                                </Group>
+                            </Paper>
+                        </Grid.Col>
+                    ))}
+                </Grid>
 
-                    <Text fw={500} size="lg" mt="md">
-                        You&apos;ve won a million dollars in cash!
-                    </Text>
+                {/* Sales Report and Search Terms */}
+                <Grid>
+                    <Grid.Col span={{ base: 12, md: 8 }}>
+                        <Paper p="md" radius="md" withBorder mb="md">
+                            <Group justify="space-between" mb="md">
+                                <Text fw={500}>Sales Report</Text>
+                                <Group>
+                                    <Tabs value={timeFilter} onChange={setTimeFilter}>
+                                        <Tabs.List>
+                                            <Tabs.Tab value="12 Months">12 Months</Tabs.Tab>
+                                            <Tabs.Tab value="6 Months">6 Months</Tabs.Tab>
+                                            <Tabs.Tab value="30 Days">30 Days</Tabs.Tab>
+                                            <Tabs.Tab value="7 Days">7 Days</Tabs.Tab>
+                                        </Tabs.List>
+                                    </Tabs>
+                                    <Button
+                                        variant="outline"
+                                        size="xs"
+                                        leftSection={<IconFileExport size={16} />}
+                                    >
+                                        Export PDF
+                                    </Button>
+                                </Group>
+                            </Group>
 
-                    <Text mt="xs" c="dimmed" size="sm">
-                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
-                    </Text>
-                </Card> </Grid.Col>
-                <Grid.Col span={3}> <Card
-                    shadow="sm"
-                    padding="xl"
-                    component="a"
-                    target="_blank"
-                >
-                    <Card.Section>
+                            <Box mt="md">
+                                <Box style={{ position: 'relative' }}>
+                                    <Box style={{ position: 'absolute', top: 20, left: 20 }}>
+                                        <Text size="xs" c="dimmed">June 2021</Text>
+                                        <Text fw={700}>₱45,991</Text>
+                                    </Box>
+                                </Box>
+                                <LineChart
+                                    h={300}
+                                    data={chartData}
+                                    dataKey="date"
+                                    series={[
+                                        { name: "Sales", color: "blue.6" },
+                                        { name: "Orders", color: "blue.3" }
+                                    ]}
+                                    curveType="natural"
+                                    gridAxis="y"
+                                    withLegend
+                                    withTooltip
+                                    withDots
+                                />
+                            </Box>
+                        </Paper>
+                    </Grid.Col>
 
-                    </Card.Section>
-
-                    <Text fw={500} size="lg" mt="md">
-                        You&apos;ve won a million dollars in cash!
-                    </Text>
-
-                    <Text mt="xs" c="dimmed" size="sm">
-                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
-                    </Text>
-                </Card> </Grid.Col>
-                <Grid.Col span={3}> <Card
-                    shadow="sm"
-                    padding="xl"
-                    component="a"
-                    target="_blank"
-                >
-                    <Card.Section>
-
-                    </Card.Section>
-
-                    <Text fw={500} size="lg" mt="md">
-                        You&apos;ve won a million dollars in cash!
-                    </Text>
-
-                    <Text mt="xs" c="dimmed" size="sm">
-                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
-                    </Text>
-                </Card> </Grid.Col>
-                <Grid.Col span={3}> <Card
-                    shadow="sm"
-                    padding="xl"
-                    component="a"
-                    target="_blank"
-                >
-                    <Card.Section>
-
-                    </Card.Section>
-
-                    <Text fw={500} size="lg" mt="md">
-                        You&apos;ve won a million dollars in cash!
-                    </Text>
-
-                    <Text mt="xs" c="dimmed" size="sm">
-                        Please click anywhere on this card to claim your reward, this is not a fraud, trust us
-                    </Text>
-                </Card> </Grid.Col>
-                <Grid.Col span={6}><LineChart
-                    h={300}
-                    data={dataCharts}
-                    dataKey="date"
-                    series={[
-                        { name: 'Apples', color: 'indigo.6' },
-                        { name: 'Oranges', color: 'blue.6' },
-                        { name: 'Tomatoes', color: 'teal.6' },
-                    ]}
-                    curveType="bump"
-                    gridAxis="y"
-                /></Grid.Col>
-
-                <Grid.Col span={2} offset={.5}><Table>
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th>Element position</Table.Th>
-                            <Table.Th>Element name</Table.Th>
-                            <Table.Th>Symbol</Table.Th>
-                            <Table.Th>Atomic mass</Table.Th>
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>{rows}</Table.Tbody>
-                </Table></Grid.Col>
-            </Grid>
-
-
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                        <Paper p="md" radius="md" withBorder>
+                            <Text fw={500} mb="md">Top Search Terms</Text>
+                            <Table>
+                                <Table.Thead>
+                                    <Table.Tr>
+                                        <Table.Th>Search Term</Table.Th>
+                                        <Table.Th>Results</Table.Th>
+                                        <Table.Th>Uses</Table.Th>
+                                    </Table.Tr>
+                                </Table.Thead>
+                                <Table.Tbody>
+                                    {searchTerms.map((term, index) => (
+                                        <Table.Tr key={index}>
+                                            <Table.Td>{term.term}</Table.Td>
+                                            <Table.Td>{term.results}</Table.Td>
+                                            <Table.Td>{term.uses}</Table.Td>
+                                        </Table.Tr>
+                                    ))}
+                                </Table.Tbody>
+                            </Table>
+                        </Paper>
+                    </Grid.Col>
+                </Grid>
+            </Container>
         </MantineProvider>
     );
 }

@@ -1,17 +1,16 @@
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, Box } from "@mantine/core";
 import AdminHeader from "../Components/AdminHeader";
-
 
 export default function AdminLayout({ children }) {
     return (
         <MantineProvider>
-            <header>
-                <AdminHeader />
-            </header>
+            <Box mx="xl">
 
-        <main>{children}</main>
+                <header>
+                    <AdminHeader />
+                </header>
+                <main>{children}</main>
+            </Box>
         </MantineProvider>
     );
 }
-
-

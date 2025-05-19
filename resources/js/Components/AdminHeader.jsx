@@ -79,7 +79,7 @@ function AdminHeader() {
                         <Link href="/aboutus" style={linkStyle}>
                            Messages
                         </Link>
-                        <Link href="/aboutus" style={linkStyle}>
+                        <Link href="/order/list" style={linkStyle}>
                             Orders
                         </Link>
 

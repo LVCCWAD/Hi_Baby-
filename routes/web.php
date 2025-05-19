@@ -30,7 +30,7 @@ Route::get('/aboutus', [AuthAdminController::class, 'aboutus'])->name('aboutus')
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/messages', [AdminController::class, 'messages'])->name('admin.messages');
-    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::get('/order/list', [OrderController::class, 'show'])->name('admin.orders');
 
 
     Route::get('/add-product', [ProductController::class, 'create'])->name('admin.add-product');
