@@ -181,6 +181,13 @@ class ProductController extends Controller
         ]);
     }
 
+    public function showBoysProducts()
+    {
+        return Inertia::render('User/Boys', [
+            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+        ]);
+    }
+
 
     public function productDetail(Product $product)
     {
