@@ -28,7 +28,7 @@ class ProductController extends Controller
     public function show(Product $products)
     {
         $products = Product::with(['reviews', 'categories', 'colors', 'sizes', 'gender'])->latest()->get();
-
+        
         return Inertia::render('Admin/Products', [
             'products' => $products
         ]);

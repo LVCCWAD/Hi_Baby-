@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\LikeController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\Admin\AdminController;
@@ -57,8 +58,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', [ProductController::class, 'index'])->name('user.home');
-    Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.home');
-    Route::get('/boys-products', [ProductController::class, 'showBoysProducts'])->name('user.home');
+    Route::get('/girls-products', [ProductController::class, 'showGirlsProducts'])->name('user.girls');
+    Route::get('/boys-products', [ProductController::class, 'showBoysProducts'])->name('user.boys');
 
     Route::get('/user/products/{product}', [ProductController::class, 'productDetail'])->name('user.products.show');
 
@@ -75,11 +76,9 @@ Route::middleware(['auth'])->group(function () {
     //User Profile
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
-
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 
     // Address routes
-
     Route::get('/addresses/latest', function () {
         $address = Auth::user()->addresses()->latest()->first();
 
@@ -98,6 +97,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/products/{product}/reviews', [ReviewsController::class, 'store'])->name('reviews.store');
     Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'update'])->name('reviews.update');
     Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroy'])->name('reviews.destroy');
+
+    //Like Products
+    Route::get('/home', [LikeController::class, 'home'])->name('home');
+    Route::get('/girls-products', [LikeController::class, 'girls'])->name('girls.products');
+    Route::get('/boys-products', [LikeController::class, 'boys'])->name('boys.products');
+    Route::post('/products/{product}/like', [LikeController::class, 'like'])->name('products.like');
 
     //Messages
     Route::get('/chat', [ChatsController::class, 'index'])->name('chat.index'); // user chatting with admin

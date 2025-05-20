@@ -14,22 +14,30 @@ import {
 } from "@mantine/core";
 import { useState, useMemo } from "react";
 import { Link } from "@inertiajs/react";
-import { IconHeart } from "@tabler/icons-react";
+import { router } from "@inertiajs/react";
+import { IconHeartFilled, IconHeart } from "@tabler/icons-react";  // You used IconHeartFilled but didn't import it
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products);
 
     // Filter products by gender
     const girlsProducts = useMemo(() => {
-        return products.filter(product => product.gender?.name === "Girls").slice(0, 3);
+        return products
+            .filter((product) => product.gender?.name === "Girls")
+            .slice(0, 3);
     }, [products]);
 
     const boysProducts = useMemo(() => {
-        return products.filter(product => product.gender?.name === "Boys").slice(0, 3);
+        return products
+            .filter((product) => product.gender?.name === "Boys")
+            .slice(0, 3);
     }, [products]);
 
     return (
-        <Container size="xl" style={{ backgroundColor: "#f9f6f1", padding: "20px" }}>
+        <Container
+            size="xl"
+            style={{ backgroundColor: "#f9f6f1", padding: "20px" }}
+        >
             {/* Girls Section */}
             <Box mb={40}>
                 <Group position="apart" mb={10}>
@@ -68,7 +76,12 @@ function Home({ products = [] }) {
 
             {/* Boys Section */}
             <Box>
-                <Text size="xl" weight={700} mb={10} style={{ fontSize: "28px" }}>
+                <Text
+                    size="xl"
+                    weight={700}
+                    mb={10}
+                    style={{ fontSize: "28px" }}
+                >
                     Boy's Clothing
                 </Text>
 
@@ -98,11 +111,34 @@ function Home({ products = [] }) {
 }
 
 function ProductCard({ product }) {
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isLiked, setIsLiked] = useState(product.liked || false);
+    const [likeCount, setLikeCount] = useState(product.likes_count || 0);
 
     // Calculate a fake "original" price for display purposes (20% higher)
     const originalPrice = Math.round(product.price * 1.2);
-    const discountPercentage = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+    const discountPercentage = Math.round(
+        ((originalPrice - product.price) / originalPrice) * 100
+    );
+
+    const handleLikeToggle = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        router.post(
+            `/products/${product.id}/like`,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsLiked((prev) => !prev);
+                    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+                },
+                onError: (error) => {
+                    console.error("Like toggle failed:", error);
+                },
+            }
+        );
+    };
 
     return (
         <MantineProvider>
@@ -130,21 +166,15 @@ function ProductCard({ product }) {
                             height: "30px",
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center"
+                            justifyContent: "center",
                         }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsFavorite(!isFavorite);
-                        }}
+                        onClick={handleLikeToggle}
                     >
-                        <IconHeart
-                            size={18}
-                            style={{
-                                color: isFavorite ? "#ff6b6b" : "#adb5bd",
-                                fill: isFavorite ? "#ff6b6b" : "transparent"
-                            }}
-                        />
+                        {isLiked ? (
+                            <IconHeartFilled size={18} color="#ff6b6b" />
+                        ) : (
+                            <IconHeart size={18} color="#adb5bd" />
+                        )}
                     </div>
 
                     <Card.Section>
@@ -175,11 +205,22 @@ function ProductCard({ product }) {
                             -{discountPercentage}%
                         </Text>
                     </Group>
+
+                    <Group mt={5} spacing="xs" align="center">
+                        {product.categories &&
+                            product.categories.length > 0 && (
+                                <Badge variant="light" color="blue" size="sm">
+                                    {product.categories[0].name}
+                                </Badge>
+                            )}
+                        <Text size="xs" color="dimmed" ml="auto">
+                            {likeCount} {likeCount === 1 ? "like" : "likes"}
+                        </Text>
+                    </Group>
                 </Card>
             </Link>
         </MantineProvider>
     );
 }
-
 
 export default Home;
