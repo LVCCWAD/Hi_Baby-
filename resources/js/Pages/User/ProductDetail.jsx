@@ -4,7 +4,6 @@ import { router } from "@inertiajs/react";
 
 import ProductImageSection from "../../Components/ProductImageSection";
 import ProductInfoSection from "../../Components/ProductInfoSection";
-import AuthHeader from "../../Components/AuthHeader";
 import Reviews from "../../Components/Reviews";
 
 function ProductDetail({ product, auth }) {
@@ -46,7 +45,6 @@ function ProductDetail({ product, auth }) {
 
   return (
     <MantineProvider>
-      <AuthHeader />
 
       <Container size="lg" mt="xl">
         <Grid>

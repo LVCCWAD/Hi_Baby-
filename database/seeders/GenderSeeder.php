@@ -15,8 +15,8 @@ class GenderSeeder extends Seeder
     {
 
         $genders = [
-            ['name' => 'boys'],
-            ['name' => 'girls'],
+            ['name' => 'Boys'],
+            ['name' => 'Girls'],
         ];
         foreach ($genders as $gender) {
             Gender::create($gender);
