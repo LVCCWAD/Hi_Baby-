@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('role')->default('user'); // Default value is 'user'
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('picture')->nullable();
+            $table->boolean('status')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

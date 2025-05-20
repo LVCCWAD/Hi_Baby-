@@ -206,7 +206,7 @@ function NavHeader() {
                                             </Menu.Item>
                                             <Menu.Item
                                                 component={Link}
-                                                href="/settings"
+                                                href="/chat"
                                                 leftSection={
                                                     <IconSettings
                                                         size={16}
@@ -214,7 +214,7 @@ function NavHeader() {
                                                     />
                                                 }
                                             >
-                                                Account Settings
+                                                Chats
                                             </Menu.Item>
 
                                             <Divider my="xs" />

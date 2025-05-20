@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Controller;
+use App\Models\Chat;
+
 
 class AdminController extends Controller
 {
@@ -20,15 +23,13 @@ class AdminController extends Controller
         return  Inertia::render('Admin/Products');
     }
 
-    public function messages()
-    {
-        return  Inertia::render('Admin/Messages');
-    }
 
     public function orders()
     {
         return  Inertia::render('Admin/Orders');
     }
+
+
 
 
 }

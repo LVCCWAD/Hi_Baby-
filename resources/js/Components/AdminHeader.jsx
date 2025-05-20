@@ -76,7 +76,7 @@ function AdminHeader() {
                         <Link href="/show-products" style={linkStyle}>
                             Products
                         </Link>
-                        <Link href="/aboutus" style={linkStyle}>
+                        <Link href="/chat" style={linkStyle}>
                            Messages
                         </Link>
                         <Link href="/order/list" style={linkStyle}>
