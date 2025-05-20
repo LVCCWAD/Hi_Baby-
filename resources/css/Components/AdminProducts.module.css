@@ -1,0 +1,19 @@
+
+@font-face {
+    font-family: 'WendyOne';
+    src: url('/fonts/WendyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.title {
+    font-family: 'WendyOne', sans-serif;
+    color:  #BAB86C;
+}
+
+.description {
+    width: 20%;
+}
+p{
+    font-family: 'WendyOne', sans-serif;
+}

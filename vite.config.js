@@ -20,9 +20,5 @@ export default defineConfig({
 
         },
     },
-    build: {
-        rollupOptions: {
-            input: 'resources/css/app.css'
-        }
-    }
+    
 });

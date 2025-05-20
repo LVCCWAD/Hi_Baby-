@@ -1,8 +1,9 @@
-import { Table, MantineProvider, Grid, Flex, Button, Image } from "@mantine/core";
+import { Table, MantineProvider, Grid, Flex, Button, Image, Box } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { router } from "@inertiajs/react";
 
-import { IconCheck } from "@tabler/icons-react"; // Optional icon
+import classes from "../../../css/Components/AdminProducts.module.css";
+import { IconCheck, IconPencil, IconTrash } from "@tabler/icons-react"; // Optional icon
 
 function Products({ products = [] }) {
     const handleDelete = (id) => {
@@ -38,7 +39,7 @@ function Products({ products = [] }) {
                 />
             </Table.Td>
             <Table.Td>{product.name}</Table.Td>
-            <Table.Td>{product.description}</Table.Td>
+            <Table.Td className={classes.description}>{product.description}</Table.Td>
             <Table.Td>{product.gender?.name || "N/A"}</Table.Td>
             <Table.Td>
                 {product.categories && product.categories.length > 0
@@ -111,19 +112,17 @@ function Products({ products = [] }) {
             </Table.Td>
 
             <Table.Td>
-                <Button
-                    component="a"
+                <a
                     href={`/products/${product.id}/edit`}
-                    variant="outline"
                     color="teal"
                 >
-                    Edit
-                </Button>
+                    <IconPencil size={16} stroke={1.5} color="black"/>
+                </a>
             </Table.Td>
             <Table.Td>
-                <Button onClick={() => handleDelete(product.id)} color="red">
-                    Delete
-                </Button>
+                <a onClick={() => handleDelete(product.id)} color="red">
+                    <IconTrash size={16} stroke={1.5} color="black"/>
+                </a>
             </Table.Td>
         </Table.Tr>
     ));
@@ -146,10 +145,10 @@ function Products({ products = [] }) {
     return (
         <MantineProvider>
             <Flex justify="space-between" align="center" mb="md">
-                <h1>Products</h1>
+                <Box className={classes.title}><h1>Products</h1></Box>
 
-                <Button component="a" href="/add-product" variant="outline">
-                    Add Product
+                <Button component="a" href="/add-product" variant="outline" bg="#BAB86C" radius={15} color="#FBF2E9">
+                    <p>Add Product</p>
                 </Button>
             </Flex>
             <Table captionSide="bottom">
