@@ -14,13 +14,12 @@
       margin-right: 0;
     }
   }
+  
 
   .title {
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-    font-family:
-      Greycliff CF,
-      var(--mantine-font-family);
-    font-size: 44px;
+    color: #BAB86C;
+    font-family: 'FredokaOne';
+    font-size: 96px;
     line-height: 1.2;
     font-weight: 900;
 

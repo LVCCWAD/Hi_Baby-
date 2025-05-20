@@ -5,7 +5,7 @@ import ProductCarousel from "../Components/LandingPage/ProductCarousel";
 
 function LandingPage() {
     return (
-        <MantineProvider>
+        <MantineProvider bg="#FBF2E9">
             <HeroHeader />
             <FeatureSection />
             <ProductCarousel />

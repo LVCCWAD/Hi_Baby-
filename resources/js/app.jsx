@@ -7,6 +7,7 @@ import { MantineProvider, Box } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import UserLayout from "./Layouts/UserLayout";
 import AdminLayout from "./Layouts/AdminLayout";
+import.meta.glob(['../fonts/**']);
 
 createInertiaApp({
     resolve: (name) => {
@@ -17,7 +18,7 @@ createInertiaApp({
             page.default.layout ||
             ((pageContent) => {
                 if (name.startsWith("Admin/")) {
-                    return <AdminLayout>{pageContent}</AdminLayout>;
+                    return <AdminLayout >{pageContent}</AdminLayout>;
                 } else {
                     return <UserLayout>{pageContent}</UserLayout>;
                 }
@@ -25,12 +26,17 @@ createInertiaApp({
 
         return page;
     },
-
+    
     setup({ el, App, props }) {
         createRoot(el).render(
+           
             <MantineProvider>
+                <Box bg="#FBF2E9">
                 <App {...props} />
+                </Box>
             </MantineProvider>
+            
+            
         );
     },
 });
