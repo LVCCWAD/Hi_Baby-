@@ -145,7 +145,9 @@ function Products({ products = [] }) {
     return (
         <MantineProvider>
             <Flex justify="space-between" align="center" mb="md">
-                <Box className={classes.title}><h1>Products</h1></Box>
+                <Box className={classes.title}>
+                    <p style={{fontFamily: 'WendyOne', fontSize:'50px' }} >Products</p>
+                </Box>
 
                 <Button component="a" href="/add-product" variant="outline" bg="#BAB86C" radius={15} color="#FBF2E9">
                     <p>Add Product</p>

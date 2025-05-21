@@ -9,10 +9,10 @@ function HeroHeader() {
       <div className={classes.inner}>
         <div className={classes.content}>
           <Title className={classes.title}>
-            <p style={{fontFamily: 'FredokaOne'}}>
+            <p style={{fontFamily: 'FredokaOne'}} >
             Little Trendsetters Where Classic meets Cute
             </p>
-           
+
           </Title>
 
           <Text>

@@ -7,7 +7,8 @@ import { MantineProvider, Box } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import UserLayout from "./Layouts/UserLayout";
 import AdminLayout from "./Layouts/AdminLayout";
-import.meta.glob(['../fonts/**']);
+import '../css/app.css'
+import '../css/fonts.css'
 
 createInertiaApp({
     resolve: (name) => {

@@ -42,7 +42,9 @@ function Dashboard() {
     return (
         <MantineProvider>
             <Container size="xl" py="xl" style={{ backgroundColor: "#faf5ef", minHeight: "100vh" }}>
-                <Title order={1} mb="xl" style={{ color: "#b5b063" }}>Analytics</Title>
+                <Title order={1} mb="xl" style={{ color: "#b5b063" }}>
+                    <p style={{fontFamily: 'WendyOne', fontSize:'50px' }} >Analytics</p>
+                </Title>
 
                 {/* Stat Cards */}
                 <Grid mb="xl">

@@ -98,14 +98,15 @@ function OrderSummary({
                 </Group>
 
                 <Button
-                    color="blue"
+                    style={{color: 'black'}}
                     size="lg"
                     fullWidth
                     onClick={handleCheckout}
                     loading={loading}
                     disabled={selectedItems.length === 0}
+                    bg="#BAB86C"
                 >
-                    Proceed to Checkout
+                   Checkout
                 </Button>
             </Stack>
         </Paper>

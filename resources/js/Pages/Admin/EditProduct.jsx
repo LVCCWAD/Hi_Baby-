@@ -95,10 +95,16 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
     }));
 
     return (
-        <Paper p="md" shadow="sm" pos="relative">
+        <Paper p="md" shadow="sm" pos="relative" bg="#FBF2E9">
+            <p style={{fontFamily: 'WendyOne', fontSize:'50px', color: '#BAB86C' }} >Product</p>
             <LoadingOverlay visible={processing} blur={2} />
-            <form onSubmit={handleSubmit}>
-                <Stack spacing="md">
+            <form onSubmit={handleSubmit} style={{marginLeft:'10%', marginRight:'10%', marginBottom:'10%', marginTop:'3%'}}>
+            <Stack spacing="md" style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                    }}>
+                    <div style={{width:'320px'}}>
                     <TextInput
                         required
                         label="Name"
@@ -109,18 +115,7 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
                         description="Product name must be unique"
                     />
 
-                    <Textarea
-                        required
-                        label="Description"
-                        value={data.description}
-                        onChange={(e) => setData("description", e.target.value)}
-                        error={errors.description}
-                        minRows={3}
-                        description="Minimum 10 characters"
-                    />
-
-                    <Group grow>
-                        <NumberInput
+                    <NumberInput
                             required
                             label="Price"
                             value={data.price}
@@ -130,29 +125,6 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
                             min={0}
                             description="Must be greater than 0"
                         />
-
-                        <NumberInput
-                            required
-                            label="Quantity"
-                            value={data.quantity}
-                            onChange={(value) => setData("quantity", value)}
-                            error={errors.quantity}
-                            min={0}
-                            description="Must be greater than 0"
-                        />
-                    </Group>
-
-                    <Select
-                        required
-                        label="Gender"
-                        data={genderOptions}
-                        value={data.gender_id}
-                        onChange={(value) => setData("gender_id", value)}
-                        error={errors.gender_id}
-                        placeholder="Select gender"
-                        description="Required field"
-                    />
-
                     <MultiSelect
                         required
                         label="Categories"
@@ -163,6 +135,55 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
                         placeholder="Select categories"
                         description="Select at least one category"
                     />
+                    <Textarea
+                        required
+                        label="Description"
+                        value={data.description}
+                        onChange={(e) => setData("description", e.target.value)}
+                        error={errors.description}
+                        minRows={3}
+                        description="Minimum 10 characters"
+                    />
+                    </div>
+                
+                    <div
+                    style={{width:'320px'}}
+                    >
+                    <NumberInput
+                            required
+                            label="Available quantity"
+                            value={data.quantity}
+                            onChange={(value) => setData("quantity", value)}
+                            error={errors.quantity}
+                            min={0}
+                            description="Must be greater than 0"
+                        />
+                    
+                    <img src={`http://localhost:8000/storage/${product.image}`}  />
+                    <FileInput
+                        required
+                        label="Product Image"
+                        onChange={(file) => setData("image", file)}
+                        error={errors.image}
+                        placeholder="Upload image"
+                        accept="image/*"
+                        description="Accepted formats: .jpg, .png, .jpeg"
+                    />
+
+                    
+
+                    <MultiSelect
+                        required
+                        label="Color"
+                        data={colorOptions}
+                        value={data.color_ids.map(String)}
+                        onChange={(value) => setData("color_ids", value.map(Number))}
+                        error={errors.color_ids}
+                        placeholder="Select colors"
+                        description="Select at least one color"
+                    />
+
+                    
 
                     <MultiSelect
                         required
@@ -175,34 +196,31 @@ function EditProduct({ product, categories, colors, sizes, genders }) {
                         description="Select at least one size"
                     />
 
-                    <MultiSelect
-                        required
-                        label="Colors"
-                        data={colorOptions}
-                        value={data.color_ids.map(String)}
-                        onChange={(value) => setData("color_ids", value.map(Number))}
-                        error={errors.color_ids}
-                        placeholder="Select colors"
-                        description="Select at least one color"
-                    />
-                    <img src={`http://localhost:8000/storage/${product.image}`}  />
-                    <FileInput
-                        label="Product Image"
-                        onChange={(file) => setData("image", file)}
-                        error={errors.image}
-                        placeholder="Upload image"
-                        accept="image/*"
-                        description="Accepted formats: .jpg, .png, .jpeg"
-                    />
+                    
 
-                    <Button
-                        type="submit"
-                        color="blue"
-                        loading={processing}
-                    >
-                        Update Product
-                    </Button>
+                    <Select
+                        required
+                        label="Gender"
+                        data={genderOptions}
+                        value={data.gender_id}
+                        onChange={(value) => setData("gender_id", value)}
+                        error={errors.gender_id}
+                        placeholder="Select gender"
+                        description="Required field"
+                    />
+                    </div>
+
+                    
                 </Stack>
+                <Button
+                    type="submit"
+                    color="blue"
+                    loading={processing}
+                    style={{width:'320px'}}
+                    disabled={processing || Object.keys(errors).length > 0}
+                >
+                    {processing ? 'Adding Product...' : 'Add Product'}
+                </Button>
             </form>
         </Paper>
     );

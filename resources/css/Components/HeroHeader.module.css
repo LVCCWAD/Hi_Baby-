@@ -15,18 +15,12 @@
     }
   }
   
-  @font-face {
-    font-family: 'FredokaOne';
-    src: url('/fonts/FredokaOne-Regular.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
 
   .title {
     color: #BAB86C;
     width: 110%;
     line-height: 120%;
-
+    font-family: 'FredokaOne';
     @media (max-width: $mantine-breakpoint-xs) {
       font-size: 28px;
     }
