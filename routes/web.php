@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroyReview'])->name('reviews.destroy');
 
     //Like Products
-    Route::get('/home', [LikeController::class, 'likedProductsInHome'])->name('home');
+    // Route::get('/home', [LikeController::class, 'likedProductsInHome'])->name('home.like');
     Route::get('/girls-products', [LikeController::class, 'likedProductsInGirls'])->name('girls.products');
     Route::get('/boys-products', [LikeController::class, 'likedProductsInBoys'])->name('boys.products');
     Route::post('/products/{product}/like', [LikeController::class, 'likeChecker'])->name('products.like');

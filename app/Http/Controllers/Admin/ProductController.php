@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Like;
 use App\Models\Size;
 use Inertia\Inertia;
 use App\Models\Color;
@@ -17,10 +18,27 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
 
+    private function addLikedStatus($products, $userId)
+    {
+        return $products->map(function ($product) use ($userId) {
+            $product->liked = $product->likes()->where('user_id', $userId)->exists();
+            return $product;
+        });
+    }
+
+
     public function showProductsToUserHome()
     {
+        $userId = Auth::id();
+
+        $products = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
+            ->withCount('likes')
+            ->get();
+
+        $products = $this->addLikedStatus($products, $userId);
+
         return Inertia::render('User/Home', [
-            'products' => Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])->get(),
+            'products' => $products,
         ]);
     }
 

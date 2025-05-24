@@ -20,23 +20,7 @@ class LikeController extends Controller
     }
 
 
-    public function likedProductsInHome()
-    {
-        $userId = Auth::id();
 
-        // Get all products with relationships and likes count
-        $products = Product::with(['categories', 'sizes', 'gender'])
-            ->withCount('likes')
-            ->get();
-
-        // Add liked flag
-        $products = $this->addLikedStatus($products, $userId);
-
-        // Pass to Inertia view
-        return Inertia::render('User/Home', [
-            'products' => $products,
-        ]);
-    }
 
 
     public function likedProductsInGirls()
