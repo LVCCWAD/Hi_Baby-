@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class ChatsController extends Controller
 {
 
-    public function index(Request $request)
+    public function showChatstoAdminAndUser(Request $request)
     {
         $user = Auth::user();
 

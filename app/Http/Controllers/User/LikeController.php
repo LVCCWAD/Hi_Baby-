@@ -20,7 +20,7 @@ class LikeController extends Controller
     }
 
 
-    public function home()
+    public function likedProductsInHome()
     {
         $userId = Auth::id();
 
@@ -39,7 +39,7 @@ class LikeController extends Controller
     }
 
 
-    public function girls()
+    public function likedProductsInGirls()
     {
         $userId =  Auth::id();
 
@@ -61,7 +61,7 @@ class LikeController extends Controller
     }
 
 
-    public function boys()
+    public function likedProductsInBoys()
     {
         $userId =  Auth::id();
 
@@ -82,7 +82,7 @@ class LikeController extends Controller
         ]);
     }
 
-    public function like(Product $product)
+    public function likeChecker(Product $product)
     {
         $user = Auth::user();
 

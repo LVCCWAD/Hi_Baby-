@@ -4,11 +4,13 @@ import CartItem from "../../Components/CartItem";
 import OrderSummary from "../../Components/OrderSummary";
 import { router, usePage } from "@inertiajs/react";
 
-function Cart({ cart = [], selectedAddress: initialAddress }) {
+function Cart({ cart = [] }) {
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [cartItems, setCartItems] = useState(cart);
+    const { address } = usePage().props;
+    console.log("Loaded address:", address);
 
     const handleDelete = (id) => {
         if (
@@ -59,42 +61,41 @@ function Cart({ cart = [], selectedAddress: initialAddress }) {
         0
     );
 
-    const { address } = usePage().props;
-
     const handleCheckout = () => {
-    if (!address) {
-      console.log("Please select a shipping address.");
-      return;
-    }
-
-    // Compose string from address object fields
-    const shippingAddressString = `${address.street}, ${address.city}, ${address.state ?? ''} ${address.zip ?? ''}`.trim();
-
-    if (shippingAddressString.length < 10) {
-      console.log("Shipping address is too short.");
-      return;
-    }
-
-    setLoading(true);
-
-    router.post(
-        "/order/create",
-        {
-            address: shippingAddressString,
-        },
-        {
-            onSuccess: () => {
-                console.log("Order placed successfully!");
-                setLoading(false);
-            },
-            onError: (errors) => {
-                console.error("Failed to place order:", errors);
-                setLoading(false);
-            },
+        if (!address) {
+            console.log("Please select a shipping address.");
+            return;
         }
-    );
-};
 
+        // Compose string from address object fields
+        const shippingAddressString = `${address.street}, ${address.city}, ${
+            address.state ?? ""
+        } ${address.zip ?? ""}`.trim();
+
+        if (shippingAddressString.length < 10) {
+            console.log("Shipping address is too short.");
+            return;
+        }
+
+        setLoading(true);
+
+        router.post(
+            "/order/create",
+            {
+                address: shippingAddressString,
+            },
+            {
+                onSuccess: () => {
+                    console.log("Order placed successfully!");
+                    setLoading(false);
+                },
+                onError: (errors) => {
+                    console.error("Failed to place order:", errors);
+                    setLoading(false);
+                },
+            }
+        );
+    };
 
     return (
         <Container size="xl" mt="xl">

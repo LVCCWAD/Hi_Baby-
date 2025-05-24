@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
 
-    public function index()
+    public function showProductsToUserHome()
     {
         return Inertia::render('User/Home', [
             'products' => Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])->get(),
@@ -25,17 +25,17 @@ class ProductController extends Controller
     }
 
 
-    public function show(Product $products)
+    public function showProductsToAdmin(Product $products)
     {
         $products = Product::with(['reviews', 'categories', 'colors', 'sizes', 'gender'])->latest()->get();
-        
+
         return Inertia::render('Admin/Products', [
             'products' => $products
         ]);
     }
 
 
-    public function create()
+    public function createProduct()
     {
         return Inertia::render('Admin/AddProduct', [
             'categories' => Category::all(),
@@ -46,7 +46,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function storeCreatedProduct(Request $request)
     {
 
         // dd($request->all());
@@ -93,7 +93,8 @@ class ProductController extends Controller
         }
     }
 
-    public function edit(Product $product)
+
+    public function editProduct(Product $product)
     {
         $product->load('categories');
         $product->load('colors');
@@ -109,7 +110,7 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, Product $product)
+    public function updateProduct(Request $request, Product $product)
     {
         $validated = request()->validate([
             'name' => 'required|string|max:255',
@@ -165,7 +166,7 @@ class ProductController extends Controller
     }
 
 
-    public function delete(Product $product)
+    public function deleteProduct(Product $product)
     {
         $product->delete();
 

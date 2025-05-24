@@ -31,7 +31,7 @@ class UserController extends Controller
     }
 
 
-    public function profile()
+    public function profileView()
     {
 
         return Inertia::render('User/ProfileView', ['user' => Auth::user(),]);
@@ -88,21 +88,22 @@ class UserController extends Controller
     }
 
 
-    public function chats()
-    {
-        $userId = Auth::id();
 
-        $messages = Chat::with(['sender', 'receiver'])
-            ->where('sender_id', $userId)
-            ->orWhere('receiver_id', $userId)
-            ->orderBy('created_at', 'asc')
-            ->get();
+    // public function chats()
+    // {
+    //     $userId = Auth::id();
 
-        return Inertia::render('User/UserChat', [
-            'messages' => $messages,
-            'authUserId' => $userId,
-        ]);
-    }
+    //     $messages = Chat::with(['sender', 'receiver'])
+    //         ->where('sender_id', $userId)
+    //         ->orWhere('receiver_id', $userId)
+    //         ->orderBy('created_at', 'asc')
+    //         ->get();
+
+    //     return Inertia::render('User/UserChat', [
+    //         'messages' => $messages,
+    //         'authUserId' => $userId,
+    //     ]);
+    // }
 
     // public function logout()
     // {

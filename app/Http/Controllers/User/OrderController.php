@@ -74,9 +74,9 @@ class OrderController extends Controller
         }
     }
 
-    // App\Http\Controllers\User\OrderController.php
 
-    public function orders()
+
+    public function showUserOrders()
     {
         $orders = Auth::user()->orders()->with(['orderItems.product', 'orderItems.color', 'orderItems.size'])->get();
 
@@ -86,32 +86,32 @@ class OrderController extends Controller
             'role' => "user",
         ]);
 
-        // For admins
-        return Inertia::render('Admin/Orders', [
-            'orders' => $orders,
-            'role' => "admin",
-        ]);
+        // // For admins
+        // return Inertia::render('Admin/Orders', [
+        //     'orders' => $orders,
+        //     'role' => "admin",
+        // ]);
     }
 
 
-    // public function show()
-    // {
-    //     if (Auth::user()->role === 'admin') {
-    //         // Admin sees all orders
-    //         $orders = Order::with(['user', 'orderItems.product', 'orderItems.color', 'orderItems.size'])
-    //             ->latest()
-    //             ->get();
-    //     } else {
-    //         // User sees only their own orders
-    //         $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
-    //             ->where('user_id', Auth::id())
-    //             ->latest()
-    //             ->get();
-    //     }
+    public function showUserOrdersToAdmin()
+    {
+        if (Auth::user()->role === 'admin') {
+            // Admin sees all orders
+            $orders = Order::with(['user', 'orderItems.product', 'orderItems.color', 'orderItems.size'])
+                ->latest()
+                ->get();
+        } else {
+            // User sees only their own orders
+            $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+        }
 
-    //     return Inertia::render('Admin/Orders', [
-    //         'orders' => $orders,
-    //         'role' => Auth::user()->role,
-    //     ]);
-    // }
+        return Inertia::render('Admin/Orders', [
+            'orders' => $orders,
+            'role' => Auth::user()->role,
+        ]);
+    }
 }
