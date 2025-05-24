@@ -94,24 +94,24 @@ class OrderController extends Controller
     }
 
 
-    public function show()
-    {
-        if (Auth::user()->role === 'admin') {
-            // Admin sees all orders
-            $orders = Order::with(['user', 'orderItems.product', 'orderItems.color', 'orderItems.size'])
-                ->latest()
-                ->get();
-        } else {
-            // User sees only their own orders
-            $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
-                ->where('user_id', Auth::id())
-                ->latest()
-                ->get();
-        }
+    // public function show()
+    // {
+    //     if (Auth::user()->role === 'admin') {
+    //         // Admin sees all orders
+    //         $orders = Order::with(['user', 'orderItems.product', 'orderItems.color', 'orderItems.size'])
+    //             ->latest()
+    //             ->get();
+    //     } else {
+    //         // User sees only their own orders
+    //         $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
+    //             ->where('user_id', Auth::id())
+    //             ->latest()
+    //             ->get();
+    //     }
 
-        return Inertia::render('Admin/Orders', [
-            'orders' => $orders,
-            'role' => Auth::user()->role,
-        ]);
-    }
+    //     return Inertia::render('Admin/Orders', [
+    //         'orders' => $orders,
+    //         'role' => Auth::user()->role,
+    //     ]);
+    // }
 }

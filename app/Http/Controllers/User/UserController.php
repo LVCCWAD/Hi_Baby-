@@ -25,7 +25,6 @@ class UserController extends Controller
     }
 
 
-
     public function home()
     {
         return  Inertia::render('User/Home');

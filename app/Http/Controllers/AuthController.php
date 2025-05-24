@@ -55,6 +55,7 @@ class AuthController extends Controller
     {
         return  Inertia::render('Register');
     }
+
     public function registerPost(Request $request)
     {
         try {
