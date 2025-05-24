@@ -18,11 +18,9 @@
 
   .title {
     color: #BAB86C;
+    width: 110%;
+    line-height: 120%;
     font-family: 'FredokaOne';
-    font-size: 96px;
-    line-height: 1.2;
-    font-weight: 900;
-
     @media (max-width: $mantine-breakpoint-xs) {
       font-size: 28px;
     }

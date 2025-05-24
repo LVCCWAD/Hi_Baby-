@@ -50,7 +50,7 @@ function AdminHeader() {
 
     return (
         <Box
-            bg="white"
+            bg="#FBF2E9"
             py="md"
             style={{
                 borderBottom: "1px solid #f0f0f0",

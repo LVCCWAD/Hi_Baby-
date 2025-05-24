@@ -28,32 +28,46 @@ function FeatureSection() {
         <Container size="lg" py={50} style={{ borderRadius: 8 }}>
             <Grid gutter="lg">
                 {features.map((feature, index) => (
-                    <Grid.Col key={index} span={{ base: 12, md: 4 }}>
+                    <Grid.Col key={index} span={{ base: 6, md: 4 }}>
                         <Card
                             shadow="sm"
-                            p="xl"
+                            p="l"
                             style={{
                                 backgroundColor: "transparent",
                                 border: "1px solid #fff",
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+
                             }}
                         >
+                            <div
+                             style={{
+                                alignItems: 'center',
+                                justifyContent: 'space-around',
+                            }}
+                             >
                             <ThemeIcon
-                                size="xl"
+                                size="sm"
                                 variant="outline"
                                 color="#BAB86C"
                                 sx={{
-                                    marginBottom: 16,
                                     backgroundColor: "transparent",
                                 }}
                             >
                                 {feature.icon}
                             </ThemeIcon>
-                            <Text size="xl" weight={600} color="#BAB86C">
+                            </div>
+                            <div>
+                            <Text size="1x" weight='20' color="#BAB86C">
                                 {feature.title}
                             </Text>
-                            <Text size="sm" mt="xs" color="#BAB86C">
+                            <Text size="sm" color="#BAB86C">
                                 {feature.description}
                             </Text>
+                            </div>
+                            
                         </Card>
                     </Grid.Col>
                 ))}

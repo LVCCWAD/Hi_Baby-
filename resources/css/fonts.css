@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'FredokaOne';
+    src: url('../fonts/FredokaOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'WendyOne';
+    src: url('../fonts/WendyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
