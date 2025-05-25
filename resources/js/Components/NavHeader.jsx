@@ -26,7 +26,7 @@ import { Inertia } from "@inertiajs/inertia";
 import Logo from "../Assets/Logo.png";
 import CollectionDropdown from "./CollectionDropdown";
 import NotificationModal from "./NotificationModal";
-
+import styled from "styled-components";
 import { useState } from "react";
 
 function NavHeader() {
@@ -71,9 +71,9 @@ function NavHeader() {
                     {/* Center: Navigation */}
                     <Group gap={rem(40)}>
                         <CollectionDropdown />
-                        <Link href="/aboutus" style={linkStyle}>
+                        <LinkStyle href="/aboutus"s>
                             About Us
-                        </Link>
+                        </LinkStyle>
                     </Group>
 
                     {/* Right: Search & Icons */}
@@ -271,16 +271,22 @@ function NavHeader() {
         </Box>
     );
 }
+const LinkStyle = styled(Link)`
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding: 10px;
 
-const linkStyle = {
-    fontSize: "15px",
-    fontWeight: 500,
-    color: "#333",
-    textDecoration: "none",
-    transition: "color 0.2s ease",
-    "&:hover": {
-        color: "#abc32f",
-    },
-};
+
+  &:hover {
+    color: #EDE7E7;
+    background-color: #9F8E8E;
+    border-radius: 20px;
+    
+  }
+`;
+
 
 export default NavHeader;

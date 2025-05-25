@@ -115,7 +115,7 @@ function Boys({ products = [] }) {
     return (
         <Container size="xl" style={{ backgroundColor: "#f9f6f1", padding: "20px" }}>
             <Group position="apart" mb={20}>
-                <Text size="xl" weight={700} style={{ fontSize: "28px" }}>
+                <Text size="xl" weight={700} style={{ fontSize: "28px", fontFamily: "WendyOne"  }}>
                     Boy's Clothing
                 </Text>
                 <Select

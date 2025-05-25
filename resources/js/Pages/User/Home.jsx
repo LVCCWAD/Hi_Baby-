@@ -41,7 +41,7 @@ function Home({ products = [] }) {
             {/* Girls Section */}
             <Box mb={40}>
                 <Group position="apart" mb={10}>
-                    <Text size="xl" weight={700} style={{ fontSize: "28px" }}>
+                    <Text size="xl" weight={700} style={{ fontSize: "28px", fontFamily: "WendyOne"  }}>
                         Girl's Clothing
                     </Text>
                     <Select
@@ -80,7 +80,7 @@ function Home({ products = [] }) {
                     size="xl"
                     weight={700}
                     mb={10}
-                    style={{ fontSize: "28px" }}
+                    style={{ fontSize: "28px", fontFamily: "WendyOne" }}
                 >
                     Boy's Clothing
                 </Text>

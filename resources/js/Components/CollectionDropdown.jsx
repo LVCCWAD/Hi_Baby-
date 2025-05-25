@@ -1,25 +1,26 @@
 import { Menu } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { Link } from "@inertiajs/react";
+import styled from "styled-components";
 
 function CollectionDropdown() {
-    const pillItemStyle = {
-        borderRadius: 999,
-        border: "1px solid #b4b472",
-        color: "#6a6a00",
-        padding: "8px 16px",
-        margin: "4px 0",
-        fontWeight: 500,
-        backgroundColor: "white",
-        textAlign: "center",
-        transition: "color 0.3s, border-color 0.3s, background-color 0.3s",
+    const PillItemStyle = styled(Link)`
+        border-radius: 999px;
+        border: 1px solid #b4b472;
+        color: #6a6a00;
+        padding: 8px 16px;
+        margin: 4px 0;
+        font-weight: 500;
+        background-color: white;
+        textalign: center;
+        transition: color 0.3s, border-color 0.3s, background-color 0.3s;
 
-        "&:hover": {
-            color: "#4caf50", // lime[7] approx
-            borderColor: "#4caf50",
-            backgroundColor: "#f5f5f5",
+        &:hover {
+            color: #4caf50;
+            border-color: #4caf50;
+            background-color: #f5f5f5;
         },
-    };
+    `;
 
     const dropdownStyle = {
         dropdown: {
@@ -27,21 +28,31 @@ function CollectionDropdown() {
             border: "none",
             boxShadow: "none",
         },
-    };
 
+    };
+    
+    const DivStyle = styled.div`
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    padding: 10px;
+  
+  
+    &:hover {
+      color: #EDE7E7;
+      background-color: #9F8E8E;
+      border-radius: 20px;
+      
+    }
+  `;
     return (
-        <Menu shadow="md" width={220} withArrow offset={5}>
+        <Menu shadow="md" width={220} withArrow offset={5} trigger="hover">
             <Menu.Target>
-                <div
-                    style={{
-                        cursor: "pointer",
-                        fontSize: "16px",
-                        fontWeight: 500,
-                        color: "black",
-                    }}
-                >
+                <DivStyle>
                     Collection
-                </div>
+                </DivStyle>
             </Menu.Target>
 
             {/* First level dropdown */}
@@ -51,37 +62,33 @@ function CollectionDropdown() {
                     <Menu.Target>
                         <Menu.Item
                             rightSection={<IconChevronRight size={14} />}
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Boys
                         </Menu.Item>
                     </Menu.Target>
                     <Menu.Dropdown styles={dropdownStyle}>
                         <Menu.Item
-                            component={Link}
                             href="/collection/boys/jackets"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Jackets and Sweaters
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/boys/pants"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Pants and Jeans
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/boys/pajamas"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Pajamas
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/boys/suits"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Suits
                         </Menu.Item>
@@ -93,37 +100,33 @@ function CollectionDropdown() {
                     <Menu.Target>
                         <Menu.Item
                             rightSection={<IconChevronRight size={14} />}
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Girls
                         </Menu.Item>
                     </Menu.Target>
                     <Menu.Dropdown styles={dropdownStyle}>
                         <Menu.Item
-                            component={Link}
                             href="/collection/girls/dresses"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Dresses
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/girls/skirts"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Tops and Skirts
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/girls/pajamas"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Pajamas
                         </Menu.Item>
                         <Menu.Item
-                            component={Link}
                             href="/collection/girls/gowns"
-                            style={pillItemStyle}
+                            component={PillItemStyle}
                         >
                             Gowns
                         </Menu.Item>

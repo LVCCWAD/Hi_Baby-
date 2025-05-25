@@ -73,7 +73,7 @@ function Orders({ orders = [] }) {
         style={{
           color: "#b5bd6a",
           fontWeight: 800,
-          fontFamily: "Georgia, serif",
+          fontFamily: "WendyOne" ,
           fontSize: "32px",
           marginBottom: "30px"
         }}
