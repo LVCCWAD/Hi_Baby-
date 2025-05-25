@@ -20,26 +20,10 @@ class LikeController extends Controller
     }
 
 
-    public function home()
-    {
-        $userId = Auth::id();
-
-        // Get all products with relationships and likes count
-        $products = Product::with(['categories', 'sizes', 'gender'])
-            ->withCount('likes')
-            ->get();
-
-        // Add liked flag
-        $products = $this->addLikedStatus($products, $userId);
-
-        // Pass to Inertia view
-        return Inertia::render('User/Home', [
-            'products' => $products,
-        ]);
-    }
 
 
-    public function girls()
+
+    public function likedProductsInGirls()
     {
         $userId =  Auth::id();
 
@@ -61,7 +45,7 @@ class LikeController extends Controller
     }
 
 
-    public function boys()
+    public function likedProductsInBoys()
     {
         $userId =  Auth::id();
 
@@ -82,32 +66,29 @@ class LikeController extends Controller
         ]);
     }
 
-public function like(Product $product)
-{
-    $user = Auth::user();
+    public function likeChecker(Product $product)
+    {
+        $user = Auth::user();
 
-    if (!$user) {
-        return redirect()->back()->with('error', 'You must be logged in to like products.');
+        if (!$user) {
+            return redirect()->back()->with('error', 'You must be logged in to like products.');
+        }
+
+        // Check if user already liked the product
+        $like = $product->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            // Unlike: delete the Like record
+            $like->delete();
+            $message = 'Product unliked successfully.';
+        } else {
+            // Like: create a new Like record
+            $product->likes()->create([
+                'user_id' => $user->id,
+            ]);
+            $message = 'Product liked successfully.';
+        }
+
+        return redirect()->back()->with('success', $message);
     }
-
-    // Check if user already liked the product
-    $like = $product->likes()->where('user_id', $user->id)->first();
-
-    if ($like) {
-        // Unlike: delete the Like record
-        $like->delete();
-        $message = 'Product unliked successfully.';
-    } else {
-        // Like: create a new Like record
-        $product->likes()->create([
-            'user_id' => $user->id,
-        ]);
-        $message = 'Product liked successfully.';
-    }
-
-    return redirect()->back()->with('success', $message);
-}
-
-
-
 }

@@ -10,16 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class AddressController extends Controller
 {
-    public function index()
+    public function showAddressToCart()
     {
-        $addresses = Auth::user()->address()->get();
+        $user = Auth::user()->load('address');
 
         return Inertia::render('User/Cart', [
-            'addresses' => $addresses
+            'cart' => $user->carts,
+            'address' => $user->address, // important!
         ]);
     }
 
-    public function store(Request $request)
+    public function storeAddress(Request $request)
     {
         $request->validate([
             'street' => 'required|string|max:255',
@@ -44,18 +45,8 @@ class AddressController extends Controller
     }
 
 
-    // public function show(Address $address)
-    // {
-    //     if ($address->user_id !== Auth::id()) {
-    //         abort(403);
-    //     }
 
-    //     return Inertia::render('User/Cart', [
-    //         'address' => $address
-    //     ]);
-    // }
-
-    public function update(Request $request, Address $address)
+    public function updateAddress(Request $request, Address $address)
     {
         if ($address->user_id !== Auth::id()) {
             abort(403);

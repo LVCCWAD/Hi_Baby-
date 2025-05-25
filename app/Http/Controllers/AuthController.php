@@ -51,10 +51,13 @@ class AuthController extends Controller
         return redirect()->back()->withErrors(['default' => 'Invalid credentials']);
     }
 
+
     public function register()
     {
         return  Inertia::render('Register');
     }
+
+
     public function registerPost(Request $request)
     {
         try {

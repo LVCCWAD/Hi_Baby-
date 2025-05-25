@@ -33,4 +33,9 @@ class Cart extends Model
     {
         return $this->belongsTo(Size::class);
     }
+
+    public function address()
+    {
+        return $this->hasMany(Address::class);
+    }
 }

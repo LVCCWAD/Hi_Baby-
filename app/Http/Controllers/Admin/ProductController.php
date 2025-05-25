@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Like;
 use App\Models\Size;
 use Inertia\Inertia;
 use App\Models\Color;
@@ -17,25 +18,42 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
 
-    public function index()
+    private function addLikedStatus($products, $userId)
     {
+        return $products->map(function ($product) use ($userId) {
+            $product->liked = $product->likes()->where('user_id', $userId)->exists();
+            return $product;
+        });
+    }
+
+
+    public function showProductsToUserHome()
+    {
+        $userId = Auth::id();
+
+        $products = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
+            ->withCount('likes')
+            ->get();
+
+        $products = $this->addLikedStatus($products, $userId);
+
         return Inertia::render('User/Home', [
-            'products' => Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])->get(),
+            'products' => $products,
         ]);
     }
 
 
-    public function show(Product $products)
+    public function showProductsToAdmin(Product $products)
     {
         $products = Product::with(['reviews', 'categories', 'colors', 'sizes', 'gender'])->latest()->get();
-        
+
         return Inertia::render('Admin/Products', [
             'products' => $products
         ]);
     }
 
 
-    public function create()
+    public function createProduct()
     {
         return Inertia::render('Admin/AddProduct', [
             'categories' => Category::all(),
@@ -46,7 +64,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function storeCreatedProduct(Request $request)
     {
 
         // dd($request->all());
@@ -93,7 +111,8 @@ class ProductController extends Controller
         }
     }
 
-    public function edit(Product $product)
+
+    public function editProduct(Product $product)
     {
         $product->load('categories');
         $product->load('colors');
@@ -109,7 +128,7 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, Product $product)
+    public function updateProduct(Request $request, Product $product)
     {
         $validated = request()->validate([
             'name' => 'required|string|max:255',
@@ -165,7 +184,7 @@ class ProductController extends Controller
     }
 
 
-    public function delete(Product $product)
+    public function deleteProduct(Product $product)
     {
         $product->delete();
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewsController extends Controller
 {
-    public function show(Product $product)
+    public function showReviews(Product $product)
     {
         $product->load(['reviews.user', 'categories', 'colors', 'sizes']);
 
@@ -23,7 +23,7 @@ class ReviewsController extends Controller
         ]);
     }
 
-    public function store(Request $request, Product $product)
+    public function storeReviews(Request $request, Product $product)
     {
         $request->validate([
             'review' => 'required|string',
@@ -41,7 +41,7 @@ class ReviewsController extends Controller
     }
 
 
-    public function update(Request $request, Product $product, Review $review)
+    public function updateReview(Request $request, Product $product, Review $review)
     {
         if (Auth::id() !== $review->user_id) {
             return redirect()->back()->with('error', 'Unauthorized action.');
@@ -60,7 +60,7 @@ class ReviewsController extends Controller
         return redirect()->back()->with('success', 'Review updated successfully!');
     }
 
-    public function destroy(Product $product, Review $review)
+    public function destroyReview(Product $product, Review $review)
     {
         if (Auth::id() !== $review->user_id) {
             return redirect()->back()->with('error', 'Unauthorized action.');
