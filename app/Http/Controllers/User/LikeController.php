@@ -20,9 +20,6 @@ class LikeController extends Controller
     }
 
 
-
-
-
     public function likedProductsInGirls()
     {
         $userId =  Auth::id();

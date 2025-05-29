@@ -26,6 +26,49 @@ class ProductController extends Controller
         });
     }
 
+    public function unlike(Product $product)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            // Find the Like record for this user and product
+            $like = $user->likes()->where('product_id', $product->id)->first();
+
+            if ($like) {
+                $like->delete();
+                // Redirect back with success message
+                return redirect()->back()->with('success', 'Product unliked successfully.');
+            }
+
+            // If no like found, maybe redirect back with a message
+            return redirect()->back()->with('error', 'You have not liked this product.');
+        }
+
+        // If not logged in
+        return redirect()->back()->with('error', 'You must be logged in to unlike products.');
+    }
+
+
+
+
+    public function showUserLikedProducts()
+    {
+        $userId = Auth::id();
+
+        $likedProducts = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
+            ->withCount('likes')
+            ->whereHas('likes', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
+
+        $likedProducts = $this->addLikedStatus($likedProducts, $userId);
+
+        return Inertia::render('User/ProfileView', [
+            'likedProducts' => $likedProducts,
+        ]);
+    }
+
 
     public function showProductsToUserHome()
     {

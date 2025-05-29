@@ -71,7 +71,7 @@ function NavHeader() {
                     {/* Center: Navigation */}
                     <Group gap={rem(40)}>
                         <CollectionDropdown />
-                        <LinkStyle href="/aboutus"s>
+                        <LinkStyle href="/aboutus">
                             About Us
                         </LinkStyle>
                     </Group>
@@ -284,7 +284,7 @@ const LinkStyle = styled(Link)`
     color: #EDE7E7;
     background-color: #9F8E8E;
     border-radius: 20px;
-    
+
   }
 `;
 

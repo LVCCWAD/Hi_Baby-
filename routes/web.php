@@ -93,6 +93,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/girls-products', [LikeController::class, 'likedProductsInGirls'])->name('girls.products');
     Route::get('/boys-products', [LikeController::class, 'likedProductsInBoys'])->name('boys.products');
     Route::post('/products/{product}/like', [LikeController::class, 'likeChecker'])->name('products.like');
+    Route::post('/products/{product}/unlike', [ProductController::class, 'unlike']);
+
 
     //Messages
     Route::get('/chat', [ChatsController::class, 'showChatstoAdminAndUser'])->name('chat.index'); // user chatting with admin

@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Product;
 
 class UserController extends Controller
 {
@@ -33,10 +35,20 @@ class UserController extends Controller
 
     public function profileView()
     {
+        $user = Auth::user();
 
-        return Inertia::render('User/ProfileView', ['user' => Auth::user(),]);
+        // Get liked products by this user
+        $likedProducts = Product::whereHas('likes', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->with('reviews') // optional, load relations you need
+            ->get();
+
+        return Inertia::render('User/ProfileView', [
+            'user' => $user,
+            'likedProducts' => $likedProducts,
+        ]);
     }
-
 
     public function profileEdit()
     {
@@ -69,23 +81,45 @@ class UserController extends Controller
             'last_name'     => 'required|string|max:255',
             'email'         => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone_number'  => 'nullable|string|max:20',
-            'role'          => 'required|string',
             'address_id'    => 'nullable|integer',
-            'picture'       => 'nullable|url',
+            'picture'       => 'nullable|image|max:2048',
             'password'      => 'nullable|confirmed|min:6',
+            'current_password' => [
+                'required_with:password',
+                function ($attribute, $value, $fail) use ($request, $user) {
+                    if ($request->filled('password') && !Hash::check($value, $user->password)) {
+                        $fail('Current password is incorrect.');
+                    }
+                }
+            ],
         ]);
 
-        // Remove password if not being updated
+        // Handle picture upload with file replacement
+        if ($request->hasFile('picture')) {
+            if ($user->picture && Storage::disk('public')->exists(str_replace('/storage/', '', $user->picture))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $user->picture));
+            }
+
+            $file = $request->file('picture');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('storage/profile_pictures'), $fileName);
+
+            $validated['picture'] = 'profile_pictures/' . $fileName;
+        } else {
+            $validated['picture'] = $user->picture;
+        }
+
+        // If password is blank, remove it from $validated so it's not updated
         if (empty($validated['password'])) {
             unset($validated['password']);
-        } else {
-            $validated['password'] = Hash::make($validated['password']);
         }
 
         $user->update($validated);
 
-        return redirect()->route('user.profile')->with('success', 'Profile updated successfully!');
+        return back()->with('success', 'Profile updated successfully!');
     }
+
 
 
 
