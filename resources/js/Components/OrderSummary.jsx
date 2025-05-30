@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Paper, Text, Group, Button, Divider, Stack } from "@mantine/core";
+import {
+    Paper,
+    Text,
+    Group,
+    Button,
+    Divider,
+    Stack,
+    Flex,
+} from "@mantine/core";
 import AddressSection from "./AddressSection";
 import { usePage, router } from "@inertiajs/react";
 
@@ -7,7 +15,9 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
     const { props } = usePage();
     const [addressModalOpened, setAddressModalOpened] = useState(false);
     const [editingAddress, setEditingAddress] = useState(null);
-    const [selectedAddress, setSelectedAddress] = useState(props.address ?? null);
+    const [selectedAddress, setSelectedAddress] = useState(
+        props.address ?? null
+    );
 
     const handleAddressSubmit = async (values) => {
         try {
@@ -40,52 +50,130 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
     };
 
     return (
-        <Paper shadow="sm" radius="md" p="md" style={{ position: "sticky", top: 20 }}>
-            <Text size="xl" weight={600} mb="md">
-                Order Summary
+        <Paper
+            shadow="sm"
+            radius="md"
+            p="md"
+            style={{ position: "sticky", top: 20 }}
+        >
+            <Text size="xl" fw={700} >
+                Delivery
             </Text>
 
-            <Stack spacing="md">
-                <Group position="apart">
-                    <Text>Subtotal</Text>
-                    <Text weight={500}>₱{total.toLocaleString()}</Text>
-                </Group>
+            <AddressSection
+                selectedAddress={selectedAddress}
+                setAddressModalOpened={setAddressModalOpened}
+                setEditingAddress={setEditingAddress}
+                addressModalOpened={addressModalOpened}
+                editingAddress={editingAddress}
+                onAddressSubmit={handleAddressSubmit}
+            />
 
-                <Group position="apart">
-                    <AddressSection
-                        selectedAddress={selectedAddress}
-                        setAddressModalOpened={setAddressModalOpened}
-                        setEditingAddress={setEditingAddress}
-                        addressModalOpened={addressModalOpened}
-                        editingAddress={editingAddress}
-                        onAddressSubmit={handleAddressSubmit}
-                    />
+            <Text size="md" fw={500} mt="md" mb="md">
+                Cash on Delivery
+            </Text>
 
-                    <Text>Delivery Fee</Text>
-                    <Text weight={500}>₱990</Text>
-                </Group>
+            <Divider my="sm" />
 
-                <Divider my="sm" />
-
-                <Group position="apart">
-                    <Text size="lg" weight={700}>Total</Text>
-                    <Text size="xl" weight={700} color="blue">
-                        ₱{(total + 990).toLocaleString()}
+            <Flex
+                direction={{ base: "column", sm: "row" }}
+                justify="space-between"
+                align={{ base: "flex-start", sm: "center" }}
+                mb="xs"
+                gap="xs"
+            ></Flex>
+            <Stack spacing="md" sx={{ maxHeight: 300, overflowY: "auto" }}>
+                {/* Selected Items */}
+                <Text size="xl" fw={700} >
+                    Items
+                </Text>
+                {selectedItems.length === 0 && (
+                    <Text color="dimmed" size="sm">
+                        No items selected.
                     </Text>
-                </Group>
-
-                <Button
-                    style={{ color: "black" }}
-                    size="lg"
-                    fullWidth
-                    onClick={handleCheckout}
-                    loading={loading}
-                    disabled={selectedItems.length === 0 || !selectedAddress}
-                    bg="#BAB86C"
-                >
-                    Checkout
-                </Button>
+                )}
+                {selectedItems.map((item) => (
+                    <Group
+                        key={item.id}
+                        noWrap
+                        position="apart"
+                        spacing="xs"
+                        sx={(theme) => ({
+                            padding: theme.spacing.xs,
+                            borderRadius: theme.radius.sm,
+                            backgroundColor:
+                                theme.colorScheme === "dark"
+                                    ? theme.colors.dark[7]
+                                    : theme.colors.gray[0],
+                            width: "100%",
+                        })}
+                    >
+                        <Stack
+                            spacing={0}
+                            sx={{ maxWidth: "calc(100% - 110px)" }}
+                        >
+                            <Text size="sm" weight={600} truncate>
+                                {item.name}
+                            </Text>
+                            <Text size="xs" color="dimmed">
+                                Qty: {item.quantity}
+                            </Text>
+                        </Stack>
+                        <Text
+                            weight={600}
+                            size="sm"
+                            sx={{
+                                width: 100,
+                                textAlign: "right",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
+                            ₱{(item.price * item.quantity).toLocaleString()}
+                        </Text>
+                    </Group>
+                ))}
             </Stack>
+
+            <Divider my="sm" />
+
+            {/* Subtotal */}
+            <Text size="xl" fw={700} mb="md">
+                Summary
+            </Text>
+            <Group position="apart" mb="xs">
+                <Text size="sm">Subtotal</Text>
+                <Text weight={600}>₱{total.toLocaleString()}</Text>
+            </Group>
+
+            {/* Delivery Fee */}
+            <Group position="apart" mb="sm">
+                <Text size="sm">Delivery Fee</Text>
+                <Text weight={600}>₱990</Text>
+            </Group>
+
+            <Divider my="sm" />
+
+            {/* Total */}
+            <Group position="apart" mb="md">
+                <Text size="lg" weight={700}>
+                    Total
+                </Text>
+                <Text size="xl" weight={700} color="blue">
+                    ₱{(total + 990).toLocaleString()}
+                </Text>
+            </Group>
+
+            {/* Checkout Button */}
+            <Button
+                style={{ color: "black", backgroundColor: "#BAB86C" }}
+                size="lg"
+                fullWidth
+                onClick={handleCheckout}
+                loading={loading}
+                disabled={selectedItems.length === 0 || !selectedAddress}
+            >
+                Checkout
+            </Button>
         </Paper>
     );
 }

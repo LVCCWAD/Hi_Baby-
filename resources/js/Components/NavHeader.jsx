@@ -6,7 +6,8 @@ import {
     IconLogin,
     IconUserCircle,
     IconLogout,
-    IconSettings,
+    IconFileText,
+    IconMessageCircle,
 } from "@tabler/icons-react";
 import {
     Autocomplete,
@@ -21,7 +22,7 @@ import {
     Menu,
     Divider,
 } from "@mantine/core";
-import { Link, usePage } from "@inertiajs/react"; // Or use react-router's Link if not using Inertia
+import { Link, usePage } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import Logo from "../Assets/Logo.png";
 import CollectionDropdown from "./CollectionDropdown";
@@ -71,9 +72,7 @@ function NavHeader() {
                     {/* Center: Navigation */}
                     <Group gap={rem(40)}>
                         <CollectionDropdown />
-                        <LinkStyle href="/aboutus">
-                            About Us
-                        </LinkStyle>
+                        <LinkStyle href="/aboutus">About Us</LinkStyle>
                     </Group>
 
                     {/* Right: Search & Icons */}
@@ -204,17 +203,31 @@ function NavHeader() {
                                             >
                                                 User Settings
                                             </Menu.Item>
+
                                             <Menu.Item
                                                 component={Link}
                                                 href="/chat"
                                                 leftSection={
-                                                    <IconSettings
+                                                    <IconMessageCircle
                                                         size={16}
                                                         stroke={1.5}
                                                     />
                                                 }
                                             >
                                                 Chats
+                                            </Menu.Item>
+
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/orders"
+                                                leftSection={
+                                                    <IconFileText
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
+                                                Orders
                                             </Menu.Item>
 
                                             <Divider my="xs" />
@@ -272,21 +285,18 @@ function NavHeader() {
     );
 }
 const LinkStyle = styled(Link)`
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-  text-decoration: none;
-  transition: color 0.2s ease;
-  padding: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    padding: 10px;
 
-
-  &:hover {
-    color: #EDE7E7;
-    background-color: #9F8E8E;
-    border-radius: 20px;
-
-  }
+    &:hover {
+        color: #ede7e7;
+        background-color: #9f8e8e;
+        border-radius: 20px;
+    }
 `;
-
 
 export default NavHeader;

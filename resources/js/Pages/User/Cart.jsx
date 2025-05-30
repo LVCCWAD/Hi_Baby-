@@ -133,7 +133,9 @@ function Cart({ cart = [] }) {
                         total={total}
                         handleCheckout={handleCheckout}
                         loading={loading}
-                        selectedItems={selectedItems}
+                        selectedItems={cartItems.filter((item) =>
+                            selectedItems.includes(item.id)
+                        )}
                     />
                 </Grid.Col>
             </Grid>

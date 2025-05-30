@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePage, router, useForm } from "@inertiajs/react";
 import { notifications } from "@mantine/notifications";
 import {
@@ -32,6 +32,21 @@ function ProfileView() {
     const [likedProducts, setLikedProducts] = useState(
         initialLikedProducts || []
     );
+
+    useEffect(() => {
+        switch (activeTab) {
+            case "likes":
+                document.title = "My Likes - Hi Baby!";
+                break;
+            case "purchases":
+                document.title = "My Purchases - Hi Baby!";
+                break;
+            case "profile":
+            default:
+                document.title = "My Profile - Hi Baby!";
+                break;
+        }
+    }, [activeTab]);
 
     // Form for profile editing
     const { data, setData, post, processing, errors } = useForm({
