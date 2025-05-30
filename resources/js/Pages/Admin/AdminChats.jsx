@@ -115,11 +115,12 @@ function AdminChat() {
                         messages.map(msg => (
                             <Group
                                 key={msg.id}
-                                position={msg.sender_id === authUserId ? "right" : "left"}
+                        
                                 spacing="xs"
-                                align="flex-start"
+                                align={msg.sender_id === authUserId ? "flexStart" : "flexEnd"}
                                 noWrap
-                            >
+                        
+                            >  
                                 {msg.sender_id !== authUserId && (
                                     <Avatar src={msg.sender?.picture} radius="xl" size="sm" />
                                 )}

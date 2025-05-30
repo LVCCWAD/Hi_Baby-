@@ -65,6 +65,8 @@ function Orders({ orders = [] }) {
   ));
 
   return (
+    <div style={{ backgroundColor: "#f9f5eb", minHeight: "100vh", padding: "2rem" }}>
+
     <Container size="lg" mt="xl" style={{ backgroundColor: "#f9f5eb", padding: "2rem", borderRadius: "8px" }}>
       <Title
         order={2}
@@ -109,6 +111,7 @@ function Orders({ orders = [] }) {
         </Table>
       )}
     </Container>
+    </div>
   );
 }
 

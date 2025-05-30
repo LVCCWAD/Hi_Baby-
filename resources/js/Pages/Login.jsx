@@ -29,15 +29,9 @@ function Login() {
     return (
         <MantineProvider>
             <div className={classes.container}>
-                <div className={classes.wrapper}>
+                
                     <form onSubmit={submit}>
-                        <Paper
-                            className={classes.form}
-                            radius={24}
-                            p={30}
-                            bg="#FBF2E9"
-                            h="600"
-                        >
+                        <Paper className={classes.form} radius={24} p={30} bg="#FBF2E9" w="455">
                             <Title
                                 order={2}
                                 className={classes.title}
@@ -112,7 +106,7 @@ function Login() {
                             </Text>
                         </Paper>
                     </form>
-                </div>
+                
                 <Image src={image} className={classes.image} />
             </div>
         </MantineProvider>

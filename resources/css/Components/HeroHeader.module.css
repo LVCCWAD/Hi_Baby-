@@ -8,11 +8,6 @@
   .content {
     max-width: 480px;
     margin-right: calc(var(--mantine-spacing-xl) * 3);
-
-    @media (max-width: $mantine-breakpoint-md) {
-      max-width: 100%;
-      margin-right: 0;
-    }
   }
   
 
@@ -21,24 +16,12 @@
     width: 110%;
     line-height: 120%;
     font-family: 'FredokaOne';
-    @media (max-width: $mantine-breakpoint-xs) {
-      font-size: 28px;
-    }
-  }
-
-  .control {
-    @media (max-width: $mantine-breakpoint-xs) {
-      flex: 1;
-    }
+   
   }
 
   .image {
     width: 376px;
     height: 356px;
-
-    @media (max-width: $mantine-breakpoint-md) {
-      display: none;
-    }
   }
 
   .highlight {
@@ -47,3 +30,15 @@
     border-radius: var(--mantine-radius-sm);
     padding: 4px 12px;
   }
+  
+@media(max-width: 992px){
+.content {
+  max-width: 100%;
+  margin-right: 0;
+}
+.image{display: none;}
+
+.control{flex: 1;}
+
+.title{font-size: 28px;}
+}

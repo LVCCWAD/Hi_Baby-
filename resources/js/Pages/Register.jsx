@@ -44,7 +44,7 @@ function Register() {
     return (
         <MantineProvider>
             <div className={classes.container}>
-            <div className={classes.wrapper}>
+        
                 <form onSubmit={submit}>
                     <Paper className={classes.form} radius={24} p={30} bg="#FBF2E9" w="455" h="740">
 
@@ -170,8 +170,6 @@ function Register() {
                             </Text>
                         </Paper>
                     </form>
-                </div>
-
                 <Image src={image} className={classes.image} />
             </div>
         </MantineProvider>
