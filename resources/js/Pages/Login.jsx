@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import image from "../Assets/Login.png";
 import classes from "../../css/Components/Login.module.css";
+import HandleError from "../Components/HandleError.jsx";
 
 function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -55,7 +56,8 @@ function Login() {
                                 }
                                 size="md"
                             />
-
+                            
+                            {errors.email && <HandleError message={errors.email} />}
                             <PasswordInput
                                 label="Password"
                                 placeholder="Your password"
@@ -69,6 +71,7 @@ function Login() {
                                 mt="md"
                                 size="md"
                             />
+                        
 
                             {/* <Checkbox
                                 label="Keep me logged in"
@@ -77,15 +80,10 @@ function Login() {
                             /> */}
 
                             {/* Error Display */}
-                            {errors.email && (
-                                <Text color="red">{errors.email}</Text>
-                            )}
-                            {errors.password && (
-                                <Text color="red">{errors.password}</Text>
-                            )}
-                            {errors.default && (
-                                <Text color="red">{errors.default}</Text>
-                            )}
+                            
+                            {errors.password && <HandleError message={errors.password} />}
+                            
+                            {errors.default && <HandleError message={errors.default} />}
 
                             <Button
                                 type="submit"
