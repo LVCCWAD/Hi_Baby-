@@ -6,6 +6,8 @@ import { Box, List, Avatar, Text, Title, Paper, Divider, Badge } from "@mantine/
 
 function UsersList({ users }) {
     return (
+        <div style={{ backgroundColor: "#f9f5eb", minHeight: "100vh", padding: "2rem" }}>
+
         <Box maw={600} mx="auto" p="md">
             <Title order={3} mb="md">Customer Messages</Title>
             <Paper shadow="xs" p="md" withBorder>
@@ -38,6 +40,7 @@ function UsersList({ users }) {
                 )}
             </Paper>
         </Box>
+        </div>
     );
 }
 

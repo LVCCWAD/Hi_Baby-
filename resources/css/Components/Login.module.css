@@ -1,22 +1,21 @@
-.wrapper {
-    min-height: 900px;
-    background-size: cover;
-  }
+
   .container{
+    width: 100%;
     display:flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    right: 0px;
+    padding: 20px;
   }
 
-  .form {
+  .form {  
     max-width: 455px;
-    padding-top: 80px;
-    filter : drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
-
-
-
-    @media (max-width: $mantine-breakpoint-sm) {
-      max-width: 100%;
-    }
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    margin: 0 auto;
   }
 
   .title {
@@ -27,13 +26,19 @@
   }
 
   .image {
-    width: 376px;
-    height: 356px;
-    margin: 150px;
-    
-    @media (max-width: $mantine-breakpoint-md) {
-      display: none;
+    max-width: 746px;
+    height: 691px;
+    margin-left: 5px;
+    gap: 20px;
+  }
+  @media (max-width: 992px) {
+    .image {
+      display: none !important;
     }
+    .form {
+      max-width: 100%;
+    }
+
   }
 
   .button{

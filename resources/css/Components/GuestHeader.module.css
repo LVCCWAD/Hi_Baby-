@@ -16,15 +16,16 @@
     font-weight: 500;
     font-size: var(--mantine-font-size-sm);
 
-    @media (max-width: $mantine-breakpoint-sm) {
+
+    
+  }
+  .link:hover {
+    background-color: "green";
+  }
+  @media (max-width: 992px) {
+    .link{
       height: 42px;
       width: 100%;
-
-
-    }
-
-    &:hover {
-      background-color: "green";
     }
   }
 

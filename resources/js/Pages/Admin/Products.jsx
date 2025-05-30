@@ -143,6 +143,8 @@ function Products({ products = [] }) {
     );
 
     return (
+        <div style={{ backgroundColor: "#f9f5eb", minHeight: "100vh", padding: "2rem" }}>
+
         <MantineProvider>
             <Flex justify="space-between" align="center" mb="md">
                 <Box className={classes.title}>
@@ -160,6 +162,7 @@ function Products({ products = [] }) {
                 {/* <Table.Tfoot>{ths}</Table.Tfoot> */}
             </Table>
         </MantineProvider>
+        </div>
     );
 }
 
