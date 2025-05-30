@@ -1,4 +1,12 @@
-import { Table, MantineProvider, Grid, Flex, Button, Image, Box } from "@mantine/core";
+import {
+    Table,
+    MantineProvider,
+    Grid,
+    Flex,
+    Button,
+    Image,
+    Box,
+} from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { router } from "@inertiajs/react";
 
@@ -36,10 +44,17 @@ function Products({ products = [] }) {
                     width={60}
                     height={60}
                     alt={product.name}
+                    style={{
+                        maxWidth: "60px",
+                        maxHeight: "60px",
+                        objectFit: "contain",
+                    }}
                 />
             </Table.Td>
             <Table.Td>{product.name}</Table.Td>
-            <Table.Td className={classes.description}>{product.description}</Table.Td>
+            <Table.Td className={classes.description}>
+                {product.description}
+            </Table.Td>
             <Table.Td>{product.gender?.name || "N/A"}</Table.Td>
             <Table.Td>
                 {product.categories && product.categories.length > 0
@@ -112,16 +127,13 @@ function Products({ products = [] }) {
             </Table.Td>
 
             <Table.Td>
-                <a
-                    href={`/products/${product.id}/edit`}
-                    color="teal"
-                >
-                    <IconPencil size={16} stroke={1.5} color="black"/>
+                <a href={`/products/${product.id}/edit`} color="teal">
+                    <IconPencil size={16} stroke={1.5} color="black" />
                 </a>
             </Table.Td>
             <Table.Td>
                 <a onClick={() => handleDelete(product.id)} color="red">
-                    <IconTrash size={16} stroke={1.5} color="black"/>
+                    <IconTrash size={16} stroke={1.5} color="black" />
                 </a>
             </Table.Td>
         </Table.Tr>
@@ -143,25 +155,39 @@ function Products({ products = [] }) {
     );
 
     return (
-        <div style={{ backgroundColor: "#f9f5eb", minHeight: "100vh", padding: "2rem" }}>
+        <div
+            style={{
+                backgroundColor: "#f9f5eb",
+                minHeight: "100vh",
+                padding: "2rem",
+            }}
+        >
+            <MantineProvider>
+                <Flex justify="space-between" align="center" mb="md">
+                    <Box className={classes.title}>
+                        <p style={{ fontFamily: "WendyOne", fontSize: "50px" }}>
+                            Products
+                        </p>
+                    </Box>
 
-        <MantineProvider>
-            <Flex justify="space-between" align="center" mb="md">
-                <Box className={classes.title}>
-                    <p style={{fontFamily: 'WendyOne', fontSize:'50px' }} >Products</p>
-                </Box>
-
-                <Button component="a" href="/add-product" variant="outline" bg="#BAB86C" radius={15} color="#FBF2E9">
-                    <p>Add Product</p>
-                </Button>
-            </Flex>
-            <Table captionSide="bottom">
-                {/* <Table.Caption>Some elements from periodic table</Table.Caption> */}
-                <Table.Thead>{ths}</Table.Thead>
-                <Table.Tbody>{rows}</Table.Tbody>
-                {/* <Table.Tfoot>{ths}</Table.Tfoot> */}
-            </Table>
-        </MantineProvider>
+                    <Button
+                        component="a"
+                        href="/add-product"
+                        variant="outline"
+                        bg="#BAB86C"
+                        radius={15}
+                        color="#FBF2E9"
+                    >
+                        <p>Add Product</p>
+                    </Button>
+                </Flex>
+                <Table captionSide="bottom">
+                    {/* <Table.Caption>Some elements from periodic table</Table.Caption> */}
+                    <Table.Thead>{ths}</Table.Thead>
+                    <Table.Tbody>{rows}</Table.Tbody>
+                    {/* <Table.Tfoot>{ths}</Table.Tfoot> */}
+                </Table>
+            </MantineProvider>
         </div>
     );
 }
