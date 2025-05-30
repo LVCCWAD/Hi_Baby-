@@ -60,7 +60,7 @@ function NavHeader() {
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
                     {/* Left: Logo */}
-                    <Link href="/" style={{ textDecoration: "none" }}>
+                    <Link href="/home" style={{ textDecoration: "none" }}>
                         <Image
                             src={Logo}
                             alt="HI, BABY!"

@@ -15,7 +15,8 @@ import {
     Title,
     Flex,
 } from "@mantine/core";
-import Pusher from "pusher-js";
+import{IconArrowBack, IconSend2, IconUser} from "@tabler/icons-react";
+import Pusher from 'pusher-js';
 
 function AdminChat() {
     const {
@@ -102,19 +103,15 @@ function AdminChat() {
     }, [messages]);
 
     return (
-        <Box maw={600} mx="auto" p="md">
-            <Flex justify="space-between" align="center" mb="md">
-                <Link href="/chat" style={{ textDecoration: "none" }}>
-                    <Text size="sm" color="blue">
-                        ← Back to Users
-                    </Text>
+        <Box maw={600} mx="auto" p="md" style={{borderColor: "#BAB86C", borderWidth: "3px", borderRadius: "23px"}}>
+            <Flex justify="space-between" align="center" mb="md" >
+                <Link href="/chat" style={{ textDecoration: 'none' }}>
+                    <IconArrowBack size={16} stroke={1.5}/>
                 </Link>
-                <Title order={3}>
-                    Chat with {targetUser?.username || "User"}
-                </Title>
+                <Title order={3} style={{flexDirection:"row", display: "flex", color: "#BAB86C"}} ><IconUser size={30} stroke={1.5} color="#BAB86C"  style={{border: "3px solid #BAB86C", borderRadius: "23px", marginRight:"10px"}}/> {targetUser?.username || 'User'}</Title>
                 <div></div> {/* Empty div for flex spacing */}
             </Flex>
-
+            <hr style={{marginBottom: "20px", border: "1px solid #BAB86C"}} />
             <ScrollArea h={400} viewportRef={viewport}>
                 <Stack spacing="sm">
                     {messages.length === 0 ? (
@@ -126,11 +123,8 @@ function AdminChat() {
                             <Group
                                 key={msg.id}
                                 spacing="xs"
-                                align={
-                                    msg.sender_id === authUserId
-                                        ? "flexStart"
-                                        : "flexEnd"
-                                }
+                                align="flex-start"
+                                justify={msg.sender_id === authUserId ? "flex-end" : "flex-start"}
                                 noWrap
                             >
                                 {msg.sender_id !== authUserId && (
@@ -138,7 +132,7 @@ function AdminChat() {
                                         src={msg.sender?.picture}
                                         radius="xl"
                                         size="sm"
-                                    />
+                                    style={{border: "3px solid #BAB86C"}}/>
                                 )}
                                 <Paper
                                     shadow="xs"
@@ -174,16 +168,18 @@ function AdminChat() {
             </ScrollArea>
 
             <form onSubmit={sendMessage}>
-                <Group mt="md">
+                <Group mt="md" style={{border: "3px solid #BAB86C", borderRadius:"23px"}}>
                     <TextInput
                         value={data.message}
                         onChange={(e) => setData("message", e.target.value)}
                         placeholder="Type your message..."
-                        style={{ flex: 1 }}
+                        style={{flex: 1, padding: "5px"}}
+                        variant="unstyled"
+
                         required
                     />
-                    <Button type="submit" loading={processing}>
-                        Send
+                    <Button type="submit" loading={processing} variant="subtle" color="#BAB86C">
+                    <IconSend2 size={20} stroke={1.5}/>
                     </Button>
                 </Group>
             </form>
