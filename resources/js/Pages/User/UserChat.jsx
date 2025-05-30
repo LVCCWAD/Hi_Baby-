@@ -26,6 +26,7 @@ function UserChat() {
     const [messages, setMessages] = useState(initialMessages || []);
     const viewport = useRef(null);
 
+
     const { data, setData, post, processing, reset } = useForm({
         message: "",
         receiver_id: adminId,
@@ -86,9 +87,9 @@ function UserChat() {
         setMessages((prevMessages) => [...prevMessages, tempMessage]);
 
         post("/chat/send", data, {
-            forceFormData: true, // ⬅️ THIS is the key!
+            forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => reset("message"),
+            onSuccess: () => setData("message", ""), // Clear input field here
             onError: (errors) => {
                 console.error("Error sending message:", errors);
                 setMessages((prev) =>

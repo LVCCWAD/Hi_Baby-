@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 
     // Address routes
-
     Route::post('/addresses', [AddressController::class, 'storeAddress'])->name('user.addresses.store');
     Route::get('/addresses', [AddressController::class, 'showAddressToCart'])->name('user.addresses.show');
     Route::put('/addresses/{address}', [AddressController::class, 'updateAddress'])->name('user.addresses.update');

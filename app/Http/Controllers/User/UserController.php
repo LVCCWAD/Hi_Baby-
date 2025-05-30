@@ -123,7 +123,7 @@ class UserController extends Controller
 
 
 
-    // public function chats()
+    // public function userChats()
     // {
     //     $userId = Auth::id();
 

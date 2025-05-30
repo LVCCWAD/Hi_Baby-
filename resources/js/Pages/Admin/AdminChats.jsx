@@ -15,10 +15,15 @@ import {
     Title,
     Flex,
 } from "@mantine/core";
-import Pusher from 'pusher-js';
+import Pusher from "pusher-js";
 
 function AdminChat() {
-    const { messages: initialMessages, authUserId, targetUserId, targetUser } = usePage().props;
+    const {
+        messages: initialMessages,
+        authUserId,
+        targetUserId,
+        targetUser,
+    } = usePage().props;
     const [messages, setMessages] = useState(initialMessages);
     const viewport = useRef(null);
 
@@ -32,97 +37,108 @@ function AdminChat() {
         // Enable pusher logging - don't include this in production
         // Pusher.logToConsole = true;
 
-        const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY || '5a7697f73e3c287f4892', {
-            cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || 'ap1',
-            forceTLS: true
-        });
+        const pusher = new Pusher(
+            import.meta.env.VITE_PUSHER_APP_KEY || "5a7697f73e3c287f4892",
+            {
+                cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || "ap1",
+                forceTLS: true,
+            }
+        );
 
-        const channel = pusher.subscribe('admin-messages');
+        const channel = pusher.subscribe("admin-messages");
 
         // Listen for user messages
-        channel.bind('user-message', function(data) {
-            if (data.receiver_id === authUserId && data.sender_id === targetUserId) {
-                setMessages(prevMessages => [...prevMessages, data]);
+        channel.bind("user-message", function (data) {
+            if (
+                data.receiver_id === authUserId &&
+                data.sender_id === targetUserId
+            ) {
+                setMessages((prevMessages) => [...prevMessages, data]);
             }
         });
 
         return () => {
-            pusher.unsubscribe('admin-messages');
+            pusher.unsubscribe("admin-messages");
         };
     }, [authUserId, targetUserId]);
 
     const sendMessage = (e) => {
         e.preventDefault();
-
         if (!data.message.trim()) return;
 
-        // Add optimistic UI update
         const tempMessage = {
-            id: 'temp-' + Date.now(),
+            id: "temp-" + Date.now(),
             message: data.message,
             sender_id: authUserId,
             receiver_id: targetUserId,
             created_at: new Date().toISOString(),
-            sender: { picture: null } // Add any admin data needed
+            sender: { picture: null },
         };
 
-        setMessages(prevMessages => [...prevMessages, tempMessage]);
+        setMessages((prev) => [...prev, tempMessage]);
 
-        post(route('chat.send'), {
+        post("admin/chat/send", data, {
+            forceFormData: true,
             preserveScroll: true,
-            onSuccess: (response) => {
-                // Replace the temporary message with the actual one from the server
-                if (response?.message) {
-                    setMessages(prevMessages =>
-                        prevMessages.map(msg =>
-                            msg.id === tempMessage.id ? response.message : msg
-                        )
-                    );
-                }
-                reset('message');
-            },
+            onSuccess: () => reset("message"),
             onError: (errors) => {
-                console.error('Error sending message:', errors);
-                // Remove the temporary message if there was an error
-                setMessages(prevMessages =>
-                    prevMessages.filter(msg => msg.id !== tempMessage.id)
+                console.error("Error sending message:", errors);
+                setMessages((prev) =>
+                    prev.filter(
+                        (msg) => !(msg.id && String(msg.id).startsWith("temp-"))
+                    )
                 );
-            }
+            },
         });
     };
 
     useEffect(() => {
         if (viewport.current) {
-            viewport.current.scrollTo({ top: viewport.current.scrollHeight, behavior: "smooth" });
+            viewport.current.scrollTo({
+                top: viewport.current.scrollHeight,
+                behavior: "smooth",
+            });
         }
     }, [messages]);
 
     return (
         <Box maw={600} mx="auto" p="md">
             <Flex justify="space-between" align="center" mb="md">
-                <Link href="/chat" style={{ textDecoration: 'none' }}>
-                    <Text size="sm" color="blue">← Back to Users</Text>
+                <Link href="/chat" style={{ textDecoration: "none" }}>
+                    <Text size="sm" color="blue">
+                        ← Back to Users
+                    </Text>
                 </Link>
-                <Title order={3}>Chat with {targetUser?.username || 'User'}</Title>
+                <Title order={3}>
+                    Chat with {targetUser?.username || "User"}
+                </Title>
                 <div></div> {/* Empty div for flex spacing */}
             </Flex>
 
             <ScrollArea h={400} viewportRef={viewport}>
                 <Stack spacing="sm">
                     {messages.length === 0 ? (
-                        <Text align="center" color="dimmed" py="xl">No messages yet. Start a conversation!</Text>
+                        <Text align="center" color="dimmed" py="xl">
+                            No messages yet. Start a conversation!
+                        </Text>
                     ) : (
-                        messages.map(msg => (
+                        messages.map((msg) => (
                             <Group
                                 key={msg.id}
-                        
                                 spacing="xs"
-                                align={msg.sender_id === authUserId ? "flexStart" : "flexEnd"}
+                                align={
+                                    msg.sender_id === authUserId
+                                        ? "flexStart"
+                                        : "flexEnd"
+                                }
                                 noWrap
-                        
-                            >  
+                            >
                                 {msg.sender_id !== authUserId && (
-                                    <Avatar src={msg.sender?.picture} radius="xl" size="sm" />
+                                    <Avatar
+                                        src={msg.sender?.picture}
+                                        radius="xl"
+                                        size="sm"
+                                    />
                                 )}
                                 <Paper
                                     shadow="xs"
@@ -130,13 +146,22 @@ function AdminChat() {
                                     radius="md"
                                     withBorder
                                     style={{
-                                        backgroundColor: msg.sender_id === authUserId ? '#d1fae5' : '#f3f4f6',
+                                        backgroundColor:
+                                            msg.sender_id === authUserId
+                                                ? "#d1fae5"
+                                                : "#f3f4f6",
                                         maxWidth: "70%",
                                     }}
                                 >
                                     <Text size="sm">{msg.message}</Text>
-                                    <Text size="xs" color="dimmed" align="right">
-                                        {new Date(msg.created_at).toLocaleTimeString()}
+                                    <Text
+                                        size="xs"
+                                        color="dimmed"
+                                        align="right"
+                                    >
+                                        {new Date(
+                                            msg.created_at
+                                        ).toLocaleTimeString()}
                                     </Text>
                                 </Paper>
                                 {msg.sender_id === authUserId && (
@@ -152,7 +177,7 @@ function AdminChat() {
                 <Group mt="md">
                     <TextInput
                         value={data.message}
-                        onChange={(e) => setData('message', e.target.value)}
+                        onChange={(e) => setData("message", e.target.value)}
                         placeholder="Type your message..."
                         style={{ flex: 1 }}
                         required
