@@ -4,11 +4,14 @@ namespace App\Http\Controllers\User;
 
 use Inertia\Inertia;
 use App\Models\Order;
+use App\Mail\OrderPlaced;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 
 class OrderController extends Controller
 {
@@ -25,14 +28,8 @@ class OrderController extends Controller
             return back()->with('error', 'Your cart is empty');
         }
 
-        // Check product availability
         foreach ($cartItems as $item) {
-            if (!$item->product) {
-                return back()->with('error', 'One or more products are no longer available');
-            }
-
-            // Add additional validation as needed (e.g., check if color and size are still valid)
-            if (!$item->color || !$item->size) {
+            if (!$item->product || !$item->color || !$item->size) {
                 return back()->with('error', 'Invalid product configuration');
             }
         }
@@ -60,12 +57,15 @@ class OrderController extends Controller
                     'price' => $item->product->price
                 ]);
             }
-            // dd($order);
 
-
-            // Clear the cart after creating the order
+            // Clear the cart
             $user->carts()->delete();
 
+            // 🔁 Load items and relationships for email
+            $order->load('items.product', 'items.color', 'items.size', 'user');
+
+            // ✅ Send order confirmation email
+            Mail::to($user->email)->send(new OrderPlaced($order));
 
             return redirect()->route('user.orders')->with('success', 'Order placed successfully');
         } catch (\Exception $e) {

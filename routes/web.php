@@ -1,7 +1,9 @@
 <?php
 
 use Inertia\Inertia;
+use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatsController;
@@ -14,7 +16,11 @@ use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\ReviewsController;
 use App\Http\Controllers\Admin\ProductController;
 
-
+Route::get('/test-mail', function () {
+    $order = App\Models\Order::with('items')->latest()->first();
+    Mail::to('galacticabbadon@gmail.com')->send(new OrderPlaced($order));
+    return "Email sent!";
+});
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {

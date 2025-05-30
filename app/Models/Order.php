@@ -10,7 +10,7 @@ class Order extends Model
         'user_id',
         'total_amount',
         'status',
-        'address',   
+        'address',
         'payment_status',
     ];
 
@@ -21,6 +21,10 @@ class Order extends Model
     }
 
     public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
