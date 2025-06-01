@@ -255,8 +255,13 @@ class ProductController extends Controller
     {
         $product->load(['categories', 'colors', 'sizes', 'gender']);
 
+        // Load the authenticated user's address
+        $address = Auth::user()->address;
+
         return Inertia::render('User/ProductDetail', [
-            'product' => $product
+            'product' => $product,
+            'address' => $address,
+            'auth' => ['user' => Auth::user()]
         ]);
     }
 }

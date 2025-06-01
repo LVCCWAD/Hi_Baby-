@@ -73,7 +73,8 @@ Route::middleware(['auth'])->group(function () {
     //Orders
     Route::post('/order/create', [OrderController::class, 'createOrder'])->name('order.create'); // create order
     Route::get('/orders', [OrderController::class, 'showUserOrders'])->name('user.orders');
-    Route::get('/orders/{order}', [OrderController::class, 'showUserOrders'])->name('orders.show'); // show single order detail
+    Route::post('/orders', [OrderController::class, 'placeOrder'])->name('orders.store');
+    Route::get('/order-success/{order}', [OrderController::class, 'showSuccess'])->name('order.success');
 
     //User Profile
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');

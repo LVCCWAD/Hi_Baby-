@@ -15,7 +15,7 @@ import {
 import { useState, useMemo } from "react";
 import { Link } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
-import { IconHeartFilled, IconHeart } from "@tabler/icons-react";  // You used IconHeartFilled but didn't import it
+import { IconHeartFilled, IconHeart } from "@tabler/icons-react"; // You used IconHeartFilled but didn't import it
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products);
@@ -41,7 +41,11 @@ function Home({ products = [] }) {
             {/* Girls Section */}
             <Box mb={40}>
                 <Group position="apart" mb={10}>
-                    <Text size="xl" weight={700} style={{ fontSize: "28px", fontFamily: "WendyOne"  }}>
+                    <Text
+                        size="xl"
+                        weight={700}
+                        style={{ fontSize: "28px", fontFamily: "WendyOne" }}
+                    >
                         Girl's Clothing
                     </Text>
                     <Select
@@ -179,10 +183,15 @@ function ProductCard({ product }) {
 
                     <Card.Section>
                         <Image
-                            src={`/storage/${product.image}`}
-                            height={200}
+                            src={product.image}
                             alt={product.name}
-                            fit="cover"
+                            height={200}
+                            width={200}
+                            style={{
+                                maxWidth: "300px",
+                                maxHeight: "200px",
+
+                            }}
                         />
                     </Card.Section>
 

@@ -23,33 +23,34 @@ class ProductSeeder extends Seeder
                 'name' => 'Baby Cotton T-Shirt',
                 'description' => 'Soft and comfortable cotton t-shirt perfect for everyday wear',
                 'price' => 19.99,
-                'image' => 'https://placehold.co/600x400/pink/white?text=Baby+Cotton+T-Shirt',
+                'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpQos2X4a-ELYZeg5UkTvcLT79ui9NGbG6cw&s',
             ],
             [
                 'name' => 'Denim Overall',
                 'description' => 'Adorable denim overall with adjustable straps',
                 'price' => 34.99,
-                'image' => 'https://placehold.co/600x400/blue/white?text=Denim+Overall',
+                'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUklBujan8uy9NLwYJ8kq0Zcay1kp6nqUSWA&s',
             ],
             [
                 'name' => 'Cozy Pajama Set',
                 'description' => 'Two-piece pajama set made with soft cotton',
                 'price' => 24.99,
-                'image' => 'https://placehold.co/600x400/purple/white?text=Cozy+Pajama+Set',
+                'image' => 'https://babeemall.com/cdn/shop/files/13_9bcd5145-3ee1-433e-8f9f-66241261d28b.png?v=1701882928&width=1946',
             ],
             [
                 'name' => 'Winter Jacket',
                 'description' => 'Warm and stylish winter jacket for cold days',
                 'price' => 49.99,
-                'image' => 'https://placehold.co/600x400/gray/white?text=Winter+Jacket',
+                'image' => 'https://down-ph.img.susercontent.com/file/e21655044df78471340c4ce6a31824c6',
             ],
             [
                 'name' => 'Summer Dress',
                 'description' => 'Light and breezy summer dress with floral pattern',
                 'price' => 29.99,
-                'image' => 'https://placehold.co/600x400/yellow/white?text=Summer+Dress',
-            ]
+                'image' => 'https://m.media-amazon.com/images/I/71S6BGG97gS._AC_SL1500_.jpg',
+            ],
         ];
+
 
         $sizeNames = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
         $colorOptions = [

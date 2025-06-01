@@ -31,7 +31,7 @@ function Boys({ products = [] }) {
 
     // Filter products by gender (only boys products)
     const boysProducts = useMemo(() => {
-        return products.filter(product => product.gender?.name === "Boys");
+        return products.filter((product) => product.gender?.name === "Boys");
     }, [products]);
 
     // Apply filters
@@ -40,21 +40,23 @@ function Boys({ products = [] }) {
 
         // Filter by categories
         if (selectedCategories.length > 0) {
-            filtered = filtered.filter(product =>
-                product.categories &&
-                product.categories.some(category =>
-                    selectedCategories.includes(category.name)
-                )
+            filtered = filtered.filter(
+                (product) =>
+                    product.categories &&
+                    product.categories.some((category) =>
+                        selectedCategories.includes(category.name)
+                    )
             );
         }
 
         // Filter by sizes
         if (selectedSizes.length > 0) {
-            filtered = filtered.filter(product =>
-                product.sizes &&
-                product.sizes.some(size =>
-                    selectedSizes.includes(size.name)
-                )
+            filtered = filtered.filter(
+                (product) =>
+                    product.sizes &&
+                    product.sizes.some((size) =>
+                        selectedSizes.includes(size.name)
+                    )
             );
         }
 
@@ -72,9 +74,9 @@ function Boys({ products = [] }) {
     // Available categories and sizes from products
     const categories = useMemo(() => {
         const categorySet = new Set();
-        boysProducts.forEach(product => {
+        boysProducts.forEach((product) => {
             if (product.categories) {
-                product.categories.forEach(category => {
+                product.categories.forEach((category) => {
                     categorySet.add(category.name);
                 });
             }
@@ -84,9 +86,9 @@ function Boys({ products = [] }) {
 
     const sizes = useMemo(() => {
         const sizeSet = new Set();
-        boysProducts.forEach(product => {
+        boysProducts.forEach((product) => {
             if (product.sizes) {
-                product.sizes.forEach(size => {
+                product.sizes.forEach((size) => {
                     sizeSet.add(size.name);
                 });
             }
@@ -96,26 +98,33 @@ function Boys({ products = [] }) {
 
     // Handle category selection
     const toggleCategory = (category) => {
-        setSelectedCategories(prev =>
+        setSelectedCategories((prev) =>
             prev.includes(category)
-                ? prev.filter(c => c !== category)
+                ? prev.filter((c) => c !== category)
                 : [...prev, category]
         );
     };
 
     // Handle size selection
     const toggleSize = (size) => {
-        setSelectedSizes(prev =>
+        setSelectedSizes((prev) =>
             prev.includes(size)
-                ? prev.filter(s => s !== size)
+                ? prev.filter((s) => s !== size)
                 : [...prev, size]
         );
     };
 
     return (
-        <Container size="xl" style={{ backgroundColor: "#f9f6f1", padding: "20px" }}>
+        <Container
+            size="xl"
+            style={{ backgroundColor: "#f9f6f1", padding: "20px" }}
+        >
             <Group position="apart" mb={20}>
-                <Text size="xl" weight={700} style={{ fontSize: "28px", fontFamily: "WendyOne"  }}>
+                <Text
+                    size="xl"
+                    weight={700}
+                    style={{ fontSize: "28px", fontFamily: "WendyOne" }}
+                >
                     Boy's Clothing
                 </Text>
                 <Select
@@ -148,10 +157,14 @@ function Boys({ products = [] }) {
                                             <Checkbox
                                                 key={category}
                                                 label={category}
-                                                checked={selectedCategories.includes(category)}
-                                                onChange={() => toggleCategory(category)}
+                                                checked={selectedCategories.includes(
+                                                    category
+                                                )}
+                                                onChange={() =>
+                                                    toggleCategory(category)
+                                                }
                                                 styles={{
-                                                    label: { fontSize: '14px' },
+                                                    label: { fontSize: "14px" },
                                                 }}
                                             />
                                         ))}
@@ -170,10 +183,14 @@ function Boys({ products = [] }) {
                                             <Checkbox
                                                 key={size}
                                                 label={size}
-                                                checked={selectedSizes.includes(size)}
-                                                onChange={() => toggleSize(size)}
+                                                checked={selectedSizes.includes(
+                                                    size
+                                                )}
+                                                onChange={() =>
+                                                    toggleSize(size)
+                                                }
                                                 styles={{
-                                                    label: { fontSize: '14px' },
+                                                    label: { fontSize: "14px" },
                                                 }}
                                             />
                                         ))}
@@ -214,7 +231,9 @@ function ProductCard({ product }) {
 
     // Calculate a fake "original" price for display purposes (20% higher)
     const originalPrice = Math.round(product.price * 1.2);
-    const discountPercentage = Math.round(((originalPrice - product.price) / originalPrice) * 100);
+    const discountPercentage = Math.round(
+        ((originalPrice - product.price) / originalPrice) * 100
+    );
 
     return (
         <MantineProvider>
@@ -242,7 +261,7 @@ function ProductCard({ product }) {
                             height: "30px",
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center"
+                            justifyContent: "center",
                         }}
                         onClick={(e) => {
                             e.preventDefault();
@@ -254,17 +273,21 @@ function ProductCard({ product }) {
                             size={18}
                             style={{
                                 color: isFavorite ? "#ff6b6b" : "#adb5bd",
-                                fill: isFavorite ? "#ff6b6b" : "transparent"
+                                fill: isFavorite ? "#ff6b6b" : "transparent",
                             }}
                         />
                     </div>
 
                     <Card.Section>
                         <Image
-                            src={`/storage/${product.image}`}
-                            height={200}
+                            src={product.image}
                             alt={product.name}
-                            fit="cover"
+                            height={200}
+                            width={200}
+                            style={{
+                                maxWidth: "300px",
+                                maxHeight: "200px",
+                            }}
                         />
                     </Card.Section>
 
@@ -290,8 +313,13 @@ function ProductCard({ product }) {
 
                     {product.categories && product.categories.length > 0 && (
                         <Group mt={5}>
-                            {product.categories.slice(0, 1).map(cat => (
-                                <Badge key={cat.id} variant="light" color="blue" size="sm">
+                            {product.categories.slice(0, 1).map((cat) => (
+                                <Badge
+                                    key={cat.id}
+                                    variant="light"
+                                    color="blue"
+                                    size="sm"
+                                >
                                     {cat.name}
                                 </Badge>
                             ))}

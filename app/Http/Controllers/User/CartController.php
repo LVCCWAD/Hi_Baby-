@@ -106,4 +106,6 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Cart quantity updated.');
     }
+
+
 }
