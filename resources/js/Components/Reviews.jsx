@@ -38,6 +38,11 @@ function Reviews({ product, auth }) {
 
   const currentUserId = auth?.user?.id;
 
+  // 👇 Check if user already submitted a review
+  const existingReview = product.reviews?.find(
+    (review) => review.user_id === currentUserId
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -67,7 +72,12 @@ function Reviews({ product, auth }) {
 
   const handleDelete = (reviewId) => {
     if (confirm("Are you sure you want to delete this review?")) {
-      destroy(`/user/products/${product.id}/reviews/${reviewId}`);
+      destroy(`/user/products/${product.id}/reviews/${reviewId}`, {
+        onSuccess: () => {
+          reset();
+          setEditingReview(null);
+        },
+      });
     }
   };
 
@@ -85,39 +95,45 @@ function Reviews({ product, auth }) {
         </Notification>
       )}
 
-      {/* Review Form */}
-      <Paper withBorder shadow="xs" p="lg" radius="md" mt="md">
-        <form onSubmit={handleSubmit}>
-          <Stack>
-            <Textarea
-              label="Your Review"
-              placeholder="Share your thoughts..."
-              value={data.review}
-              onChange={(e) => setData("review", e.target.value)}
-              error={errors.review}
-              required
-            />
+      {/* Review Form - Show only if user hasn't reviewed or is editing */}
+      {!existingReview || editingReview ? (
+        <Paper withBorder shadow="xs" p="lg" radius="md" mt="md">
+          <form onSubmit={handleSubmit}>
+            <Stack>
+              <Textarea
+                label="Your Review"
+                placeholder="Share your thoughts..."
+                value={data.review}
+                onChange={(e) => setData("review", e.target.value)}
+                error={errors.review}
+                required
+              />
 
-            <Rating
-              value={data.rating}
-              onChange={(value) => setData("rating", value)}
-              count={5}
-              size="lg"
-              color="yellow"
-              required
-            />
-            {errors.rating && (
-              <Text size="xs" color="red">
-                {errors.rating}
-              </Text>
-            )}
+              <Rating
+                value={data.rating}
+                onChange={(value) => setData("rating", value)}
+                count={5}
+                size="lg"
+                color="yellow"
+                required
+              />
+              {errors.rating && (
+                <Text size="xs" color="red">
+                  {errors.rating}
+                </Text>
+              )}
 
-            <Button type="submit" loading={processing} fullWidth>
-              {editingReview ? "Update Review" : "Submit Review"}
-            </Button>
-          </Stack>
-        </form>
-      </Paper>
+              <Button type="submit" loading={processing} fullWidth>
+                {editingReview ? "Update Review" : "Submit Review"}
+              </Button>
+            </Stack>
+          </form>
+        </Paper>
+      ) : (
+        <Text color="dimmed" size="sm" mt="sm">
+          You have already submitted a review. You can edit or delete it below.
+        </Text>
+      )}
 
       {/* Reviews List */}
       <Stack mt="xl">
@@ -175,5 +191,6 @@ function Reviews({ product, auth }) {
     </>
   );
 }
+
 
 export default Reviews;
