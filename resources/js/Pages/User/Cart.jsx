@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Text, Grid, Paper, Checkbox, Group } from "@mantine/core";
+import {
+    Container,
+    Text,
+    Grid,
+    Paper,
+    Checkbox,
+    Group,
+} from "@mantine/core";
 import CartItem from "../../Components/CartItem";
 import OrderSummary from "../../Components/OrderSummary";
 import { router, usePage, Head } from "@inertiajs/react";
@@ -10,17 +17,13 @@ function Cart({ cart = [] }) {
     const [selectAll, setSelectAll] = useState(false);
     const [cartItems, setCartItems] = useState(cart);
     const { address } = usePage().props;
-    console.log("Loaded address:", address);
 
     const handleDelete = (id) => {
-        if (
-            confirm("Are you sure you want to delete this item from your cart?")
-        ) {
+        if (confirm("Are you sure you want to delete this item from your cart?")) {
             router.delete(`/cart/${id}`, {
                 onSuccess: () => {
-                    setCartItems((prev) =>
-                        prev.filter((item) => item.id !== id)
-                    );
+                    setCartItems((prev) => prev.filter((item) => item.id !== id));
+                    setSelectedItems((prev) => prev.filter((itemId) => itemId !== id));
                     console.log("Item removed from cart successfully.");
                 },
                 onError: () => {
@@ -31,7 +34,6 @@ function Cart({ cart = [] }) {
     };
 
     const handleQuantityChange = (id, quantity) => {
-        console.log("Changing quantity", { id, quantity });
         setCartItems((prev) =>
             prev.map((item) => (item.id === id ? { ...item, quantity } : item))
         );
@@ -56,10 +58,10 @@ function Cart({ cart = [] }) {
         });
     };
 
-    const total = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
+    // ✅ Only calculate total for selected items
+    const total = cartItems
+        .filter((item) => selectedItems.includes(item.id))
+        .reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const handleCheckout = () => {
         if (!address) {
@@ -67,7 +69,6 @@ function Cart({ cart = [] }) {
             return;
         }
 
-        // Compose string from address object fields
         const shippingAddressString = `${address.street}, ${address.city}, ${
             address.state ?? ""
         } ${address.zip ?? ""}`.trim();
@@ -77,12 +78,18 @@ function Cart({ cart = [] }) {
             return;
         }
 
+        if (selectedItems.length === 0) {
+            console.log("Please select at least one item to checkout.");
+            return;
+        }
+
         setLoading(true);
 
         router.post(
             "/order/create",
             {
                 address: shippingAddressString,
+                items: selectedItems, // optionally send selected item IDs
             },
             {
                 onSuccess: () => {
