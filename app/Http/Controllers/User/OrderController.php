@@ -55,9 +55,11 @@ class OrderController extends Controller
                     'color_id' => $item->color_id,
                     'size_id' => $item->size_id,
                     'quantity' => $item->quantity,
-                    'price' => $item->product->price
+                    'price' => $item->product->price,
+                    'total' => $item->product->price * $item->quantity, // ✅ Add this
                 ]);
             }
+
 
             // Clear the cart
             $user->carts()->delete();
@@ -67,6 +69,7 @@ class OrderController extends Controller
 
             // ✅ Send order confirmation email
             Mail::to($user->email)->send(new OrderPlaced($order));
+            Log::info('Order created, ID: ' . $order->id);
 
             return redirect()->route('order.success', ['order' => $order->id]);
         } catch (\Exception $e) {
@@ -105,8 +108,6 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
-
-        \Log::info('Place order request data: ', $request->all());
         $request->validate([
             'address' => 'required|string|min:10',
             'product_id' => 'required|exists:products,id',
@@ -116,65 +117,47 @@ class OrderController extends Controller
         ]);
 
         $user = Auth::user();
-
-        // Fetch the product to get price and check existence
         $product = Product::find($request->product_id);
-        if (!$product) {
-            return back()->with('error', 'Product not found.');
-        }
 
         $totalAmount = $product->price * $request->quantity;
 
-        try {
-            // Create order with provided address and total
-            $order = Order::create([
-                'user_id' => $user->id,
-                'total_amount' => $totalAmount,
-                'status' => 'pending',
-                'address' => $request->address,
-                'payment_status' => 'pending',
-            ]);
+        $order = Order::create([
+            'user_id' => $user->id,
+            'total_amount' => $totalAmount,
+            'status' => 'pending',
+            'address' => $request->address,
+            'payment_status' => 'pending',
+        ]);
 
-            // Create one order item for the single product
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $product->id,
-                'color_id' => $request->color_id,
-                'size_id' => $request->size_id,
-                'quantity' => $request->quantity,
-                'price' => $product->price,
-            ]);
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'color_id' => $request->color_id,
+            'size_id' => $request->size_id,
+            'quantity' => $request->quantity,
+            'price' => $product->price,
+            'total' => $totalAmount,
+        ]);
 
-            // Send order confirmation email
-            $order->load('items.product', 'items.color', 'items.size', 'user');
-            Mail::to($user->email)->send(new OrderPlaced($order));
+        Mail::to($user->email)->send(new OrderPlaced($order));
 
-            // Return Inertia page with order info (or redirect as needed)
-            return inertia('User/OrderSuccess', [
-                'order_id' => $order->id,
-                'order' => $order,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Order creation error: ' . $e->getMessage());
-            return back()->with('error', 'Failed to create order. Please try again.');
-        }
+
+        return redirect()->route('order.success', ['order' => $order->id]);
     }
+
 
 
     public function showSuccess(Order $order)
     {
-        // Optionally, check if the authenticated user owns this order
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
+        $order->load('items.product', 'items.color', 'items.size');
 
-        // Render a success page and pass order details if needed
         return Inertia::render('User/OrderSuccess', [
-            'order_id' => $order->id,
-            'order' => $order->load('items.product'),
+            'order' => $order->load('items.product', 'items.color', 'items.size', 'user'),
         ]);
     }
-
 
     // public function checkout(Request $request)
     // {

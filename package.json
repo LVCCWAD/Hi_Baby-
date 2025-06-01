@@ -29,6 +29,7 @@
         "pusher-js": "^8.4.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "styled-components": "^6.1.18"
+        "styled-components": "^6.1.18",
+        "ziggy-js": "^2.5.3"
     }
 }

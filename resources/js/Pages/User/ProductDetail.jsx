@@ -87,7 +87,6 @@ function ProductDetail({ product, auth }) {
             return false;
         }
     };
-
     const handleBuyNow = () => {
         if (!selectedAddress || selectedAddress.trim() === "") {
             alert("Please add a shipping address before placing the order.");
@@ -113,23 +112,16 @@ function ProductDetail({ product, auth }) {
             },
             {
                 preserveScroll: true,
-                onSuccess: (page) => {
-                    const orderId = page.props?.order_id;
-                    if (orderId) {
-                        router.visit(`/order-success/${orderId}`);
-                    } else {
-                        alert(
-                            "Order placed but order ID missing. Please check your orders."
-                        );
-                    }
-                },
                 onError: (errors) => {
                     alert(errors?.address || "Failed to place order.");
                 },
-                onFinish: () => setLoading(false),
+                onFinish: () => {
+                    setLoading(false);
+                    console.log("Finished loading");
+                },
             }
         );
-    };  
+    };
 
     if (!product) return <div>Loading product...</div>;
 
