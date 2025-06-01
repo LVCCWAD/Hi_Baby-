@@ -68,7 +68,7 @@ class OrderController extends Controller
             // ✅ Send order confirmation email
             Mail::to($user->email)->send(new OrderPlaced($order));
 
-            return redirect()->route('user.orders')->with('success', 'Order placed successfully');
+            return redirect()->route('order.success', ['order' => $order->id]);
         } catch (\Exception $e) {
             \Log::error('Order creation error: ' . $e->getMessage());
             return back()->with('error', 'Failed to create order. Please try again.');
@@ -77,22 +77,7 @@ class OrderController extends Controller
 
 
 
-    public function showUserOrders()
-    {
-        $orders = Auth::user()->orders()->with(['orderItems.product', 'orderItems.color', 'orderItems.size'])->get();
 
-        // For users
-        return Inertia::render('User/Orders', [
-            'orders' => $orders,
-            'role' => "user",
-        ]);
-
-        // // For admins
-        // return Inertia::render('Admin/Orders', [
-        //     'orders' => $orders,
-        //     'role' => "admin",
-        // ]);
-    }
 
 
     public function showUserOrdersToAdmin()
@@ -189,6 +174,8 @@ class OrderController extends Controller
             'order' => $order->load('items.product'),
         ]);
     }
+
+
     // public function checkout(Request $request)
     // {
     //     $cart = Auth::user()->carts()->with('product')->get();

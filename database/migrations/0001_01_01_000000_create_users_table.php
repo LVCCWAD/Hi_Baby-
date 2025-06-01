@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('cascade');
             $table->string('phone_number')->nullable();
             $table->string('role')->default('user'); // Default value is 'user'

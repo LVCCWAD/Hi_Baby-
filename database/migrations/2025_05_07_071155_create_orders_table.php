@@ -15,12 +15,20 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total_amount', 10, 2)->default(0);
-            $table->string('status')->default('pending'); // pending, processing, completed, cancelled
+
+            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])
+                  ->default('pending'); // ORDER status
+
             $table->string('address');
-            $table->string('payment_status')->default('pending'); // pending, paid, failed
+
+            $table->string('payment_method')->default('cod');; // PAYMENT method
+
+            $table->enum('payment_status', ['pending', 'paid', 'failed'])
+                  ->default('pending'); // PAYMENT status
+
             $table->timestamps();
         });
-    }
+}
 
     /**
      * Reverse the migrations.

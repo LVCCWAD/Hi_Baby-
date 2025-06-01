@@ -2,21 +2,32 @@
 
 namespace Database\Seeders;
 
-use App\Models\Size;
 use App\Models\User;
+use App\Models\Size;
 use App\Models\Color;
 use App\Models\Gender;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\OrderItem;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class ProductSeeder extends Seeder
 {
     public function run()
     {
         $faker = Faker::create();
-        $user = User::first();
+
+        // Create default user
+        $user = User::firstOrCreate(
+            ['email' => 'galacticabaddon@gmail.com'],
+            [
+                'username' => 'TestUser', // Use correct column name
+                'password' => Hash::make('password'),
+            ]
+        );
 
         $products = [
             [
@@ -51,13 +62,14 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-
         $sizeNames = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
         $colorOptions = [
             ['name' => 'Red', 'hex_code' => '#FF0000'],
             ['name' => 'Blue', 'hex_code' => '#0000FF'],
             ['name' => 'Green', 'hex_code' => '#00FF00'],
         ];
+
+        $createdProducts = [];
 
         foreach ($products as $productData) {
             $gender = Gender::inRandomOrder()->first();
@@ -72,37 +84,60 @@ class ProductSeeder extends Seeder
                 'image' => $productData['image'],
             ]);
 
-            // Create sizes for this product
-            $randomSizes = array_rand($sizeNames, rand(1, 3)); // Randomly select 1 to 3 sizes
-            if (is_array($randomSizes)) {
-                // If multiple sizes were selected
-                foreach ($randomSizes as $sizeIndex) {
-                    $product->sizes()->create([
-                        'name' => $sizeNames[$sizeIndex],
-                    ]);
-                }
-            } else {
-                // If only one size was selected
-                $product->sizes()->create([
-                    'name' => $sizeNames[$randomSizes],
-                ]);
+            $createdProducts[] = $product;
+
+            // Sizes
+            $randomSizes = array_rand($sizeNames, rand(1, 3));
+            $sizes = is_array($randomSizes) ? $randomSizes : [$randomSizes];
+            foreach ($sizes as $sizeIndex) {
+                $product->sizes()->create(['name' => $sizeNames[$sizeIndex]]);
             }
 
-            // Create colors for this product
-            $randomColors = array_rand($colorOptions, rand(1, 3)); // Randomly select 1 to 3 colors
-            if (is_array($randomColors)) {
-                // If multiple colors were selected
-                foreach ($randomColors as $colorIndex) {
-                    $product->colors()->create($colorOptions[$colorIndex]);
-                }
-            } else {
-                // If only one color was selected
-                $product->colors()->create($colorOptions[$randomColors]);
+            // Colors
+            $randomColors = array_rand($colorOptions, rand(1, 3));
+            $colors = is_array($randomColors) ? $randomColors : [$randomColors];
+            foreach ($colors as $colorIndex) {
+                $product->colors()->create($colorOptions[$colorIndex]);
             }
 
-            // Categories: many-to-many stays as-is
-            $categories = Category::inRandomOrder()->take(rand(1, 2))->pluck('id')->toArray();
+            // Categories
+            $categories = Category::inRandomOrder()->take(rand(1, 2))->pluck('id');
             $product->categories()->attach($categories);
         }
+
+        // Create one order for the user
+        $order = Order::create([
+            'user_id' => $user->id,
+            'total_amount' => 0,
+            'status' => 'pending',
+            'address' => '123 Baby St, Cutetown, PH 1000',
+            'payment_status' => 'pending',
+        ]);
+
+        $total = 0;
+
+        foreach ($faker->randomElements($createdProducts, rand(1, 3)) as $product) {
+            $color = $product->colors()->inRandomOrder()->first();
+            $size = $product->sizes()->inRandomOrder()->first();
+
+            if (!$color || !$size) continue;
+
+            $quantity = rand(1, 3);
+            $lineTotal = $product->price * $quantity;
+
+            // Create one order for the user
+            $order = Order::create([
+                'user_id' => $user->id,
+                'total_amount' => 0,
+                'status' => 'pending',
+                'address' => '123 Baby St, Cutetown, PH 1000',
+                'payment_status' => 'pending',
+                'payment_method' => 'Cash on Delivery',  // Add this line
+            ]);
+
+            $total += $lineTotal;
+        }
+
+        $order->update(['total_amount' => $total]);
     }
 }

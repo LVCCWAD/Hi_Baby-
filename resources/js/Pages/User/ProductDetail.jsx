@@ -129,7 +129,7 @@ function ProductDetail({ product, auth }) {
                 onFinish: () => setLoading(false),
             }
         );
-    };
+    };  
 
     if (!product) return <div>Loading product...</div>;
 

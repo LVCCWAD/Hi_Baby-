@@ -7,6 +7,7 @@ import {
     Divider,
     Stack,
     Flex,
+    Radio,
 } from "@mantine/core";
 import AddressSection from "./AddressSection";
 import { usePage, router } from "@inertiajs/react";
@@ -18,7 +19,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
     const [selectedAddress, setSelectedAddress] = useState(
         props.address ?? null
     );
-
+    const [paymentMethod, setPaymentMethod] = useState("cod");
     const handleAddressSubmit = async (values) => {
         try {
             if (editingAddress) {
@@ -56,7 +57,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
             p="md"
             style={{ position: "sticky", top: 20 }}
         >
-            <Text size="xl" fw={700} >
+            <Text size="xl" fw={700}>
                 Delivery
             </Text>
 
@@ -69,9 +70,20 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                 onAddressSubmit={handleAddressSubmit}
             />
 
-            <Text size="md" fw={500} mt="md" mb="md">
-                Cash on Delivery
+            <Text size="md" fw={500} mt="md" mb="sm">
+                Payment Method
             </Text>
+
+            <Radio.Group
+                value={paymentMethod}
+                onChange={setPaymentMethod}
+                spacing="sm"
+            >
+                <Stack spacing="xs">
+                    <Radio value="cod" label="Cash on Delivery" />
+                    {/* If you want to add more methods in the future, add here */}
+                </Stack>
+            </Radio.Group>
 
             <Divider my="sm" />
 
@@ -84,7 +96,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
             ></Flex>
             <Stack spacing="md" sx={{ maxHeight: 300, overflowY: "auto" }}>
                 {/* Selected Items */}
-                <Text size="xl" fw={700} >
+                <Text size="xl" fw={700}>
                     Items
                 </Text>
                 {selectedItems.length === 0 && (
@@ -168,7 +180,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                 style={{ color: "black", backgroundColor: "#BAB86C" }}
                 size="lg"
                 fullWidth
-                onClick={handleCheckout}
+                onClick={() => handleCheckout(paymentMethod)}
                 loading={loading}
                 disabled={selectedItems.length === 0 || !selectedAddress}
             >
