@@ -92,6 +92,12 @@
         <p><strong>Order ID:</strong> {{ $order->id }}</p>
         <p class="total"><strong>Total Amount:</strong> ₱{{ number_format($order->total_amount, 2) }}</p>
 
+        <p><strong>Mode of Payment:</strong> {{ ucfirst($order->payment_method ?? 'Not specified') }}</p>
+
+        <p><strong>Shipping Address:</strong></p>
+        <p>{{ $order->address ?? 'N/A' }}</p>
+
+
         <h3>Order Summary</h3>
         <ul>
             @foreach ($order->items as $item)

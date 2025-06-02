@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Size;
 use Inertia\Inertia;
+use App\Models\Color;
 use App\Models\Order;
+use App\Models\Address;
 use App\Models\Product;
 use App\Mail\OrderPlaced;
 use App\Models\OrderItem;
@@ -12,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 
 class OrderController extends Controller
@@ -45,7 +49,8 @@ class OrderController extends Controller
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
                 'address' => $request->address,
-                'payment_status' => 'pending'
+                'payment_status' => 'pending',
+                'payment_method' => $request->payment_method,
             ]);
 
             foreach ($cartItems as $item) {
@@ -56,7 +61,8 @@ class OrderController extends Controller
                     'size_id' => $item->size_id,
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
-                    'total' => $item->product->price * $item->quantity, // ✅ Add this
+                    'total' => $item->product->price * $item->quantity,
+                    'payment_method' => $request->payment_method,
                 ]);
             }
 
@@ -108,27 +114,44 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
-        $request->validate([
+        \Log::info('PlaceOrder Request:', $request->all());
+
+        // Validation rules
+        $rules = [
             'address' => 'required|string|min:10',
             'product_id' => 'required|exists:products,id',
             'color_id' => 'required|exists:colors,id',
             'size_id' => 'required|exists:sizes,id',
             'quantity' => 'required|integer|min:1',
-        ]);
+            'payment_method' => 'required|string|in:cod', // extend this list as needed
+        ];
+
+        // Validate request data
+        if ($request->expectsJson()) {
+            Validator::make($request->all(), $rules)->validate();
+        } else {
+            $request->validate($rules);
+        }
 
         $user = Auth::user();
         $product = Product::find($request->product_id);
 
         $totalAmount = $product->price * $request->quantity;
 
+        // Use payment method from request or default to 'cod'
+        $paymentMethod = $request->input('payment_method', 'cod');
+
+        // Create the order
         $order = Order::create([
             'user_id' => $user->id,
             'total_amount' => $totalAmount,
             'status' => 'pending',
             'address' => $request->address,
             'payment_status' => 'pending',
+            'payment_method' => $paymentMethod,
         ]);
 
+        // Create the order item
         OrderItem::create([
             'order_id' => $order->id,
             'product_id' => $product->id,
@@ -139,9 +162,10 @@ class OrderController extends Controller
             'total' => $totalAmount,
         ]);
 
+        // Send order confirmation email
         Mail::to($user->email)->send(new OrderPlaced($order));
 
-
+        // Redirect to order success page
         return redirect()->route('order.success', ['order' => $order->id]);
     }
 
@@ -158,6 +182,38 @@ class OrderController extends Controller
             'order' => $order->load('items.product', 'items.color', 'items.size', 'user'),
         ]);
     }
+
+
+    public function checkoutConfirmation(Request $request)
+    {
+        $user = $request->user();
+
+        $product = Product::with('colors', 'sizes')->findOrFail($request->input('product_id'));
+        $address = $user->address;
+
+        $colorId = $request->input('color_id');
+        $sizeId = $request->input('size_id');
+
+        $color = Color::find($colorId);
+        $size = Size::find($sizeId);
+
+        $initialData = [
+            'quantity' => (int) $request->input('quantity', 1),
+            'payment_method' => $request->input('payment_method', 'cod'),
+            'color_id' => $colorId,
+            'size_id' => $sizeId,
+            'color_name' => $color?->name,
+            'size_name' => $size?->name,
+        ];
+
+        return Inertia::render('User/Checkout', [
+            'product' => $product,
+            'address' => $address,
+            'initialData' => $initialData,
+        ]);
+    }
+
+
 
     // public function checkout(Request $request)
     // {

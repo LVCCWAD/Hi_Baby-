@@ -73,8 +73,9 @@ Route::middleware(['auth'])->group(function () {
     //Orders
     Route::post('/order/create', [OrderController::class, 'createOrder'])->name('order.create'); // create order
     Route::get('/orders', [OrderController::class, 'showUserOrders'])->name('user.orders');
-    Route::post('/orders', [OrderController::class, 'placeOrder'])->name('orders.store');
+    Route::post('/order-checkout', [OrderController::class, 'placeOrder'])->name('orders.store');
     Route::get('/order-success/{order}', [OrderController::class, 'showSuccess'])->name('order.success');
+    Route::get('/checkout-confirmation', [OrderController::class, 'checkoutConfirmation']);
 
     //User Profile
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');
@@ -85,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/addresses', [AddressController::class, 'storeAddress'])->name('user.addresses.store');
     Route::get('/addresses', [AddressController::class, 'showAddressToCart'])->name('user.addresses.show');
     Route::put('/addresses/{address}', [AddressController::class, 'updateAddress'])->name('user.addresses.update');
+    Route::get('/user/products/{product}', [AddressController::class, 'showCheckout'])->name('user.products.show');
 
 
     // Show product

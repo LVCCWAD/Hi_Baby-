@@ -12,6 +12,7 @@ class Order extends Model
         'status',
         'address',
         'payment_status',
+        'payment_method',
     ];
 
 
@@ -27,5 +28,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
     }
 }

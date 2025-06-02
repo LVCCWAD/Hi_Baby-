@@ -9,6 +9,7 @@ function Cart({ cart = [] }) {
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [cartItems, setCartItems] = useState(cart);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
     const { address } = usePage().props;
 
     const handleDelete = (id) => {
@@ -78,6 +79,7 @@ function Cart({ cart = [] }) {
                     address.state ?? ""
                 } ${address.zip ?? ""}`.trim(),
                 items: selectedItems,
+                payment_method: selectedPaymentMethod,
             },
             {
                 onSuccess: (page) => {

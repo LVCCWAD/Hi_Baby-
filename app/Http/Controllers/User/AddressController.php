@@ -4,21 +4,60 @@ namespace App\Http\Controllers\User;
 
 use Inertia\Inertia;
 use App\Models\Address;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AddressController extends Controller
 {
-    public function showAddressToCart()
-    {
-        $user = Auth::user()->load('address');
 
-        return Inertia::render('User/Cart', [
-            'cart' => $user->carts,
-            'address' => $user->address, // important!
+
+    public function showCheckout(Product $product)
+    {
+        $address = Auth::user()->address;
+
+        return Inertia::render('User/Checkout', [
+            'product' => $product,
+            'address' => $address ? [
+                'street' => $address->street,
+                'barangay' => $address->barangay,
+                'city' => $address->city,
+                'province' => $address->province,
+                'zip_code' => $address->zip_code,
+                'country' => $address->country,
+            ] : null,
         ]);
     }
+
+
+
+    // public function showProductDetail(Product $product)
+    // {
+    //     $product = Product::with(['colors', 'sizes'])->findOrFail($product->id);
+
+    //     $user = Auth::user()->load('address');
+
+    //     // Log the structure of the user's address
+    //     if ($user->address) {
+    //         \Log::info('Address structure:', $user->address->toArray());
+    //     } else {
+    //         \Log::info('No address found for user ID: ' . $user->id);
+    //     }
+
+    //     return Inertia::render('User/ProductDetail', [
+    //         'product' => $product,
+    //         'auth' => [
+    //             'user' => $user,
+    //         ],
+    //         'address' => $user->address,
+    //     ]);
+    // }
+
+
+
+
+
 
     public function storeAddress(Request $request)
     {

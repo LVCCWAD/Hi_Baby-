@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->string('address');
 
-            $table->string('payment_method')->default('cod');; // PAYMENT method
+            $table->string('payment_method')->default('cod'); // PAYMENT method
 
             $table->enum('payment_status', ['pending', 'paid', 'failed'])
                   ->default('pending'); // PAYMENT status
