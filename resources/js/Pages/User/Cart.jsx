@@ -62,6 +62,7 @@ function Cart({ cart = [] }) {
         .filter((item) => selectedItems.includes(item.id))
         .reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+
     const handleCheckout = () => {
         if (!address) {
             alert("Please select a shipping address.");

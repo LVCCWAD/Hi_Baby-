@@ -23,14 +23,21 @@ class OrderController extends Controller
     public function createOrder(Request $request)
     {
         $request->validate([
-            'address' => 'required|string|min:10'
+            'address' => 'required|string|min:10',
+            'items' => 'required|array',
+            'items.*' => 'integer|exists:carts,id'
         ]);
 
         $user = Auth::user();
-        $cartItems = $user->carts()->with(['product', 'color', 'size'])->get();
+
+        // ✅ Only get selected items
+        $cartItems = $user->carts()
+            ->with(['product', 'color', 'size'])
+            ->whereIn('id', $request->items)
+            ->get();
 
         if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Your cart is empty');
+            return back()->with('error', 'No valid cart items selected');
         }
 
         foreach ($cartItems as $item) {
@@ -39,9 +46,7 @@ class OrderController extends Controller
             }
         }
 
-        $totalAmount = $cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
+        $totalAmount = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
 
         try {
             $order = Order::create([
@@ -66,16 +71,12 @@ class OrderController extends Controller
                 ]);
             }
 
+            // ✅ Only delete selected cart items
+            $user->carts()->whereIn('id', $request->items)->delete();
 
-            // Clear the cart
-            $user->carts()->delete();
-
-            // 🔁 Load items and relationships for email
             $order->load('items.product', 'items.color', 'items.size', 'user');
 
-            // ✅ Send order confirmation email
             Mail::to($user->email)->send(new OrderPlaced($order));
-            Log::info('Order created, ID: ' . $order->id);
 
             return redirect()->route('order.success', ['order' => $order->id]);
         } catch (\Exception $e) {
@@ -83,6 +84,7 @@ class OrderController extends Controller
             return back()->with('error', 'Failed to create order. Please try again.');
         }
     }
+
 
 
 

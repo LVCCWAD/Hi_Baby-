@@ -98,13 +98,37 @@ function ProfileView() {
         router.post("/logout");
     };
 
-    const handlePictureUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData("picture", file); // keep this to send on submit
-            setPreviewImage(URL.createObjectURL(file)); // update preview image immediately
+    const handlePictureUpload = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/webp",
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            alert("Please upload a valid image file (jpg, png, webp).");
+            return;
         }
+
+        const previewUrl = URL.createObjectURL(file);
+        setPreviewImage(previewUrl); // update previewImage, not imagePreview
+
+        // Set the actual file for upload in form data
+        setData("picture", file);
     };
+
+    // Cleanup preview URL when component unmounts or when imagePreview changes
+    useEffect(() => {
+        return () => {
+            if (previewImage && previewImage.startsWith("blob:")) {
+                URL.revokeObjectURL(previewImage);
+            }
+        };
+    }, [previewImage]);
+
     const handleUnlike = (productId) => {
         router.post(
             `/products/${productId}/unlike`,
@@ -194,10 +218,10 @@ function ProfileView() {
                     >
                         <Stack spacing="md" align="center">
                             <Avatar
-                                src={user.picture || null}
+                                src={previewImage || user.picture || null}
                                 size={120}
                                 radius={120}
-                                alt="User Picture"
+                                alt={`${user.first_name} ${user.last_name} profile picture`}
                                 style={{ border: "3px solid #E8E1C5" }}
                             />
 

@@ -82,4 +82,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
+
+    public function getPictureAttribute($value)
+    {
+        if ($value) {
+            return asset('storage/' . $value); // Prepends the full URL for the frontend
+        }
+        return null;
+    }
 }

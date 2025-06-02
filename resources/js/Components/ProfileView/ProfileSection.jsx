@@ -37,10 +37,13 @@ function ProfileSection({
     handleSubmit,
     handleLogout,
     handlePictureUpload,
+    previewImage = null,
 }) {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [currentPasswordError, setCurrentPasswordError] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder>
             {isEditing ? (
@@ -56,12 +59,18 @@ function ProfileSection({
                         <Center>
                             <Box style={{ position: "relative" }}>
                                 <Avatar
-                                    src={user.picture || null}
+                                    src={
+                                        previewImage ||
+                                        (user.picture
+                                            ? `/storage/${user.picture}`
+                                            : null)
+                                    }
                                     size={120}
                                     radius={120}
                                     alt={`${user.first_name} ${user.last_name}`}
-                                    style={{ border: "4px solid #E8E1C5" }}
+                                    style={{ border: "3px solid #E8E1C5" }}
                                 />
+
                                 <ActionIcon
                                     component="label"
                                     size="lg"
@@ -230,12 +239,13 @@ function ProfileSection({
 
                     <Group position="center" mb="md" align="flex-end">
                         <Avatar
-                            src={user.picture || null}
+                            src={previewImage || user.picture || null}
                             size={120}
                             radius={120}
                             alt={`${user.first_name} ${user.last_name} profile picture`}
                             style={{ border: "3px solid #E8E1C5" }}
                         />
+
                         <Stack mb="md" style={{ textAlign: "left" }}>
                             <Text
                                 style={{
