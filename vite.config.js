@@ -21,13 +21,14 @@ export default defineConfig({
     manifest: true,
     outDir: 'public/build',
     emptyOutDir: true,
-    sourcemap: false, //
-    assetsDir: '.',   //
+    sourcemap: false,
+    assetsDir: '.',
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           if (/\.(ttf|woff2?|eot|otf)$/.test(assetInfo.name)) {
-            return 'fonts/[name][extname]'; //
+            return 'fonts/[name][extname]';
+          }
           return 'assets/[name]-[hash][extname]';
         },
       },
