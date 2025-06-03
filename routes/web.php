@@ -16,6 +16,10 @@ use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\ReviewsController;
 use App\Http\Controllers\Admin\ProductController;
 
+
+Route::get('/', fn () => 'Laravel app is responding!');
+
+
 Route::get('/test-mail', function () {
     $order = App\Models\Order::with('items')->latest()->first();
     Mail::to('galacticabbadon@gmail.com')->send(new OrderPlaced($order));
