@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Cart;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use App\Notifications\UserEventNotification;
 
 class CartController extends Controller
 {
@@ -62,6 +63,7 @@ class CartController extends Controller
                 'quantity' => $request->input('quantity', 1)
             ]);
         }
+        $user->notify(new UserEventNotification("Product #{$itemId} added to your cart", 'Cart Update'));
 
         $cartCount = $user->carts()->count();
         return redirect()->route('user.cart')->with('cartCount', $cartCount);
@@ -106,6 +108,4 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Cart quantity updated.');
     }
-
-
 }

@@ -120,8 +120,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/send', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('chat.send');
 
     //Search
-    Route::get('/api/products/search', [ProductController::class, 'search']);
     Route::get('/search', [ProductController::class, 'searchResultsPage'])->name('user.search');
+
+    // Notifications
+
 });
 
 Route::post('/logout', function () {

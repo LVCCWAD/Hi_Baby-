@@ -122,6 +122,39 @@ class UserController extends Controller
 
 
 
+    public function showNotifications(Request $request)
+    {
+        $user = $request->user();
+
+        // Get user notifications, order by newest first
+        $notifications = $user->notifications()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'title' => $notification->data['title'] ?? 'Notification',
+                    'description' => $notification->data['description'] ?? '',
+                    'time' => $notification->created_at->diffForHumans(),
+                    'read_at' => $notification->read_at,
+                ];
+            });
+
+
+
+        return Inertia::render('User/Notifications', [
+            'notifications' => $notifications,
+            'unreadCount' => $user->unreadNotifications()->count(),
+        ]);
+    }
+
+    public function markAllRead(Request $request)
+    {
+        $request->user()->unreadNotifications->markAsRead();
+
+        return redirect()->back()->with('success', 'All notifications marked as read.');
+    }
+
 
     // public function userChats()
     // {

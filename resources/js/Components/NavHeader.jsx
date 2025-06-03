@@ -21,6 +21,7 @@ import {
     Text,
     Menu,
     Divider,
+    Indicator,
 } from "@mantine/core";
 import { Link, usePage, router } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
@@ -32,10 +33,17 @@ import { useState } from "react";
 
 function NavHeader() {
     const [searchValue, setSearchValue] = useState("");
-    const { auth } = usePage().props;
-    const [modalOpen, setModalOpen] = useState(false);
-
+    const { auth, notifications = [] } = usePage().props;
     const isAuthenticated = auth && auth.user;
+    const [modalOpen, setModalOpen] = useState(false);
+    const [hasSeenNotifications, setHasSeenNotifications] = useState(false);
+
+    const unreadNotifications = notifications.length > 0;
+    const showBadge = unreadNotifications && !hasSeenNotifications;
+    const handleOpenNotifications = () => {
+        setModalOpen(true);
+        setHasSeenNotifications(true); // Hide badge after opening
+    };
 
     const handleLogout = () => {
         Inertia.post(
@@ -60,7 +68,7 @@ function NavHeader() {
         <Box bg="#FBF2E9" py="md" style={{ borderBottom: "1px solid #f0f0f0" }}>
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
-                    {/* Left: Logo */}
+                    {/* Logo */}
                     <Link href="/home" style={{ textDecoration: "none" }}>
                         <Image
                             src={Logo}
@@ -70,44 +78,44 @@ function NavHeader() {
                         />
                     </Link>
 
-                    {/* Center: Navigation */}
+                    {/* Navigation Links */}
                     <Group gap={rem(40)}>
                         <CollectionDropdown />
                         <LinkStyle href="/aboutus">About Us</LinkStyle>
                     </Group>
 
-                    {/* Right: Search & Icons */}
+                    {/* Right Side Icons and Search */}
                     <Flex align="center" gap={rem(20)}>
-                        {/* Search */}
+                        {/* Search Bar */}
                         <Flex
                             component="form"
                             onSubmit={handleSearchSubmit}
                             align="center"
+                            gap="xs"
                             style={{
                                 backgroundColor: "#f5f5f5",
                                 borderRadius: rem(20),
-                                padding: `0 ${rem(8)}`,
+                                padding: `0 ${rem(12)}`,
                                 height: rem(40),
                                 width: rem(240),
                                 overflow: "hidden",
                             }}
                         >
                             <Autocomplete
-                                placeholder="Search"
+                                placeholder="Search products"
                                 value={searchValue}
                                 onChange={setSearchValue}
                                 data={["Bibs", "Shoes", "Toys", "Blankets"]}
+                                radius="xl"
+                                size="sm"
                                 styles={{
                                     input: {
                                         backgroundColor: "transparent",
                                         border: "none",
-                                        paddingLeft: rem(12),
                                         fontSize: rem(14),
+                                        paddingLeft: rem(6),
                                         width: "100%",
                                         height: rem(40),
-                                        "&:focus": {
-                                            outline: "none",
-                                        },
                                     },
                                     dropdown: {
                                         borderRadius: rem(8),
@@ -116,43 +124,40 @@ function NavHeader() {
                             />
                             <ActionIcon
                                 type="submit"
-                                variant="transparent"
+                                variant="filled"
                                 size={32}
-                                style={{
-                                    color: "#fff",
-                                    backgroundColor: "#abc32f",
-                                    borderRadius: rem(8),
-                                    cursor: "pointer",
-                                }}
+                                color="lime.6"
+                                radius="md"
                                 aria-label="Search"
                             >
                                 <IconSearch size={18} />
                             </ActionIcon>
                         </Flex>
 
-                        {/* Icons */}
+                        {/* Notification, Cart, User Menu */}
                         <Group gap={rem(20)}>
-                            <ActionIcon
-                                variant="transparent"
-                                style={{ color: "#555" }}
-                                onClick={() => setModalOpen(true)}
-                            >
-                                <IconBell size={20} stroke={1.5} />
-                            </ActionIcon>
-
                             <NotificationModal
                                 opened={modalOpen}
                                 onClose={() => setModalOpen(false)}
+                                notifications={notifications}
                             />
 
-                            <ActionIcon
-                                variant="transparent"
-                                component={Link}
-                                href="/cart"
-                                style={{ color: "#555" }}
+                            <Indicator
+                                disabled={!showBadge}
+                                color="red"
+                                size={10}
+                                offset={4}
+                                position="top-end"
+                                withBorder
                             >
-                                <IconShoppingCart size={20} stroke={1.5} />
-                            </ActionIcon>
+                                <ActionIcon
+                                    variant="transparent"
+                                    style={{ color: "#555" }}
+                                    onClick={handleOpenNotifications}
+                                >
+                                    <IconBell size={20} stroke={1.5} />
+                                </ActionIcon>
+                            </Indicator>
 
                             {/* User Menu */}
                             <Menu

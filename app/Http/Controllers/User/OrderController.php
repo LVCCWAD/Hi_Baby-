@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\UserEventNotification;
 
 
 class OrderController extends Controller
@@ -77,6 +78,7 @@ class OrderController extends Controller
             $order->load('items.product', 'items.color', 'items.size', 'user');
 
             Mail::to($user->email)->send(new OrderPlaced($order));
+            $user->notify(new UserEventNotification('Order placed successfully.'));
 
             return redirect()->route('order.success', ['order' => $order->id]);
         } catch (\Exception $e) {
@@ -166,6 +168,8 @@ class OrderController extends Controller
 
         // Send order confirmation email
         Mail::to($user->email)->send(new OrderPlaced($order));
+
+        $user->notify(new UserEventNotification('Order placed successfully.'));
 
         // Redirect to order success page
         return redirect()->route('order.success', ['order' => $order->id]);
