@@ -1,0 +1,58 @@
+{
+  "resources/js/Assets/1stImg.png": {
+    "file": "assets/1stImg-B3pKgQDs.png",
+    "src": "resources/js/Assets/1stImg.png"
+  },
+  "resources/js/Assets/2ndImg.png": {
+    "file": "assets/2ndImg-B9bx2OJZ.png",
+    "src": "resources/js/Assets/2ndImg.png"
+  },
+  "resources/js/Assets/3rdImg.png": {
+    "file": "assets/3rdImg-DCjyn2-X.png",
+    "src": "resources/js/Assets/3rdImg.png"
+  },
+  "resources/js/Assets/4thImg.png": {
+    "file": "assets/4thImg-BpNmMISr.png",
+    "src": "resources/js/Assets/4thImg.png"
+  },
+  "resources/js/Assets/5thImg.png": {
+    "file": "assets/5thImg-DvaV3dDF.png",
+    "src": "resources/js/Assets/5thImg.png"
+  },
+  "resources/js/Assets/HeroHeader.png": {
+    "file": "assets/HeroHeader-CQz_5rV0.png",
+    "src": "resources/js/Assets/HeroHeader.png"
+  },
+  "resources/js/Assets/Login.png": {
+    "file": "assets/Login-rYvL6Fsl.png",
+    "src": "resources/js/Assets/Login.png"
+  },
+  "resources/js/Assets/Logo.png": {
+    "file": "assets/Logo-CFcRExL-.png",
+    "src": "resources/js/Assets/Logo.png"
+  },
+  "resources/js/Assets/Register.png": {
+    "file": "assets/Register-BgFgQ0fV.png",
+    "src": "resources/js/Assets/Register.png"
+  },
+  "resources/js/app.jsx": {
+    "file": "assets/app-BY21_acu.js",
+    "name": "app",
+    "src": "resources/js/app.jsx",
+    "isEntry": true,
+    "css": [
+      "assets/app-DJh0qrOf.css"
+    ],
+    "assets": [
+      "assets/HeroHeader-CQz_5rV0.png",
+      "assets/1stImg-B3pKgQDs.png",
+      "assets/2ndImg-B9bx2OJZ.png",
+      "assets/3rdImg-DCjyn2-X.png",
+      "assets/4thImg-BpNmMISr.png",
+      "assets/5thImg-DvaV3dDF.png",
+      "assets/Login-rYvL6Fsl.png",
+      "assets/Register-BgFgQ0fV.png",
+      "assets/Logo-CFcRExL-.png"
+    ]
+  }
+}
