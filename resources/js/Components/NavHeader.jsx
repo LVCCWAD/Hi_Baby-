@@ -22,7 +22,7 @@ import {
     Menu,
     Divider,
 } from "@mantine/core";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 import Logo from "../Assets/Logo.png";
 import CollectionDropdown from "./CollectionDropdown";
@@ -43,20 +43,21 @@ function NavHeader() {
             {},
             {
                 onSuccess: () => {
-                    window.location.href = "/login"; // Force a full reload
+                    window.location.href = "/login"; // Full reload
                 },
             }
         );
     };
 
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        const trimmed = searchValue.trim();
+        if (!trimmed) return;
+        router.visit(`/search?q=${encodeURIComponent(trimmed)}`);
+    };
+
     return (
-        <Box
-            bg="#FBF2E9"
-            py="md"
-            style={{
-                borderBottom: "1px solid #f0f0f0",
-            }}
-        >
+        <Box bg="#FBF2E9" py="md" style={{ borderBottom: "1px solid #f0f0f0" }}>
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
                     {/* Left: Logo */}
@@ -79,6 +80,8 @@ function NavHeader() {
                     <Flex align="center" gap={rem(20)}>
                         {/* Search */}
                         <Flex
+                            component="form"
+                            onSubmit={handleSearchSubmit}
                             align="center"
                             style={{
                                 backgroundColor: "#f5f5f5",
@@ -112,13 +115,16 @@ function NavHeader() {
                                 }}
                             />
                             <ActionIcon
+                                type="submit"
                                 variant="transparent"
                                 size={32}
                                 style={{
-                                    color: "#fffff",
+                                    color: "#fff",
                                     backgroundColor: "#abc32f",
                                     borderRadius: rem(8),
+                                    cursor: "pointer",
                                 }}
+                                aria-label="Search"
                             >
                                 <IconSearch size={18} />
                             </ActionIcon>
@@ -147,6 +153,8 @@ function NavHeader() {
                             >
                                 <IconShoppingCart size={20} stroke={1.5} />
                             </ActionIcon>
+
+                            {/* User Menu */}
                             <Menu
                                 position="bottom-end"
                                 shadow="md"
@@ -179,7 +187,7 @@ function NavHeader() {
                                     {isAuthenticated ? (
                                         <>
                                             <Menu.Label>
-                                                Signed in as
+                                                Signed in as{" "}
                                                 <Text
                                                     fw={500}
                                                     size="sm"
@@ -284,6 +292,7 @@ function NavHeader() {
         </Box>
     );
 }
+
 const LinkStyle = styled(Link)`
     font-size: 15px;
     font-weight: 500;
