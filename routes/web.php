@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');
     Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::get('/profile', [UserController::class, 'showOrdersToProfileView'])->name('profile.orders');
 
     // Address routes
     Route::post('/addresses', [AddressController::class, 'storeAddress'])->name('user.addresses.store');

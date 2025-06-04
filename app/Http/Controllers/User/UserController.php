@@ -5,13 +5,14 @@ namespace App\Http\Controllers\User;
 use App\Models\Chat;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Product;
 
 class UserController extends Controller
 {
@@ -155,6 +156,41 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'All notifications marked as read.');
     }
 
+    public function showOrdersToProfileView()
+    {
+        $user = Auth::user();
+
+        $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'total_amount' => $order->total_amount,
+                    'status' => $order->status,
+                    'created_at' => $order->created_at->toDateTimeString(),
+                    'items' => $order->orderItems->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'price' => $item->price,
+                            'quantity' => $item->quantity,
+                            'product_name' => $item->product->name ?? 'Unnamed Product',
+                            'image' => $item->product->image ?? null,
+                            'color' => $item->color->name ?? null,
+                            'size' => $item->size->name ?? null,
+                        ];
+                    }),
+                ];
+            });
+
+        return Inertia::render('User/ProfileView', [
+            'user' => $user,
+            'likedProducts' => $user->likedProducts,
+            'orders' => $orders,
+            'ordersCount' => $orders->count(),
+        ]);
+    }
 
     // public function userChats()
     // {

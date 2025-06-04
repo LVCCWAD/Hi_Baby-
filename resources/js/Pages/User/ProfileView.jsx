@@ -24,7 +24,9 @@ function ProfileView() {
         user,
         likedProducts: initialLikedProducts,
         orders,
+        ordersCount,
     } = usePage().props;
+
     const [activeTab, setActiveTab] = useState("profile");
     const [isEditing, setIsEditing] = useState(false);
     const [orderFilter, setOrderFilter] = useState("all");
@@ -48,7 +50,6 @@ function ProfileView() {
         }
     }, [activeTab]);
 
-    // Form for profile editing
     const { data, setData, post, processing, errors } = useForm({
         username: user?.username || "",
         first_name: user?.first_name || "",
@@ -79,12 +80,9 @@ function ProfileView() {
             forceFormData: true,
             onSuccess: () => {
                 setIsEditing(false);
-
-                // Clear password fields
                 setData("password", "");
                 setData("password_confirmation", "");
                 setData("current_password", "");
-
                 notifications.show({
                     title: "Profile Updated",
                     message: "Your profile has been updated successfully",
@@ -114,13 +112,10 @@ function ProfileView() {
         }
 
         const previewUrl = URL.createObjectURL(file);
-        setPreviewImage(previewUrl); // update previewImage, not imagePreview
-
-        // Set the actual file for upload in form data
+        setPreviewImage(previewUrl);
         setData("picture", file);
     };
 
-    // Cleanup preview URL when component unmounts or when imagePreview changes
     useEffect(() => {
         return () => {
             if (previewImage && previewImage.startsWith("blob:")) {
@@ -161,45 +156,6 @@ function ProfileView() {
         return <Text>Loading user info...</Text>;
     }
 
-    // Mock data for orders (replace with actual data from backend)
-    const mockOrders = [
-        {
-            id: 78459,
-            date: "April 1, 2025",
-            total: 3700,
-            status: "delivered",
-            items: [
-                {
-                    id: 1,
-                    product_name: "Cotton Terno (Girl)",
-                    price: 1000,
-                    image: "/products/1746550630.png",
-                    status: "delivered",
-                },
-                {
-                    id: 2,
-                    product_name: "Cotton Terno (Girl)",
-                    price: 1000,
-                    image: "/products/1746550630.png",
-                    status: "delivered",
-                },
-                {
-                    id: 3,
-                    product_name: "Cotton Terno (Girl)",
-                    price: 1000,
-                    image: "/products/1746550630.png",
-                    status: "delivered",
-                },
-            ],
-        },
-    ];
-
-    // Filter orders based on selected filter
-    const filteredOrders = mockOrders.filter((order) => {
-        if (orderFilter === "all") return true;
-        return order.status === orderFilter;
-    });
-
     return (
         <Container
             size="xl"
@@ -207,7 +163,6 @@ function ProfileView() {
             style={{ backgroundColor: "#FDF8F3", minHeight: "100vh" }}
         >
             <Grid gutter="xl">
-                {/* Sidebar */}
                 <Grid.Col span={3}>
                     <Card
                         shadow="sm"
@@ -224,21 +179,13 @@ function ProfileView() {
                                 alt={`${user.first_name} ${user.last_name} profile picture`}
                                 style={{ border: "3px solid #E8E1C5" }}
                             />
-
-                            <Title
-                                order={4}
-                                align="center"
-                                style={{ marginBottom: 0 }}
-                            >
+                            <Title order={4} align="center">
                                 {user.first_name} {user.last_name}
                             </Title>
-
                             <Text size="sm" color="dimmed" align="center">
                                 {user.email}
                             </Text>
-
                             <Divider style={{ width: "100%" }} />
-
                             <Stack spacing="xs" style={{ width: "100%" }}>
                                 <Button
                                     variant={
@@ -259,24 +206,12 @@ function ProfileView() {
                                         gap="sm"
                                         wrap="nowrap"
                                         align="center"
-                                        style={{ flex: 1, overflow: "hidden" }}
+                                        style={{ flex: 1 }}
                                     >
-                                        <IconUser
-                                            size={20}
-                                            style={{ flexShrink: 0 }}
-                                        />
-                                        <Text
-                                            style={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                        >
-                                            My Profile
-                                        </Text>
+                                        <IconUser size={20} />
+                                        <Text>My Profile</Text>
                                     </Group>
                                 </Button>
-
                                 <Button
                                     variant={
                                         activeTab === "likes"
@@ -294,24 +229,12 @@ function ProfileView() {
                                         gap="sm"
                                         wrap="nowrap"
                                         align="center"
-                                        style={{ flex: 1, overflow: "hidden" }}
+                                        style={{ flex: 1 }}
                                     >
-                                        <IconHeart
-                                            size={18}
-                                            style={{ flexShrink: 0 }}
-                                        />
-                                        <Text
-                                            style={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                        >
-                                            My Likes
-                                        </Text>
+                                        <IconHeart size={18} />
+                                        <Text>My Likes</Text>
                                     </Group>
                                 </Button>
-
                                 <Button
                                     variant={
                                         activeTab === "purchases"
@@ -331,21 +254,10 @@ function ProfileView() {
                                         gap="sm"
                                         wrap="nowrap"
                                         align="center"
-                                        style={{ flex: 1, overflow: "hidden" }}
+                                        style={{ flex: 1 }}
                                     >
-                                        <IconShoppingBag
-                                            size={18}
-                                            style={{ flexShrink: 0 }}
-                                        />
-                                        <Text
-                                            style={{
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                        >
-                                            My Purchases
-                                        </Text>
+                                        <IconShoppingBag size={18} />
+                                        <Text>My Purchases</Text>
                                     </Group>
                                 </Button>
                             </Stack>
@@ -353,9 +265,7 @@ function ProfileView() {
                     </Card>
                 </Grid.Col>
 
-                {/* Main Content */}
                 <Grid.Col span={9}>
-                    {/* Profile Section */}
                     {activeTab === "profile" && (
                         <ProfileSection
                             user={user}
@@ -371,22 +281,18 @@ function ProfileView() {
                             previewImage={previewImage}
                         />
                     )}
-
-                    {/* Likes Section */}
                     {activeTab === "likes" && (
                         <LikesSection
                             likedProducts={likedProducts}
                             onUnlike={handleUnlike}
                         />
                     )}
-
-                    {/* Purchases Section */}
                     {activeTab === "purchases" && (
                         <PurchasesSection
+                            orders={orders} // from Laravel
+                            ordersCount={ordersCount} // from Laravel
                             orderFilter={orderFilter}
                             setOrderFilter={setOrderFilter}
-                            filteredOrders={filteredOrders}
-                            ordersCount={mockOrders.length}
                         />
                     )}
                 </Grid.Col>

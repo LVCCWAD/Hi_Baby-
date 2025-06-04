@@ -1,145 +1,221 @@
 import React from "react";
 import {
-  Card,
-  Title,
-  Divider,
-  Group,
-  Tabs,
-  Text,
-  Stack,
-  Paper,
-  Grid,
-  Box,
-  Image,
-  Button,
+    Card,
+    Title,
+    Divider,
+    Group,
+    Tabs,
+    Text,
+    Stack,
+    Paper,
+    Grid,
+    Box,
+    Image,
+    Button,
 } from "@mantine/core";
 import {
-  IconShoppingCart,
-  IconPackage,
-  IconCheck,
-  IconCalendar,
-  IconId,
+    IconShoppingCart,
+    IconPackage,
+    IconCheck,
+    IconX,
+    IconCalendar,
+    IconId,
 } from "@tabler/icons-react";
 
 function PurchasesSection({
-  orderFilter,
-  setOrderFilter,
-  filteredOrders,
-  ordersCount,
+    orderFilter,
+    setOrderFilter,
+    orders = [],
+    ordersCount,
 }) {
-  return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-      <Title order={3} mb="md">
-        My Purchases
-      </Title>
-      <Divider mb="lg" />
+    if (!Array.isArray(orders)) {
+        return (
+            <Text color="red" align="center">
+                Error loading orders. Please refresh the page or try again
+                later.
+            </Text>
+        );
+    }
 
-      <Group position="apart" mb="md">
-        <Tabs value={orderFilter} onTabChange={setOrderFilter}>
-          <Tabs.List>
-            <Tabs.Tab
-              value="all"
-              icon={<IconShoppingCart size={16} />}
-              style={{
-                backgroundColor: orderFilter === "all" ? "#B9BD7E" : "transparent",
-                color: orderFilter === "all" ? "white" : "inherit",
-                borderRadius: 0,
-              }}
-            >
-              All ({ordersCount})
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="to_ship"
-              icon={<IconPackage size={16} />}
-              style={{
-                backgroundColor: orderFilter === "to_ship" ? "#B9BD7E" : "transparent",
-                color: orderFilter === "to_ship" ? "white" : "inherit",
-                borderRadius: 0,
-              }}
-            >
-              To Ship
-            </Tabs.Tab>
-            <Tabs.Tab
-              value="delivered"
-              icon={<IconCheck size={16} />}
-              style={{
-                backgroundColor: orderFilter === "delivered" ? "#B9BD7E" : "transparent",
-                color: orderFilter === "delivered" ? "white" : "inherit",
-                borderRadius: 0,
-              }}
-            >
-              Delivered
-            </Tabs.Tab>
-          </Tabs.List>
-        </Tabs>
-      </Group>
+    const filterOrdersByStatus = (orders, status) => {
+        if (status === "all") return orders;
+        return orders.filter((order) => order.status === status);
+    };
 
-      {filteredOrders.length === 0 ? (
-        <Text align="center" color="dimmed" py="xl">
-          No orders found
-        </Text>
-      ) : (
-        <Stack spacing="lg">
-          {filteredOrders.map((order) => (
-            <Paper key={order.id} shadow="xs" p="md" withBorder>
-              <Grid>
-                <Grid.Col span={12}>
-                  <Group position="apart" mb="md">
-                    <Group>
-                      <IconCalendar size={16} />
-                      <Text size="sm">Ordered on: {order.date}</Text>
-                    </Group>
-                    <Group>
-                      <Text weight={500}>Total:</Text>
-                      <Text weight={700}>₱{order.total}</Text>
-                    </Group>
-                    <Group>
-                      <IconId size={16} />
-                      <Text size="sm">Order #: {order.id}</Text>
-                    </Group>
-                  </Group>
-                </Grid.Col>
+    const filteredOrders = filterOrdersByStatus(orders, orderFilter);
 
-                {order.items.map((item) => (
-                  <Grid.Col key={item.id} span={12}>
-                    <Group position="apart">
-                      <Group>
-                        <Box style={{ width: 80, height: 80, overflow: "hidden" }}>
-                          <Image
-                            src={item.image}
-                            width={80}
-                            height={80}
-                            fit="contain"
-                            withPlaceholder
-                          />
-                        </Box>
-                        <div>
-                          <Text weight={500}>{item.product_name}</Text>
-                        </div>
-                      </Group>
-                      <Group>
-                        <Text weight={700}>₱{item.price}</Text>
-                        <Button
-                          variant="light"
-                          color="green"
-                          radius="xl"
-                          compact
-                          leftIcon={<IconCheck size={16} />}
-                        >
-                          {item.status === "delivered" ? "Delivered" : item.status}
-                        </Button>
-                      </Group>
-                    </Group>
-                    <Divider my="sm" />
-                  </Grid.Col>
-                ))}
-              </Grid>
-            </Paper>
-          ))}
-        </Stack>
-      )}
-    </Card>
-  );
+    return (
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Title order={3} mb="md">
+                My Purchases
+            </Title>
+            <Divider mb="lg" />
+
+            <Group position="apart" mb="md">
+                <Tabs value={orderFilter} onChange={setOrderFilter}>
+                    <Tabs.List>
+                        {[
+                            {
+                                value: "all",
+                                label: `All (${ordersCount})`,
+                                icon: IconShoppingCart,
+                            },
+                            {
+                                value: "pending",
+                                label: "Pending",
+                                icon: IconPackage,
+                            },
+                            {
+                                value: "shipped",
+                                label: "Shipped",
+                                icon: IconPackage,
+                            },
+                            {
+                                value: "delivered",
+                                label: "Delivered",
+                                icon: IconCheck,
+                            },
+                            {
+                                value: "cancelled",
+                                label: "Cancelled",
+                                icon: IconX,
+                            },
+                        ].map(({ value, label, icon: Icon }) => (
+                            <Tabs.Tab
+                                key={value}
+                                value={value}
+                                icon={<Icon size={16} />}
+                                style={{
+                                    backgroundColor:
+                                        orderFilter === value
+                                            ? "#B9BD7E"
+                                            : "transparent",
+                                    color:
+                                        orderFilter === value
+                                            ? "white"
+                                            : "inherit",
+                                    borderRadius: 0,
+                                }}
+                            >
+                                {label}
+                            </Tabs.Tab>
+                        ))}
+                    </Tabs.List>
+                </Tabs>
+            </Group>
+
+            {filteredOrders.length === 0 ? (
+                <Text align="center" color="dimmed" py="xl">
+                    No orders found
+                </Text>
+            ) : (
+                <Stack spacing="lg">
+                    {filteredOrders.map((order) => (
+                        <Paper key={order.id} shadow="xs" p="md" withBorder>
+                            <Grid>
+                                <Grid.Col span={12}>
+                                    <Group
+                                        position="apart"
+                                        mb="md"
+                                        align="center"
+                                    >
+                                        <Group>
+                                            <IconCalendar size={16} />
+                                            <Text size="sm">
+                                                Ordered on:{" "}
+                                                {new Date(
+                                                    order.created_at
+                                                ).toLocaleDateString()}
+                                            </Text>
+                                        </Group>
+                                        <Group>
+                                            <IconId size={16} />
+                                            <Text size="sm">
+                                                Order #: {order.id}
+                                            </Text>
+                                        </Group>
+                                        <Group>
+                                            <Text weight={500}>Total:</Text>
+                                            <Text weight={700}>
+                                                ₱{order.total_amount}
+                                            </Text>
+                                        </Group>
+                                        <Button
+                                            variant="light"
+                                            color="green"
+                                            radius="xl"
+                                            compact
+                                            leftIcon={<IconCheck size={16} />}
+                                        >
+                                            {order.status
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                                order.status.slice(1)}
+                                        </Button>
+                                    </Group>
+                                </Grid.Col>
+
+                                {(order.items || []).map((item) => (
+                                    <Grid.Col key={item.id} span={12}>
+                                        <Group position="apart" align="center">
+                                            <Group>
+                                                <Box
+                                                    style={{
+                                                        width: 80,
+                                                        height: 80,
+                                                        overflow: "hidden",
+                                                    }}
+                                                >
+                                                    <Image
+                                                        src={
+                                                            item.image ??
+                                                            item.product?.image
+                                                        }
+                                                        width={80}
+                                                        height={80}
+                                                        fit="contain"
+                                                        withPlaceholder
+                                                    />
+                                                </Box>
+                                                <div>
+                                                    <Text weight={500}>
+                                                        {item.product_name ??
+                                                            item.product
+                                                                ?.name ??
+                                                            "Unnamed Product"}
+                                                    </Text>
+                                                    <Text
+                                                        size="sm"
+                                                        color="dimmed"
+                                                    >
+                                                        Color:{" "}
+                                                        {item.color || "N/A"} |
+                                                        Size:{" "}
+                                                        {item.size || "N/A"}
+                                                    </Text>
+                                                    <Text
+                                                        size="sm"
+                                                        color="dimmed"
+                                                    >
+                                                        Quantity:{" "}
+                                                        {item.quantity}
+                                                    </Text>
+                                                </div>
+                                            </Group>
+                                            <Text weight={700}>
+                                                ₱{item.price}
+                                            </Text>
+                                        </Group>
+                                        <Divider my="sm" />
+                                    </Grid.Col>
+                                ))}
+                            </Grid>
+                        </Paper>
+                    ))}
+                </Stack>
+            )}
+        </Card>
+    );
 }
 
 export default PurchasesSection;

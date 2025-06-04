@@ -219,6 +219,14 @@ class OrderController extends Controller
         ]);
     }
 
+   
+
+
+
+
+
+
+
 
 
     // public function checkout(Request $request)
