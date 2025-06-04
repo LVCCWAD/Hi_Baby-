@@ -32,10 +32,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            \Log::info('User type check', ['role' => $user->role]);
+            Log::info('User type check', ['role' => $user->role]);
 
             if ($user->role === 'admin') {
-                \Log::info('Redirecting to admin dashboard');
+                Log::info('Redirecting to admin dashboard');
 
                 return redirect()->route('admin.dashboard');
             }
@@ -70,18 +70,20 @@ class AuthController extends Controller
 
             ]);
 
+           
+            if(User::where('email', $request->email)->exists()){
+                return redirect()->back()->withErrors([
+                    'email' => 'Email is already made on this site',
+                ]);
+            }
             $credentials['password'] = bcrypt($credentials['password']);
             $user = User::create($credentials);
             Auth::login($user);
-
             if (Auth::check()) {
                 return redirect()->intended('home')->with('success', 'You are logged in!');
             }
 
-            return back()->withErrors([
-                'email' => 'The provided email do not match our records.',
-                'password' => 'The provided password do not match our records.',
-            ]);
+            
         } catch (\Exception $e) {
             // debugging
             dd("Error while saving user data: " . $e->getMessage());

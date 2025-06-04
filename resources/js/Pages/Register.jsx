@@ -15,6 +15,8 @@ import {
 } from "@mantine/core";
 
 import image from "../Assets/Register.png";
+
+import HandleError from "../Components/HandleError.jsx";
 import classes from "../../css/Components/Login.module.css";
 
 function Register() {
@@ -33,7 +35,7 @@ function Register() {
         e.preventDefault();
 
         if (data.password !== data.confirmPassword) {
-            setPassworddError("Passwords do not match");
+            setPasswordError("Passwords do not match");
             return;
         }
 
@@ -124,6 +126,8 @@ function Register() {
                                 mt="md"
                                 size="md"
                             />
+                            
+                            {errors.email && <HandleError message={errors.email} />}
                             <PasswordInput
                                 label="Password"
                                 placeholder="password"
@@ -147,10 +151,10 @@ function Register() {
                                     setData("confirmPassword", e.target.value)
                                 }
                                 value={data.confirmPassword}
-                                error={passwordError}
                                 mt="md"
                                 size="md"
-                            />
+                            />  
+                            {errors && <HandleError message={passwordError} />}
 
                             <Button
                                 type="submit"

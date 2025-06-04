@@ -15,7 +15,7 @@ import {
     Title,
     Flex
 } from "@mantine/core";
-import{IconSend2, IconUser} from "@tabler/icons-react";
+import{IconArrowBack, IconSend2, IconUser} from "@tabler/icons-react";
 import Pusher from "pusher-js";
 
 function UserChat() {
