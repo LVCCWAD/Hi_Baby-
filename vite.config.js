@@ -14,7 +14,8 @@ export default defineConfig({
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs",
+            "@tabler/icons-react":
+                "@tabler/icons-react/dist/esm/icons/index.mjs",
         },
     },
     build: {
@@ -22,8 +23,8 @@ export default defineConfig({
         outDir: "public/build",
         emptyOutDir: true,
         sourcemap: false,
-        cssCodeSplit: false, // reduces memory usage
-        chunkSizeWarningLimit: 2000, // suppress chunk size warnings
+        cssCodeSplit: false, // Disable CSS splitting to save memory
+        chunkSizeWarningLimit: 2000,
         assetsDir: ".",
         rollupOptions: {
             output: {
