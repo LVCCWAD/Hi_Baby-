@@ -37,7 +37,7 @@ function AdminHeader() {
     const isAuthenticated = auth && auth.user;
 
     const handleLogout = () => {
-        Inertia.post(
+        route.post(
             "/logout",
             {},
             {

@@ -44,13 +44,10 @@
     "src": "resources/js/Assets/Register.png"
   },
   "resources/js/app.jsx": {
-    "file": "app-PRd9yqyW.js",
+    "file": "app-DYTJi4HZ.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
-    "css": [
-      "assets/app-BETxNaRe.css"
-    ],
     "assets": [
       "assets/HeroHeader-CQz_5rV0.png",
       "assets/1stImg-B3pKgQDs.png",
@@ -64,5 +61,9 @@
       "fonts/FredokaOne-Regular.ttf",
       "fonts/WendyOne-Regular.ttf"
     ]
+  },
+  "style.css": {
+    "file": "assets/style-BETxNaRe.css",
+    "src": "style.css"
   }
 }
