@@ -7,6 +7,7 @@ import {
     Stack,
     Checkbox,
     ActionIcon,
+    Box,
     NumberInput,
 } from "@mantine/core";
 import { IconTrash, IconPlus, IconMinus } from "@tabler/icons-react";
@@ -26,6 +27,7 @@ function CartItem({
                         checked={selectedItems.includes(item.id)}
                         onChange={() => handleSelectItem(item.id)}
                     />
+                    <Box style={{ height: "200px", overflow: "hidden" }}>
                     <Image
                         src={
                             item.image.startsWith("http")
@@ -33,12 +35,15 @@ function CartItem({
                                 : `/storage/${item.image}`
                         }
                         alt={item.name}
-                        width={120}
-                        height={120}
+                        height="100%"
+                        width="100%"
                         fit="cover"
                         radius="md"
+                        style={{ objectFit: "cover" }}
                     />
 
+                    </Box>
+                    
                     <Stack spacing={5}>
                         <Text weight={600} size="lg">
                             {item.name}

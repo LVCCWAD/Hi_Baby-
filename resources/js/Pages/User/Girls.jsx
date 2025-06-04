@@ -138,7 +138,10 @@ function Girls({ products = [] }) {
 
             <Grid>
                 {/* Filters Sidebar */}
-                <Grid.Col span={3}>
+                <Grid.Col span={3} style={{
+                    minWidth: "250px",
+                    flexShrink: 0,}}
+                    >
                     <Box>
                         {/* Categories Filter */}
                         <Accordion defaultValue="categories">
@@ -198,23 +201,27 @@ function Girls({ products = [] }) {
 
                 {/* Products Grid */}
                 <Grid.Col span={9}>
-                    <Grid>
                         {filteredProducts.length > 0 ? (
-                            filteredProducts.map((product) => (
-                                <Grid.Col key={product.id} span={4} mb={20}>
-                                    <ProductCard product={product} />
-                                </Grid.Col>
-                            ))
+                        <Box
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "20px",
+                            }}
+                            >
+                            {filteredProducts.map((product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                
+                            ))}
+                            </Box>
                         ) : (
-                            <Grid.Col span={12}>
-                                <Center style={{ height: 200 }}>
-                                    <Text color="dimmed" size="lg">
-                                        No products found matching your filters.
-                                    </Text>
-                                </Center>
-                            </Grid.Col>
+                            <Center style={{ height: 200 }}>
+                                <Text color="dimmed" size="lg">
+                                    No products found matching your filters.
+                                </Text>
+                            </Center>
+                            
                         )}
-                    </Grid>
                 </Grid.Col>
             </Grid>
         </Container>
@@ -252,89 +259,86 @@ function ProductCard({ product }) {
     };
 
     return (
-        <MantineProvider>
             <Link
-                href={`/user/products/${product.id}`}
-                style={{ textDecoration: "none" }}
+            href={`/user/products/${product.id}`}
+            style={{ textDecoration: "none" }}
+        >
+            <Card
+                shadow="sm"
+                padding="lg"
+                radius="md"    
+                withBorder
+                style={{ position: "relative",  width: "200px", height: "300px", flexShrink: 0,}}
             >
-                <Card
-                    shadow="sm"
-                    padding="lg"
-                    radius="md"
-                    withBorder
-                    style={{ position: "relative" }}
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        zIndex: 2,
+                        cursor: "pointer",
+                        background: "white",
+                        borderRadius: "50%",
+                        width: "30px",
+                        height: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                    onClick={handleLikeToggle}
                 >
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            zIndex: 2,
-                            cursor: "pointer",
-                            background: "white",
-                            borderRadius: "50%",
-                            width: "30px",
-                            height: "30px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        onClick={handleLikeToggle}
-                    >
-                        {isLiked ? (
-                            <IconHeartFilled size={18} color="#ff6b6b" />
-                        ) : (
-                            <IconHeart size={18} color="#adb5bd" />
-                        )}
-                    </div>
+                    {isLiked ? (
+                        <IconHeartFilled size={18} color="#ff6b6b" />
+                    ) : (
+                        <IconHeart size={18} color="#adb5bd" />
+                    )}
+                </div>
 
-                    <Card.Section>
-                        <Image
-                            src={product.image}
-                            alt={product.name}
-                            height={200}
-                            width={200}
-                            style={{
-                                maxWidth: "300px",
-                                maxHeight: "200px",
-                            }}
-                        />
-                    </Card.Section>
+                <Card.Section style={{ height: "150px", overflow: "hidden" }}>
+                    <Image
+                        src={product.image}
+                        alt={product.name}
+                        height="100%"
+                        width="100%"
+                        fit="cover"                
+                        style={{ objectFit: "cover" }}
 
-                    <Text weight={600} mt="md" lineClamp={1}>
-                        {product.name}
+                    />
+                </Card.Section>
+
+                <Text weight={600} mt="md" lineClamp={1}>
+                    {product.name}
+                </Text>
+
+                <Group spacing={5} mt={5}>
+                    <Text weight={700} color="#6b8e23" size="md">
+                        ₱{product.price}
                     </Text>
+                    <Text
+                        size="sm"
+                        color="gray"
+                        style={{ textDecoration: "line-through" }}
+                    >
+                        ₱{originalPrice}
+                    </Text>
+                    <Text size="xs" color="red">
+                        -{discountPercentage}%
+                    </Text>
+                </Group>
 
-                    <Group spacing={5} mt={5}>
-                        <Text weight={700} color="#6b8e23" size="md">
-                            ₱{product.price}
-                        </Text>
-                        <Text
-                            size="sm"
-                            color="gray"
-                            style={{ textDecoration: "line-through" }}
-                        >
-                            ₱{originalPrice}
-                        </Text>
-                        <Text size="xs" color="red">
-                            -{discountPercentage}%
-                        </Text>
-                    </Group>
-
-                    <Group mt={5} spacing="xs" align="center">
-                        {product.categories &&
-                            product.categories.length > 0 && (
-                                <Badge variant="light" color="blue" size="sm">
-                                    {product.categories[0].name}
-                                </Badge>
-                            )}
-                        <Text size="xs" color="dimmed" ml="auto">
-                            {likeCount} {likeCount === 1 ? "like" : "likes"}
-                        </Text>
-                    </Group>
-                </Card>
-            </Link>
-        </MantineProvider>
+                <Group mt={5} spacing="xs" align="center">
+                    {product.categories &&
+                        product.categories.length > 0 && (
+                            <Badge variant="light" color="blue" size="sm">
+                                {product.categories[0].name}
+                            </Badge>
+                        )}
+                    <Text size="xs" color="dimmed" ml="auto">
+                        {likeCount} {likeCount === 1 ? "like" : "likes"}
+                    </Text>
+                </Group>
+            </Card>
+        </Link>
     );
 }
 

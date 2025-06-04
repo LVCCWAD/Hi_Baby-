@@ -48,22 +48,25 @@ function Home({ products = [] }) {
                     >
                         Girl's Clothing
                     </Text>
-                    <Select
-                        placeholder="Trending"
-                        data={[{ value: "trending", label: "Trending" }]}
-                        style={{ width: 120 }}
-                        size="xs"
-                    />
                 </Group>
 
                 <Grid>
                     {girlsProducts.map((product) => (
-                        <Grid.Col key={product.id} span={4}>
+                        <Grid.Col 
+                            key={product.id} 
+                            span={4} 
+                            style={{
+                                minWidth: "300px",
+                                minHeight: "200px",
+                                maxWidth: "300px",
+                                maxHeight: "500px",
+                            }}
+                        >
                             <ProductCard product={product} />
                         </Grid.Col>
                     ))}
                 </Grid>
-
+                
                 <Center mt={20}>
                     <Button
                         component="a"
@@ -91,7 +94,16 @@ function Home({ products = [] }) {
 
                 <Grid>
                     {boysProducts.map((product) => (
-                        <Grid.Col key={product.id} span={4}>
+                        <Grid.Col 
+                            key={product.id} 
+                            span={4}
+                            style={{
+                                maxWidth: "300px",
+                                maxHeight: "200px",
+                                minWidth: "300px",
+                                minHeight: "400px",
+                            }}
+                            >
                             <ProductCard product={product} />
                         </Grid.Col>
                     ))}

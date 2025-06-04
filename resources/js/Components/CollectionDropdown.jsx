@@ -16,9 +16,9 @@ const PillItemStyle = styled(Link)`
   transition: color 0.3s, border-color 0.3s, background-color 0.3s;
 
   &:hover {
-    color: #4caf50;
-    border-color: #4caf50;
-    background-color: #f5f5f5;
+    color: #FBF2E9;
+    border-color: #BAB86C;
+    background-color: #BAB86C;
   }
 `;
 
@@ -31,8 +31,8 @@ const DivStyle = styled.div`
   padding: 10px;
 
   &:hover {
-    color: #EDE7E7;
-    background-color: #9F8E8E;
+    color: #FBF2E9;
+    background-color: #BAB86C;
     border-radius: 20px;
   }
 `;

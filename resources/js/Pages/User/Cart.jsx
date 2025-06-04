@@ -1,35 +1,75 @@
 import React, { useState } from "react";
-import { Container, Text, Grid, Paper, Checkbox, Group } from "@mantine/core";
+import { Container, Text, Grid, Paper, Checkbox, Group, Modal, Button } from "@mantine/core";
 import CartItem from "../../Components/CartItem"; // your cart item UI component
 import OrderSummary from "../../Components/OrderSummary"; // your order summary UI component
 import { router, usePage, Head } from "@inertiajs/react";
+import { useDisclosure } from '@mantine/hooks';
 
 function Cart({ cart = [] }) {
+    
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [cartItems, setCartItems] = useState(cart);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
     const { address } = usePage().props;
+    const [modalMessage, setModalMessage] = useState("");
+    const [opened, { open, close }] = useDisclosure(false);    
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [modalAction, setModalAction] = useState(null); 
 
     const handleDelete = (id) => {
-        if (
-            confirm("Are you sure you want to delete this item from your cart?")
-        ) {
-            router.delete(`/cart/${id}`, {
-                onSuccess: () => {
-                    setCartItems((prev) =>
-                        prev.filter((item) => item.id !== id)
-                    );
-                    setSelectedItems((prev) =>
-                        prev.filter((itemId) => itemId !== id)
-                    );
+        
+            setModalMessage("Are you sure you want to delete this item from your cart?");
+            setItemToDelete(id);
+            setModalAction("delete")
+            open();
+    };
+    const handleConfirm = () => {
+        if (modalAction === "delete") {
+        if (!itemToDelete) return; 
+
+        router.delete(`/cart/${id}`, {
+            onSuccess: () => {
+                setCartItems((prev) =>
+                    prev.filter((item) => item.id !== id)
+                );
+                setSelectedItems((prev) =>
+                    prev.filter((itemId) => itemId !== id)
+                );
+            },
+            onError: () => {
+                alert("Failed to remove item.");
+            },
+        });
+    }
+    if (modalAction === "checkout") {
+        setLoading(true);
+        router.post(
+            "/order/create",
+            {
+                address: `${address.street}, ${address.city}, ${
+                    address.state ?? ""
+                } ${address.zip ?? ""}`.trim(),
+                items: selectedItems,
+                payment_method: selectedPaymentMethod,
+            },
+            {
+                onSuccess: (page) => {
+                    setLoading(false);
+                    setCartItems([]);
+                    setSelectedItems([]);
+                    // const orderId = page.props?.order_id || page.order_id;
+                    // router.visit(`/order-success/${orderId}`);
                 },
                 onError: () => {
-                    alert("Failed to remove item.");
+                    setLoading(false);
+                    alert("Failed to place order.");
                 },
-            });
-        }
+            }
+        );
+    }
+        
     };
 
     const handleQuantityChange = (id, quantity) => {
@@ -62,42 +102,25 @@ function Cart({ cart = [] }) {
         .filter((item) => selectedItems.includes(item.id))
         .reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-
     const handleCheckout = () => {
         if (!address) {
-            alert("Please select a shipping address.");
+            setModalMessage("Please select a shipping address.");
+            setModalAction(null);
+            open();
             return;
         }
         if (selectedItems.length === 0) {
-            alert("Please select at least one item to checkout.");
+            setModalMessage("Please select at least one item to checkout.");
+            setModalAction(null);
+            open();
             return;
         }
-        setLoading(true);
-        router.post(
-            "/order/create",
-            {
-                address: `${address.street}, ${address.city}, ${
-                    address.state ?? ""
-                } ${address.zip ?? ""}`.trim(),
-                items: selectedItems,
-                payment_method: selectedPaymentMethod,
-            },
-            {
-                onSuccess: (page) => {
-                    setLoading(false);
-                    setCartItems([]);
-                    setSelectedItems([]);
-                    // const orderId = page.props?.order_id || page.order_id;
-                    // router.visit(`/order-success/${orderId}`);
-                },
-                onError: () => {
-                    setLoading(false);
-                    alert("Failed to place order.");
-                },
-            }
-        );
+        setModalMessage("Are you sure you want to place this order?");
+        setModalAction("checkout"); // Set modal action
+        open();
     };
 
+   
     return (
         <Container size="xl" mt="xl">
             <Head>
@@ -147,7 +170,23 @@ function Cart({ cart = [] }) {
                     />
                 </Grid.Col>
             </Grid>
+            <Modal opened={opened} onClose={close} title="Confirm" centered>
+            <Text>{modalMessage}</Text>
+            <Group mt="md" position="right">
+                <Button variant="default" onClick={close}>Cancel</Button>
+                {modalAction && (
+                    <Button
+                        color={modalAction === "delete" ? "red" : "green"}
+                        onClick={handleConfirm}
+                        loading={loading && modalAction === "checkout"}
+                    >
+                        {modalAction === "delete" ? "Delete" : "Confirm Order"}
+                    </Button>
+                )}
+            </Group>
+            </Modal>
         </Container>
+        
     );
 }
 

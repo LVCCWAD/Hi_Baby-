@@ -141,12 +141,15 @@ function Boys({ products = [] }) {
                 />
             </Group>
 
-            <Grid>
+            <Grid minWidth={300}>
                 {/* Filters Sidebar */}
-                <Grid.Col span={3}>
+                <Grid.Col span={3} style={{
+                    minWidth: "250px",
+                    flexShrink: 0,
+                }} >
                     <Box>
                         {/* Categories Filter */}
-                        <Accordion defaultValue="categories">
+                        <Accordion defaultValue="categories" >
                             <Accordion.Item value="categories">
                                 <Accordion.Control>
                                     <Text weight={600}>Categories</Text>
@@ -203,23 +206,29 @@ function Boys({ products = [] }) {
 
                 {/* Products Grid */}
                 <Grid.Col span={9}>
-                    <Grid>
                         {filteredProducts.length > 0 ? (
-                            filteredProducts.map((product) => (
-                                <Grid.Col key={product.id} span={4} mb={20}>
-                                    <ProductCard product={product} />
-                                </Grid.Col>
-                            ))
+                        <Box
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "20px",
+                            }}
+                            >
+                            {filteredProducts.map((product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                
+                            ))}
+                            </Box>
                         ) : (
-                            <Grid.Col span={12}>
+                            
                                 <Center style={{ height: 200 }}>
                                     <Text color="dimmed" size="lg">
                                         No products found matching your filters.
                                     </Text>
                                 </Center>
-                            </Grid.Col>
+                            
                         )}
-                    </Grid>
+                    
                 </Grid.Col>
             </Grid>
         </Container>
@@ -236,98 +245,96 @@ function ProductCard({ product }) {
     );
 
     return (
-        <MantineProvider>
-            <Link
-                href={`/user/products/${product.id}`}
-                style={{ textDecoration: "none" }}
+        <Link
+            href={`/user/products/${product.id}`}
+            style={{ textDecoration: "none" }}
+        >
+            <Card
+                shadow="sm"
+                padding="lg"
+                radius="md"    
+                withBorder
+                style={{ position: "relative",  width: "200px", height: "300px", flexShrink: 0,}}
             >
-                <Card
-                    shadow="sm"
-                    padding="lg"
-                    radius="md"
-                    withBorder
-                    style={{ position: "relative" }}
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        zIndex: 2,
+                        cursor: "pointer",
+                        background: "white",
+                        borderRadius: "50%",
+                        width: "30px",
+                        height: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsFavorite(!isFavorite);
+                    }}
                 >
-                    <div
+                    <IconHeart
+                        size={18}
                         style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            zIndex: 2,
-                            cursor: "pointer",
-                            background: "white",
-                            borderRadius: "50%",
-                            width: "30px",
-                            height: "30px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            color: isFavorite ? "#ff6b6b" : "#adb5bd",
+                            fill: isFavorite ? "#ff6b6b" : "transparent",
                         }}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsFavorite(!isFavorite);
+                    />
+                </div>
+
+                <Card.Section style={{ height: "150px", overflow: "hidden" }}>
+                    <Image
+                        src={product.image}
+                        alt={product.name}
+                        height={200}
+                        width={200}
+                        style={{
+                            maxWidth: "300px",
+                            maxHeight: "200px",
                         }}
-                    >
-                        <IconHeart
-                            size={18}
-                            style={{
-                                color: isFavorite ? "#ff6b6b" : "#adb5bd",
-                                fill: isFavorite ? "#ff6b6b" : "transparent",
-                            }}
-                        />
-                    </div>
+                    />
+                </Card.Section>
 
-                    <Card.Section>
-                        <Image
-                            src={product.image}
-                            alt={product.name}
-                            height={200}
-                            width={200}
-                            style={{
-                                maxWidth: "300px",
-                                maxHeight: "200px",
-                            }}
-                        />
-                    </Card.Section>
+                <Text weight={600} mt="md" lineClamp={1}>
+                    {product.name}
+                </Text>
 
-                    <Text weight={600} mt="md" lineClamp={1}>
-                        {product.name}
+                <Group spacing={5} mt={5}>
+                    <Text weight={700} color="#6b8e23" size="md">
+                        ₱{product.price}
                     </Text>
+                    <Text
+                        size="sm"
+                        color="gray"
+                        style={{ textDecoration: "line-through" }}
+                    >
+                        ₱{originalPrice}
+                    </Text>
+                    <Text size="xs" color="red">
+                        -{discountPercentage}%
+                    </Text>
+                </Group>
 
-                    <Group spacing={5} mt={5}>
-                        <Text weight={700} color="#6b8e23" size="md">
-                            ₱{product.price}
-                        </Text>
-                        <Text
-                            size="sm"
-                            color="gray"
-                            style={{ textDecoration: "line-through" }}
-                        >
-                            ₱{originalPrice}
-                        </Text>
-                        <Text size="xs" color="red">
-                            -{discountPercentage}%
-                        </Text>
+                {product.categories && product.categories.length > 0 && (
+                    <Group mt={5}>
+                        {product.categories.slice(0, 1).map((cat) => (
+                            <Badge
+                                key={cat.id}
+                                variant="light"
+                                color="blue"
+                                size="sm"
+                            >
+                                {cat.name}
+                            </Badge>
+                        ))}
                     </Group>
-
-                    {product.categories && product.categories.length > 0 && (
-                        <Group mt={5}>
-                            {product.categories.slice(0, 1).map((cat) => (
-                                <Badge
-                                    key={cat.id}
-                                    variant="light"
-                                    color="blue"
-                                    size="sm"
-                                >
-                                    {cat.name}
-                                </Badge>
-                            ))}
-                        </Group>
-                    )}
-                </Card>
-            </Link>
-        </MantineProvider>
+                )}
+            </Card>
+        </Link>
     );
 }
 

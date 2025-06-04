@@ -293,8 +293,8 @@ const LinkStyle = styled(Link)`
     padding: 10px;
 
     &:hover {
-        color: #ede7e7;
-        background-color: #9f8e8e;
+        color: #FBF2E9;
+        background-color: #BAB86C;
         border-radius: 20px;
     }
 `;
