@@ -1,4 +1,12 @@
 {
+  "resources/css/fonts/FredokaOne-Regular.ttf": {
+    "file": "fonts/FredokaOne-Regular.ttf",
+    "src": "resources/css/fonts/FredokaOne-Regular.ttf"
+  },
+  "resources/css/fonts/WendyOne-Regular.ttf": {
+    "file": "fonts/WendyOne-Regular.ttf",
+    "src": "resources/css/fonts/WendyOne-Regular.ttf"
+  },
   "resources/js/Assets/1stImg.png": {
     "file": "assets/1stImg-B3pKgQDs.png",
     "src": "resources/js/Assets/1stImg.png"
@@ -36,12 +44,12 @@
     "src": "resources/js/Assets/Register.png"
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-loLfFQuf.js",
+    "file": "app-PRd9yqyW.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "css": [
-      "assets/app-BqE0sRmF.css"
+      "assets/app-BETxNaRe.css"
     ],
     "assets": [
       "assets/HeroHeader-CQz_5rV0.png",
@@ -52,7 +60,9 @@
       "assets/5thImg-DvaV3dDF.png",
       "assets/Login-rYvL6Fsl.png",
       "assets/Register-BgFgQ0fV.png",
-      "assets/Logo-CFcRExL-.png"
+      "assets/Logo-CFcRExL-.png",
+      "fonts/FredokaOne-Regular.ttf",
+      "fonts/WendyOne-Regular.ttf"
     ]
   }
 }
