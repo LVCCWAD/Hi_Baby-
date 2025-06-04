@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Services\ProductSearchService;
 
 
 class ProductController extends Controller
@@ -262,6 +263,33 @@ class ProductController extends Controller
             'product' => $product,
             'address' => $address,
             'auth' => ['user' => Auth::user()]
+        ]);
+    }
+
+
+    public function index(Request $request, ProductSearchService $searchService)
+    {
+        $products = $searchService->search($request->input('q'));
+        return response()->json($products);
+    }
+
+
+
+    public function searchResultsPage(Request $request)
+    {
+        $query = $request->query('q');
+        $userId = Auth::id();
+
+        $products = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
+            ->where('name', 'like', "%{$query}%")
+            ->withCount('likes')
+            ->get();
+
+        $products = $this->addLikedStatus($products, $userId);
+
+        return Inertia::render('User/Search', [
+            'products' => $products,
+            'query' => $query,
         ]);
     }
 }

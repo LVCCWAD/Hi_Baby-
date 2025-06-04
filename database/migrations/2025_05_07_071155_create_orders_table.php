@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total_amount', 10, 2)->default(0);
 
-            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])
+            $table->enum('status', ['pending', 'shipped', 'delivered', 'cancelled'])
                   ->default('pending'); // ORDER status
 
             $table->string('address');

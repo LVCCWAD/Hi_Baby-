@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+
+    use Searchable;
+
     protected $fillable = [
         'name',
         'description',
@@ -56,4 +60,6 @@ class Product extends Model
     {
         return $this->likes()->where('user_id', $user->id)->exists();
     }
+
+
 }

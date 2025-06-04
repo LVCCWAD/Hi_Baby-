@@ -1,10 +1,14 @@
 <?php
 
 use Inertia\Inertia;
+use App\Models\Order;
+use App\Models\Product;
 use App\Mail\OrderPlaced;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Services\ProductSearchService;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\User\CartController;
@@ -17,14 +21,18 @@ use App\Http\Controllers\User\ReviewsController;
 use App\Http\Controllers\Admin\ProductController;
 
 
-Route::get('/', fn () => 'Laravel app is responding!');
+Route::get('/', fn() => 'Laravel app is responding!');
 
 
-Route::get('/test-mail', function () {
-    $order = App\Models\Order::with('items')->latest()->first();
-    Mail::to('galacticabbadon@gmail.com')->send(new OrderPlaced($order));
-    return "Email sent!";
-});
+// Route::get('/test-mail', function () {
+//     $order = App\Models\Order::with('items')->latest()->first();
+//     Mail::to('galacticabbadon@gmail.com')->send(new OrderPlaced($order));
+//     return "Email sent!";
+// });
+
+// Route::get('/test-products', function () {
+//     return Product::all();
+// });
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -107,12 +115,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/products/{product}/like', [LikeController::class, 'likeChecker'])->name('products.like');
     Route::post('/products/{product}/unlike', [ProductController::class, 'unlike']);
 
-
     //Messages
     Route::get('/chat', [ChatsController::class, 'showChatstoAdminAndUser'])->name('chat.index'); // user chatting with admin
     Route::post('/chat/send', [ChatsController::class, 'sendMessageFromUserToAdmin'])->name('chat.send');
+
+    //Search
+    Route::get('/search', [ProductController::class, 'searchResultsPage'])->name('user.search');
+
+    // Notifications
+
 });
 
 Route::post('/logout', function () {
     Auth::logout();
 });
+
+// Route::get('/products/search', function (Request $request, ProductSearchService $searchService) {
+//     $query = $request->query('q');
+//     return $searchService->search($query);
+// });
