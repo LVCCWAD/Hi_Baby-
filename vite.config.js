@@ -14,14 +14,16 @@ export default defineConfig({
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            "@tabler/icons-react":
-                "@tabler/icons-react/dist/esm/icons/index.mjs",
+            "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs",
         },
     },
     build: {
         manifest: true,
         outDir: "public/build",
         emptyOutDir: true,
+        sourcemap: false,
+        cssCodeSplit: false, // reduces memory usage
+        chunkSizeWarningLimit: 2000, // suppress chunk size warnings
         assetsDir: ".",
         rollupOptions: {
             output: {
