@@ -30,7 +30,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 
 # Build frontend
-RUN NODE_OPTIONS="--max-old-space-size=256" npx vite build
+RUN npx vite build
 
 # Laravel config cache
 RUN php artisan config:cache
