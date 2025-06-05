@@ -24,7 +24,7 @@ export default defineConfig({
     build: {
         manifest: true,
         outDir: "public/build",
-        emptyOutDir: true,
+        emptyOutDir: false,
         sourcemap: false,
         cssCodeSplit: false, // Disable CSS splitting to save memory
         chunkSizeWarningLimit: 2000,
