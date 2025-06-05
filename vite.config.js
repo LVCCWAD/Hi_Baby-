@@ -2,17 +2,17 @@ import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { visualizer } from 'rollup-plugin-visualizer';
+// Disable visualizer in production to save memory
+// import { visualizer } from 'rollup-plugin-visualizer';
 
-
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
     plugins: [
         laravel({
             input: ["resources/js/app.jsx"],
             refresh: true,
         }),
         react(),
-         visualizer({ open: true })
+        // mode !== 'production' && visualizer({ open: true }), // optional, uncomment for local
     ],
     resolve: {
         alias: {
@@ -24,11 +24,11 @@ export default defineConfig({
     build: {
         manifest: true,
         outDir: "public/build",
-        emptyOutDir: false,
+        emptyOutDir: true, // must be true to avoid stale manifest issues
         sourcemap: false,
-        cssCodeSplit: false, // Disable CSS splitting to save memory
+        cssCodeSplit: false,
         chunkSizeWarningLimit: 2000,
-        assetsDir: ".",
+        assetsDir: ".", // optional: avoids nesting too deep
         rollupOptions: {
             output: {
                 assetFileNames: (assetInfo) => {
@@ -40,4 +40,4 @@ export default defineConfig({
             },
         },
     },
-});
+}));
