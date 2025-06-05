@@ -4,14 +4,17 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig(({ mode }) => ({
+    base:
+        mode === "production"
+            ? "https://hibaby-production-0186.up.railway.app/build/"
+            : "/",
     plugins: [
         laravel({
             input: ["resources/js/app.jsx"],
             refresh: true,
-            manifest: "manifest.json", // ✅ Fix path for Laravel
+            manifest: "manifest.json",
         }),
         react(),
-        // mode !== 'production' && visualizer({ open: true }),
     ],
     resolve: {
         alias: {
