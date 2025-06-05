@@ -13,7 +13,7 @@
 <body>
     @inertia
 
-    <pre>{{ print_r(json_decode(file_get_contents(public_path('build/manifest.json')), true), true) }}</pre>
+    {{-- <pre>{{ print_r(json_decode(file_get_contents(public_path('build/manifest.json')), true), true) }}</pre> --}}
 </body>
 
 </html>
