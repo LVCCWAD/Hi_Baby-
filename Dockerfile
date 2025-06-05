@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# Install system dependencies + use NodeSource for recent Node.js version
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -20,19 +20,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy package.json files and install JS deps with less memory
-COPY package*.json ./
+# Copy all source files
+COPY . .
 
-# Use --omit=dev to avoid installing large dev dependencies
-RUN npm install --omit=dev
-
-# Copy application source files
-COPY public/build ./public/build
-
-# Install PHP dependencies (optimized for prod)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Build frontend assets — keep it minimal
+# Install JS deps with dev for Vite
+RUN npm install
+
+# Build frontend
 RUN NODE_OPTIONS="--max-old-space-size=256" npx vite build
 
 # Laravel config cache
