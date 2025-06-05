@@ -27,13 +27,13 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 # Copy application source files
-COPY . .
+COPY public/build ./public/build
 
 # Install PHP dependencies (optimized for prod)
 RUN composer install --no-dev --optimize-autoloader
 
 # Build frontend assets — keep it minimal
-RUN NODE_OPTIONS="--max-old-space-size=256" npm run build
+RUN NODE_OPTIONS="--max-old-space-size=256" npx vite build
 
 # Laravel config cache
 RUN php artisan config:cache
