@@ -66,7 +66,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/chat/{userId}', [ChatsController::class, 'adminChat'])->name('admin.chat'); // admin chat with specific user
     Route::post('/admin/chat/send', [ChatsController::class, 'adminSendMessage'])->name('admin.chat.send'); // admin sends message
 
-
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -125,11 +125,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Notifications
 
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::post('/logout', function () {
-    Auth::logout();
-});
+
 
 // Route::get('/products/search', function (Request $request, ProductSearchService $searchService) {
 //     $query = $request->query('q');

@@ -37,12 +37,12 @@ function AdminHeader() {
     const isAuthenticated = auth && auth.user;
 
     const handleLogout = () => {
-        route.post(
+        Inertia.post(
             "/logout",
             {},
             {
                 onSuccess: () => {
-                    window.location.href = "/login"; // Force a full reload
+                    window.location.href = "/login"; // Optional: force reload
                 },
             }
         );
@@ -71,18 +71,17 @@ function AdminHeader() {
                     {/* Center: Navigation */}
                     <Group gap={rem(40)}>
                         <Link href="/dashboard" style={linkStyle}>
-                          Analytics
+                            Analytics
                         </Link>{" "}
                         <Link href="/show-products" style={linkStyle}>
                             Products
                         </Link>
                         <Link href="/chat" style={linkStyle}>
-                           Messages
+                            Messages
                         </Link>
                         <Link href="/order/list" style={linkStyle}>
                             Orders
                         </Link>
-
                     </Group>
 
                     {/* Right: Search & Icons */}
@@ -136,9 +135,6 @@ function AdminHeader() {
 
                         {/* Icons */}
                         <Group gap={rem(20)}>
-
-
-
                             <Menu
                                 position="bottom-end"
                                 shadow="md"
@@ -182,8 +178,6 @@ function AdminHeader() {
                                                         auth.user.email}
                                                 </Text>
                                             </Menu.Label>
-
-
 
                                             <Divider my="xs" />
 

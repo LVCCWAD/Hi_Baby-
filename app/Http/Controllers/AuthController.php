@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Log;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    public function login()
+     public function login()
     {
-        return  Inertia::render('Login');
+        // Create default admin account if it doesn't exist
+        if (!User::where('email', 'admin@example.com')->exists()) {
+            User::create([
+                'username' => 'Admin',
+                'first_name' => 'Seller',
+                'last_name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('password'), // default password
+                'role' => 'admin',
+            ]);
+        }
+
+        return Inertia::render('Login');
     }
 
 
@@ -70,7 +82,7 @@ class AuthController extends Controller
 
             ]);
 
-           
+
             if(User::where('email', $request->email)->exists()){
                 return redirect()->back()->withErrors([
                     'email' => 'Email is already made on this site',
@@ -83,7 +95,7 @@ class AuthController extends Controller
                 return redirect()->intended('home')->with('success', 'You are logged in!');
             }
 
-            
+
         } catch (\Exception $e) {
             // debugging
             dd("Error while saving user data: " . $e->getMessage());
@@ -91,10 +103,10 @@ class AuthController extends Controller
     }
 
 
-    // public function logout()
-    // {
-    //     Session::flush();
-    //     Auth::logout();
-    //     return redirect('/login')->with('success', 'You are logged out!');
-    // }
+    public function logout()
+    {
+        Session::flush();
+        Auth::logout();
+        return redirect('/login')->with('success', 'You are logged out!');
+    }
 }
