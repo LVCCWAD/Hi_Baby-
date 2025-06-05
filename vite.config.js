@@ -4,13 +4,14 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig(({ mode }) => ({
-    base:
-        mode === "production"
-            ? "https://hibaby-production-0186.up.railway.app/build/"
-            : "/",
+    base: mode === "production" ? "/build/" : "/",
     plugins: [
         laravel({
-            input: ["resources/js/app.jsx"],
+            input: [
+                "resources/js/app.jsx",
+                "resources/css/app.css",     // Include your custom CSS
+                "resources/css/fonts.css"    // If you use custom fonts
+            ],
             refresh: true,
             manifest: "manifest.json",
         }),
@@ -19,8 +20,7 @@ export default defineConfig(({ mode }) => ({
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "resources/js"),
-            "@tabler/icons-react":
-                "@tabler/icons-react/dist/esm/icons/index.mjs",
+            "@tabler/icons-react": "@tabler/icons-react/dist/esm/icons/index.mjs",
         },
     },
     build: {
