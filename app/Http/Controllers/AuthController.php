@@ -5,28 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-     public function login()
+    public function login()
     {
-        // Create default admin account if it doesn't exist
-        if (!User::where('email', 'admin@example.com')->exists()) {
-            User::create([
-                'username' => 'Admin',
-                'first_name' => 'Seller',
-                'last_name' => 'Admin',
-                'email' => 'admin@example.com',
-                'password' => bcrypt('password'), // default password
-                'role' => 'admin',
-            ]);
-        }
-
-        return Inertia::render('Login');
+        return  Inertia::render('Login');
     }
 
 

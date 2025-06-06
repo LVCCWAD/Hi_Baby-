@@ -136,6 +136,14 @@ function NavHeader() {
 
                         {/* Notification, Cart, User Menu */}
                         <Group gap={rem(20)}>
+                            <ActionIcon
+                                variant="transparent"
+                                component={Link}
+                                href="/cart"
+                                style={{ color: "#555" }}
+                            >
+                                <IconShoppingCart size={20} stroke={1.5} />
+                            </ActionIcon>
                             <NotificationModal
                                 opened={modalOpen}
                                 onClose={() => setModalOpen(false)}
@@ -307,8 +315,8 @@ const LinkStyle = styled(Link)`
     padding: 10px;
 
     &:hover {
-        color: #FBF2E9;
-        background-color: #BAB86C;
+        color: #fbf2e9;
+        background-color: #bab86c;
         border-radius: 20px;
     }
 `;
