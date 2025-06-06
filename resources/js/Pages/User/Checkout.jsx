@@ -12,11 +12,13 @@ function Checkout({ product, address, initialData }) {
         initialData.payment_method || "cod"
     );
 
-    // Extract color and size IDs from initialData
+    const price = Number(product.price);
+    const safePrice = isNaN(price) ? 0 : price;
+    const total = safePrice * quantity;
     const colorId = initialData.color_id;
     const sizeId = initialData.size_id;
 
-    const total = product.price * quantity;
+
 
     const handleCheckout = (paymentMethod) => {
         console.log("Starting checkout with:");

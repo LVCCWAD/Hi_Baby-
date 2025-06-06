@@ -118,7 +118,7 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
-        \Log::info('PlaceOrder Request:', $request->all());
+        Log::info('PlaceOrder Request:', $request->all());
 
         // Validation rules
         $rules = [
@@ -219,7 +219,7 @@ class OrderController extends Controller
         ]);
     }
 
-   
+
 
 
 
