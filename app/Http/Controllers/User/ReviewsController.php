@@ -37,7 +37,8 @@ class ReviewsController extends Controller
         ]);
 
         // Redirect to the same page but make sure fresh data is reloaded
-        return redirect()->route('products.show', $product->id);
+        session()->flash('success', 'Product updated!');
+        return Inertia::location(route('products.show', $product->id));
     }
 
 

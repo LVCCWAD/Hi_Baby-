@@ -195,7 +195,7 @@ class ChatsController extends Controller
 
         // Instead of returning JSON, redirect back to the chat with the user,
         // so Inertia gets a proper Inertia response.
-        return redirect()->route('admin.chat', ['userId' => $validated['receiver_id']])
-            ->with('success', 'Message sent successfully.');
+        session()->flash('success', 'Message sent successfully.');
+        return Inertia::location(route('admin.chat', ['userId' => $validated['receiver_id']]));
     }
 }

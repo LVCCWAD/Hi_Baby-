@@ -80,9 +80,9 @@ class OrderController extends Controller
             Mail::to($user->email)->send(new OrderPlaced($order));
             $user->notify(new UserEventNotification('Order placed successfully.'));
 
-            return redirect()->route('order.success', ['order' => $order->id]);
+            return Inertia::location(route('order.success', ['order' => $order->id]));
         } catch (\Exception $e) {
-            \Log::error('Order creation error: ' . $e->getMessage());
+            Log::error('Order creation error: ' . $e->getMessage());
             return back()->with('error', 'Failed to create order. Please try again.');
         }
     }
@@ -172,7 +172,8 @@ class OrderController extends Controller
         $user->notify(new UserEventNotification('Order placed successfully.'));
 
         // Redirect to order success page
-        return redirect()->route('order.success', ['order' => $order->id]);
+        session()->flash('success', 'Order placed successfully!');
+        return Inertia::location(route('order.success', ['order' => $order->id]));
     }
 
 

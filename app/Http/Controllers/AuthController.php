@@ -80,7 +80,7 @@ class AuthController extends Controller
             $user = User::create($credentials);
             Auth::login($user);
             if (Auth::check()) {
-                return redirect()->intended('home')->with('success', 'You are logged in!');
+                return Inertia::location(route('user.home'));
             }
         } catch (\Exception $e) {
             // debugging

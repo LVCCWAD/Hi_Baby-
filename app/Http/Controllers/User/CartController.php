@@ -66,7 +66,8 @@ class CartController extends Controller
         $user->notify(new UserEventNotification("Product #{$itemId} added to your cart", 'Cart Update'));
 
         $cartCount = $user->carts()->count();
-        return redirect()->route('user.cart')->with('cartCount', $cartCount);
+        session()->flash('cartCount', $cartCount);
+        return Inertia::location(route('user.cart'));
     }
 
     public function remove($id)

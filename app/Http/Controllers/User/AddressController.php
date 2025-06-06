@@ -79,8 +79,7 @@ class AddressController extends Controller
             'country' => $request->country,
         ]);
 
-        return redirect()->route('user.cart')
-            ->with('selectedAddress', $address);
+        return Inertia::location(route('user.cart', ['selectedAddress' => $address]));
     }
 
 

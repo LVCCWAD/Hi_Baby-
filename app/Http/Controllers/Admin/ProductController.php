@@ -224,7 +224,8 @@ class ProductController extends Controller
         Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
         Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+        session()->flash('success', 'Product updated successfully!');
+        return Inertia::location(route('admin.products'));
     }
 
 
