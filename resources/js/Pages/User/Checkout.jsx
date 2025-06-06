@@ -5,6 +5,7 @@ import { router, usePage, Head } from "@inertiajs/react";
 
 function Checkout({ product, address, initialData }) {
     console.log("Checkout props:", { product, address, initialData });
+    console.log("product.price:", product.price, "type:", typeof product.price);
 
     const [loading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(initialData.quantity || 1);
@@ -17,8 +18,6 @@ function Checkout({ product, address, initialData }) {
     const total = safePrice * quantity;
     const colorId = initialData.color_id;
     const sizeId = initialData.size_id;
-
-
 
     const handleCheckout = (paymentMethod) => {
         console.log("Starting checkout with:");
