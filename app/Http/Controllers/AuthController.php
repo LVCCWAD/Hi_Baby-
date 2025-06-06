@@ -37,11 +37,11 @@ class AuthController extends Controller
             if ($user->role === 'admin') {
                 Log::info('Redirecting to admin dashboard');
 
-                return redirect()->route('admin.dashboard');
+                return Inertia::location(route('admin.dashboard'));
             }
 
             if ($user->role === 'user') {
-                return redirect()->route('user.home');
+                return Inertia::location(route('user.home'));
             }
 
             Auth::logout();
@@ -71,7 +71,7 @@ class AuthController extends Controller
             ]);
 
 
-            if(User::where('email', $request->email)->exists()){
+            if (User::where('email', $request->email)->exists()) {
                 return redirect()->back()->withErrors([
                     'email' => 'Email is already made on this site',
                 ]);
@@ -82,8 +82,6 @@ class AuthController extends Controller
             if (Auth::check()) {
                 return redirect()->intended('home')->with('success', 'You are logged in!');
             }
-
-
         } catch (\Exception $e) {
             // debugging
             dd("Error while saving user data: " . $e->getMessage());
