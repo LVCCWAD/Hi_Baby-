@@ -87,9 +87,12 @@ function Checkout({ product, address, initialData }) {
                             Product
                         </Text>
                         <Text>Name: {product.name}</Text>
-                        <Text>Price: ${product.price.toFixed(2)}</Text>
+                        <Text>Price: ${Number(product.price).toFixed(2)}</Text>
                         <Text>Quantity: {quantity}</Text>
-                        <Text>Total: ${total.toFixed(2)}</Text>
+                        <Text>
+                            Total: $
+                            {(Number(product.price) * quantity).toFixed(2)}
+                        </Text>
                         {/* You can add inputs here to update quantity, select payment method, etc. */}
                     </Paper>
                 </Grid.Col>
