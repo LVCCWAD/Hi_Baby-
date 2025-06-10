@@ -1,27 +1,24 @@
 import React from 'react';
-import { Alert, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 const Error = ({ message }) => {
     if (!message) return null;
 
     return (
-        <Alert
-            icon={<IconAlertCircle size={16} />}
-            color="red"
-            variant="light"
-            radius={8}
+        <Text
+            size="sm"
             style={{
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
-                marginTop: '8px',
-                marginBottom: '8px'
+                color: '#dc2626', // Tailwind red-600
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                marginTop: 6,
             }}
         >
-            <Text size="sm" style={{ color: '#dc2626', fontWeight: 500 }}>
-                {message}
-            </Text>
-        </Alert>
+            <IconAlertCircle size={14} />
+            {message}
+        </Text>
     );
 };
 

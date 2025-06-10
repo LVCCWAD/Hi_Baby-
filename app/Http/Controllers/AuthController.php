@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -29,6 +30,16 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => 'No account found with this email.']);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()->withErrors(['password' => 'Incorrect password.']);
+        }
+
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
@@ -36,7 +47,6 @@ class AuthController extends Controller
 
             if ($user->role === 'admin') {
                 Log::info('Redirecting to admin dashboard');
-
                 return Inertia::location(route('admin.dashboard'));
             }
 
@@ -48,8 +58,9 @@ class AuthController extends Controller
             return redirect()->route('login')->withErrors(['default' => 'Unauthorized access.']);
         }
 
-        return redirect()->back()->withErrors(['default' => 'Invalid credentials']);
+        return redirect()->back()->withErrors(['default' => 'Login failed. Please try again.']);
     }
+
 
 
     public function register()
@@ -61,30 +72,52 @@ class AuthController extends Controller
     public function registerPost(Request $request)
     {
         try {
+            // Validate the input
             $credentials = $request->validate([
                 'username' => 'required|string|max:255',
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255',
                 'password' => 'required|string|min:8',
-
             ]);
 
+            // Check for existing username
+            if (User::where('username', $request->username)->exists()) {
+                return redirect()->back()->withErrors([
+                    'username' => 'Username is already taken',
+                ])->withInput($request->except('password'));
+            }
 
+            // Check for existing email
             if (User::where('email', $request->email)->exists()) {
                 return redirect()->back()->withErrors([
                     'email' => 'Email is already made on this site',
-                ]);
+                ])->withInput($request->except('password'));
             }
+
+            // Hash the password
             $credentials['password'] = bcrypt($credentials['password']);
+
+            // Create the user
             $user = User::create($credentials);
+
+            // Login the user
             Auth::login($user);
+
             if (Auth::check()) {
                 return Inertia::location(route('user.home'));
             }
+
+            // Fallback in case login fails
+            return redirect()->back()->withErrors([
+                'default' => 'Login after registration failed. Please try again.',
+            ]);
         } catch (\Exception $e) {
-            // debugging
-            // dd("Error while saving user data: " . $e->getMessage());
+            \Log::error('Registration error: ' . $e->getMessage());
+
+            return redirect()->back()->withErrors([
+                'default' => 'Registration failed. Please try again later.'
+            ])->withInput($request->except('password'));
         }
     }
 
