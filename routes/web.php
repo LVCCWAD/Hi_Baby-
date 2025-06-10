@@ -102,13 +102,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/products/{product}', [AddressController::class, 'showCheckout'])->name('user.products.show');
 
 
-    // Show product
+    // Show product reviews
     Route::get('/user/products/{product}', [ReviewsController::class, 'showReviews'])->name('products.show');
     // Review
     Route::post('/user/products/{product}/reviews', [ReviewsController::class, 'storeReviews'])->name('reviews.store');
     Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'updateReview'])->name('reviews.update');
     Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroyReview'])->name('reviews.destroy');
 
+    // Collections
+    Route::get('/collection/boys/{category?}', [ProductController::class, 'boysCollection'])
+        ->name('collection.boys');
     //Like Products
     // Route::get('/home', [LikeController::class, 'likedProductsInHome'])->name('home.like');
     Route::get('/girls-products', [LikeController::class, 'likedProductsInGirls'])->name('girls.products');

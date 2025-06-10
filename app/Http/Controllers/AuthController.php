@@ -84,7 +84,7 @@ class AuthController extends Controller
             }
         } catch (\Exception $e) {
             // debugging
-            dd("Error while saving user data: " . $e->getMessage());
+            // dd("Error while saving user data: " . $e->getMessage());
         }
     }
 
@@ -93,6 +93,6 @@ class AuthController extends Controller
     {
         Session::flush();
         Auth::logout();
-        return redirect('/login')->with('success', 'You are logged out!');
+        return redirect('/')->with('success', 'You are logged out!');
     }
 }

@@ -13,10 +13,34 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = ['Shirts', 'Pants & Jeans', 'Suits', 'Jackets & Sweaters', 'Pajamas', ];
+        $boysCategories = [
+            'Jackets and Sweaters',
+            'Pants and Jeans',
+            'Pajamas',
+            'Suits',
+        ];
 
-        foreach ($categories as $name) {
-            Category::create(['name' => $name]);
+        $girlsCategories = [
+            'Dresses',
+            'Tops and Skirts',
+            'Pajamas',
+            'Gowns',
+        ];
+
+        // Create boys categories
+        foreach ($boysCategories as $name) {
+            Category::create([
+                'name' => $name,
+                'gender' => 'boy',  // or 'boys' depending on your convention
+            ]);
+        }
+
+        // Create girls categories
+        foreach ($girlsCategories as $name) {
+            Category::create([
+                'name' => $name,
+                'gender' => 'girl', // or 'girls'
+            ]);
         }
     }
 }

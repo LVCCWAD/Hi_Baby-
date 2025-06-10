@@ -69,7 +69,7 @@ function NavHeader() {
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
                     {/* Logo */}
-                    <Link href="/home" style={{ textDecoration: "none" }}>
+                    <Link href="/" style={{ textDecoration: "none" }}>
                         <Image
                             src={Logo}
                             alt="HI, BABY!"
@@ -136,36 +136,41 @@ function NavHeader() {
 
                         {/* Notification, Cart, User Menu */}
                         <Group gap={rem(20)}>
-                            <ActionIcon
-                                variant="transparent"
-                                component={Link}
-                                href="/cart"
-                                style={{ color: "#555" }}
-                            >
-                                <IconShoppingCart size={20} stroke={1.5} />
-                            </ActionIcon>
-                            <NotificationModal
-                                opened={modalOpen}
-                                onClose={() => setModalOpen(false)}
-                                notifications={notifications}
-                            />
+                            {/* Only show cart and notifications for authenticated users */}
+                            {isAuthenticated && (
+                                <>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        component={Link}
+                                        href="/cart"
+                                        style={{ color: "#555" }}
+                                    >
+                                        <IconShoppingCart size={20} stroke={1.5} />
+                                    </ActionIcon>
+                                    <NotificationModal
+                                        opened={modalOpen}
+                                        onClose={() => setModalOpen(false)}
+                                        notifications={notifications}
+                                    />
 
-                            <Indicator
-                                disabled={!showBadge}
-                                color="red"
-                                size={10}
-                                offset={4}
-                                position="top-end"
-                                withBorder
-                            >
-                                <ActionIcon
-                                    variant="transparent"
-                                    style={{ color: "#555" }}
-                                    onClick={handleOpenNotifications}
-                                >
-                                    <IconBell size={20} stroke={1.5} />
-                                </ActionIcon>
-                            </Indicator>
+                                    <Indicator
+                                        disabled={!showBadge}
+                                        color="red"
+                                        size={10}
+                                        offset={4}
+                                        position="top-end"
+                                        withBorder
+                                    >
+                                        <ActionIcon
+                                            variant="transparent"
+                                            style={{ color: "#555" }}
+                                            onClick={handleOpenNotifications}
+                                        >
+                                            <IconBell size={20} stroke={1.5} />
+                                        </ActionIcon>
+                                    </Indicator>
+                                </>
+                            )}
 
                             {/* User Menu */}
                             <Menu
@@ -255,7 +260,7 @@ function NavHeader() {
 
                                             <Menu.Item
                                                 component="a"
-                                                href="/login"
+                                                href="/"
                                                 onClick={handleLogout}
                                                 leftSection={
                                                     <IconLogout

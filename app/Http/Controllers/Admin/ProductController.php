@@ -293,4 +293,25 @@ class ProductController extends Controller
             'query' => $query,
         ]);
     }
+
+    public function boysCollection($category = null)
+    {
+        $products = Product::query()
+            ->whereHas('gender', function ($query) {
+                $query->whereRaw("LOWER(name) = 'boy'");
+            });
+
+        if ($category) {
+            $categoryName = ucwords(str_replace(['-', 'and'], [' ', '&'], strtolower($category)));
+
+            $products = $products->whereHas('categories', function ($query) use ($categoryName) {
+                $query->whereRaw('LOWER(name) = ?', [strtolower($categoryName)]);
+            });
+        }
+
+        return Inertia::render('User/BoysCollectionPage', [
+            'products' => $products->get(),
+            'category' => $category,
+        ]);
+    }
 }

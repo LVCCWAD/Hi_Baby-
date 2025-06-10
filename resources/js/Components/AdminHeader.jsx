@@ -183,7 +183,7 @@ function AdminHeader() {
 
                                             <Menu.Item
                                                 component="a"
-                                                href="/login"
+                                                href="/"
                                                 onClick={handleLogout}
                                                 leftSection={
                                                     <IconLogout
