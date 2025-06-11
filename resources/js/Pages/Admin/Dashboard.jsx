@@ -1,9 +1,10 @@
-import { MantineProvider, Container, Title, Paper, Grid, Text, Group, Box, Tabs, Button, Table } from "@mantine/core";
-import { IconArrowUpRight, IconArrowDownRight, IconFileExport } from "@tabler/icons-react";
+import { MantineProvider, Container, Title, Grid, Paper, Text, Group, Button, Tabs, Table, Box } from "@mantine/core";
+import { IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react";
 import { LineChart } from "@mantine/charts";
 import { useState } from "react";
+import AnalyticsTable from "../../Components/Dashboard/AnalyticsTable";
 
-function Dashboard() {
+function Dashboard({ analytics }) {
     const [timeFilter, setTimeFilter] = useState('12 Months');
 
     // Sample data for the stat cards
@@ -90,13 +91,7 @@ function Dashboard() {
                                             <Tabs.Tab value="7 Days">7 Days</Tabs.Tab>
                                         </Tabs.List>
                                     </Tabs>
-                                    <Button
-                                        variant="outline"
-                                        size="xs"
-                                        leftSection={<IconFileExport size={16} />}
-                                    >
-                                        Export PDF
-                                    </Button>
+
                                 </Group>
                             </Group>
 
