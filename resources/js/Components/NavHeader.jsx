@@ -126,7 +126,7 @@ function NavHeader() {
                                 type="submit"
                                 variant="filled"
                                 size={32}
-                                color="lime.6"
+                                color="#BAB86C"
                                 radius="md"
                                 aria-label="Search"
                             >
