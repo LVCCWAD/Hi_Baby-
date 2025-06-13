@@ -1,7 +1,7 @@
 // resources/js/Pages/Admin/AdminChats.jsx
 
 import React, { useRef, useEffect, useState } from "react";
-import { useForm, usePage, Link } from "@inertiajs/react";
+import { Head, useForm, usePage, Link } from "@inertiajs/react";
 import {
     Box,
     ScrollArea,
@@ -116,6 +116,9 @@ function AdminChat() {
                 borderRadius: "23px",
             }}
         >
+            <Head>
+                <title>Customer Support - Hi Baby!</title>
+            </Head>
             <Flex justify="space-between" align="center" mb="md">
                 <Link href="/chat" style={{ textDecoration: "none" }}>
                     <IconArrowBack size={16} stroke={1.5} />
@@ -233,6 +236,16 @@ function AdminChat() {
                 </Group>
             </form>
         </Box>
+    );
+}
+
+function AdminChats() {
+    return (
+        <>
+            <Head>
+                <title>Customer Support - Hi Baby!</title>
+            </Head>
+        </>
     );
 }
 

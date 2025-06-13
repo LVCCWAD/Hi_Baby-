@@ -17,7 +17,7 @@ import {
     ActionIcon,
 } from "@mantine/core";
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { IconHeart } from "@tabler/icons-react";
 import CategoryBadges from "../../Components/CategoryBadges";
 
@@ -119,6 +119,9 @@ function Boys({ products = [] }) {
             size="xl"
             style={{ backgroundColor: "#f9f6f1", padding: "20px" }}
         >
+            <Head>
+                <title>Boys Collection - Hi Baby!</title>
+            </Head>
             <Group position="apart" mb={20}>
                 <Text
                     size="xl"
@@ -143,13 +146,16 @@ function Boys({ products = [] }) {
 
             <Grid minWidth={300}>
                 {/* Filters Sidebar */}
-                <Grid.Col span={3} style={{
-                    minWidth: "250px",
-                    flexShrink: 0,
-                }} >
+                <Grid.Col
+                    span={3}
+                    style={{
+                        minWidth: "250px",
+                        flexShrink: 0,
+                    }}
+                >
                     <Box>
                         {/* Categories Filter */}
-                        <Accordion defaultValue="categories" >
+                        <Accordion defaultValue="categories">
                             <Accordion.Item value="categories">
                                 <Accordion.Control>
                                     <Text weight={600}>Categories</Text>
@@ -206,29 +212,28 @@ function Boys({ products = [] }) {
 
                 {/* Products Grid */}
                 <Grid.Col span={9}>
-                        {filteredProducts.length > 0 ? (
+                    {filteredProducts.length > 0 ? (
                         <Box
                             style={{
                                 display: "flex",
                                 flexWrap: "wrap",
                                 gap: "20px",
                             }}
-                            >
+                        >
                             {filteredProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                />
                             ))}
-                            </Box>
-                        ) : (
-                            
-                                <Center style={{ height: 200 }}>
-                                    <Text color="dimmed" size="lg">
-                                        No products found matching your filters.
-                                    </Text>
-                                </Center>
-                            
-                        )}
-                    
+                        </Box>
+                    ) : (
+                        <Center style={{ height: 200 }}>
+                            <Text color="dimmed" size="lg">
+                                No products found matching your filters.
+                            </Text>
+                        </Center>
+                    )}
                 </Grid.Col>
             </Grid>
         </Container>
@@ -252,9 +257,14 @@ function ProductCard({ product }) {
             <Card
                 shadow="sm"
                 padding="lg"
-                radius="md"    
+                radius="md"
                 withBorder
-                style={{ position: "relative",  width: "200px", height: "300px", flexShrink: 0,}}
+                style={{
+                    position: "relative",
+                    width: "200px",
+                    height: "300px",
+                    flexShrink: 0,
+                }}
             >
                 <div
                     style={{

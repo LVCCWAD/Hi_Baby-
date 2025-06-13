@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import {
     Box,
     ScrollArea,
@@ -116,6 +116,9 @@ function UserChat() {
                 borderRadius: "23px",
             }}
         >
+            <Head>
+                <title>Chat Support - Hi Baby!</title>
+            </Head>
             <Flex justify="space-between" align="center" mb="md">
                 <Flex align="center">
                     <Avatar

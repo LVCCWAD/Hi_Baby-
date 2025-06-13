@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import {
     TextInput,
     Textarea,
@@ -127,6 +127,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
 
     return (
         <MantineProvider>
+<Head>
+                <title>{product?.name ? `Edit ${product.name} - Hi Baby!` : 'Edit Product - Hi Baby!'}</title>
+            </Head>
             <Modal opened={showImageError} onClose={() => setShowImageError(false)} title="File too large">
                 <Text>The maximum image size allowed is {MAX_FILE_SIZE_MB} MB.</Text>
             </Modal>

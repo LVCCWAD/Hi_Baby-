@@ -12,7 +12,7 @@ import {
     Rating,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -231,6 +231,9 @@ function Products({ products = [] }) {
             }}
         >
             <MantineProvider>
+                <Head>
+                    <title>Manage Products - Hi Baby!</title>
+                </Head>
                 <Flex justify="space-between" align="center" mb="md">
                     <Box className={classes.title}>
                         <p style={{ fontFamily: "WendyOne", fontSize: "50px" }}>

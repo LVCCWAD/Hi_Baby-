@@ -15,7 +15,7 @@ import {
     Stack,
 } from "@mantine/core";
 import { useState, useMemo } from "react";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 
 function Girls({ products = [] }) {
@@ -114,6 +114,9 @@ function Girls({ products = [] }) {
             size="xl"
             style={{ backgroundColor: "#f9f6f1", padding: "20px" }}
         >
+            <Head>
+                <title>Girls Collection - Hi Baby!</title>
+            </Head>
             <Group position="apart" mb={20}>
                 <Text
                     size="xl"
@@ -138,10 +141,13 @@ function Girls({ products = [] }) {
 
             <Grid>
                 {/* Filters Sidebar */}
-                <Grid.Col span={3} style={{
-                    minWidth: "250px",
-                    flexShrink: 0,}}
-                    >
+                <Grid.Col
+                    span={3}
+                    style={{
+                        minWidth: "250px",
+                        flexShrink: 0,
+                    }}
+                >
                     <Box>
                         {/* Categories Filter */}
                         <Accordion defaultValue="categories">
@@ -201,27 +207,28 @@ function Girls({ products = [] }) {
 
                 {/* Products Grid */}
                 <Grid.Col span={9}>
-                        {filteredProducts.length > 0 ? (
+                    {filteredProducts.length > 0 ? (
                         <Box
                             style={{
                                 display: "flex",
                                 flexWrap: "wrap",
                                 gap: "20px",
                             }}
-                            >
+                        >
                             {filteredProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                />
                             ))}
-                            </Box>
-                        ) : (
-                            <Center style={{ height: 200 }}>
-                                <Text color="dimmed" size="lg">
-                                    No products found matching your filters.
-                                </Text>
-                            </Center>
-                            
-                        )}
+                        </Box>
+                    ) : (
+                        <Center style={{ height: 200 }}>
+                            <Text color="dimmed" size="lg">
+                                No products found matching your filters.
+                            </Text>
+                        </Center>
+                    )}
                 </Grid.Col>
             </Grid>
         </Container>
@@ -259,16 +266,21 @@ function ProductCard({ product }) {
     };
 
     return (
-            <Link
+        <Link
             href={`/user/products/${product.id}`}
             style={{ textDecoration: "none" }}
         >
             <Card
                 shadow="sm"
                 padding="lg"
-                radius="md"    
+                radius="md"
                 withBorder
-                style={{ position: "relative",  width: "200px", height: "300px", flexShrink: 0,}}
+                style={{
+                    position: "relative",
+                    width: "200px",
+                    height: "300px",
+                    flexShrink: 0,
+                }}
             >
                 <div
                     style={{
@@ -300,9 +312,8 @@ function ProductCard({ product }) {
                         alt={product.name}
                         height="100%"
                         width="100%"
-                        fit="cover"                
+                        fit="cover"
                         style={{ objectFit: "cover" }}
-
                     />
                 </Card.Section>
 
@@ -327,12 +338,11 @@ function ProductCard({ product }) {
                 </Group>
 
                 <Group mt={5} spacing="xs" align="center">
-                    {product.categories &&
-                        product.categories.length > 0 && (
-                            <Badge variant="light" color="blue" size="sm">
-                                {product.categories[0].name}
-                            </Badge>
-                        )}
+                    {product.categories && product.categories.length > 0 && (
+                        <Badge variant="light" color="blue" size="sm">
+                            {product.categories[0].name}
+                        </Badge>
+                    )}
                     <Text size="xs" color="dimmed" ml="auto">
                         {likeCount} {likeCount === 1 ? "like" : "likes"}
                     </Text>

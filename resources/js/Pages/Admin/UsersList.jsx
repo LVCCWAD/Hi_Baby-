@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import {
     Box,
     List,
@@ -20,6 +20,9 @@ function UsersList({ users }) {
                 padding: "2rem",
             }}
         >
+            <Head>
+                <title>Customer Support - Hi Baby!</title>
+            </Head>
             <Box maw={600} mx="auto" p="md">
                 <Title order={3} mb="md">
                     Customer Messages

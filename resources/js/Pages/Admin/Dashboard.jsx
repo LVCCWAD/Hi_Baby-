@@ -13,7 +13,7 @@ import {
 import { IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react";
 import { LineChart } from "@mantine/charts";
 import { useState } from "react";
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
 function Dashboard({ analytics }) {
     const [timeFilter, setTimeFilter] = useState("12 Months");
@@ -30,6 +30,9 @@ function Dashboard({ analytics }) {
                 py="xl"
                 style={{ backgroundColor: "#faf5ef", minHeight: "100vh" }}
             >
+                <Head>
+                    <title>Admin Dashboard - Hi Baby!</title>
+                </Head>
                 <Title order={1} mb="xl" style={{ color: "#b5b063" }}>
                     <p style={{ fontFamily: "WendyOne", fontSize: "50px" }}>
                         Analytics
