@@ -78,10 +78,13 @@ function AdminChat() {
 
         setMessages((prev) => [...prev, tempMessage]);
 
+        // Immediately clear input box
+        setData("message", "");
+
         post("admin/chat/send", data, {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => reset("message"),
+            onSuccess: () => reset("message"), // You can actually remove this now if you want
             onError: (errors) => {
                 console.error("Error sending message:", errors);
                 setMessages((prev) =>
@@ -188,7 +191,10 @@ function AdminChat() {
                                     >
                                         {new Date(
                                             msg.created_at
-                                        ).toLocaleTimeString()}
+                                        ).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
                                     </Text>
                                 </Paper>
                                 {msg.sender_id === authUserId && (
