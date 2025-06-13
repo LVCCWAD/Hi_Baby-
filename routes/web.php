@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'cart'])->name('user.cart');
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('user.cart.add');
     Route::delete('/cart/{product}', [CartController::class, 'remove'])->name('user.cart.remove');
+    Route::put('/cart/{id}', [CartController::class, 'updateQuantity']);
+
 
     // Orders
     Route::post('/order/create', [OrderController::class, 'createOrder'])->name('order.create');
@@ -85,7 +87,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');
     Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
-    Route::get('/profile/orders', [UserController::class, 'showOrdersToProfileView'])->name('profile.orders');
+    // Route::get('/profile/orders', [UserController::class, 'showOrdersToProfileView'])->name('profile.orders');
+    Route::get('/profile', [UserController::class, 'showOrdersToProfileView'])->name('user.profile');
+
+
 
     // Addresses
     Route::post('/addresses', [AddressController::class, 'storeAddress'])->name('user.addresses.store');

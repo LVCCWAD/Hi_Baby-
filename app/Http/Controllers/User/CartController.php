@@ -96,17 +96,17 @@ class CartController extends Controller
         $cartItem = Cart::find($id);
 
         if (!$cartItem) {
-            return redirect()->back()->with('error', 'Item not found.');
+            return back()->with('error', 'Item not found.');
         }
 
         if ($cartItem->user_id !== Auth::id()) {
-            return redirect()->back()->with('error', 'Unauthorized action.');
+            return back()->with('error', 'Unauthorized action.');
         }
 
         $cartItem->update([
             'quantity' => $request->input('quantity'),
         ]);
 
-        return redirect()->back()->with('success', 'Cart quantity updated.');
+        return back()->with('success', 'Cart quantity updated.');
     }
 }

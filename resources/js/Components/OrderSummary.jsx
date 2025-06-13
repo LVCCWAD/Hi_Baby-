@@ -177,12 +177,29 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
 
             {/* Checkout Button */}
             <Button
-                style={{ color: "black", backgroundColor: "#BAB86C" }}
+                style={{
+                    color: "black",
+                    backgroundColor:
+                        selectedItems.length === 0 || !selectedAddress
+                            ? "#E0E0E0"
+                            : "#BAB86C",
+                    cursor:
+                        selectedItems.length === 0 || !selectedAddress
+                            ? "default"
+                            : "pointer",
+                    opacity:
+                        selectedItems.length === 0 || !selectedAddress
+                            ? 0.6
+                            : 1,
+                    transition: "background-color 0.3s ease, opacity 0.3s ease",
+                }}
                 size="lg"
                 fullWidth
-                onClick={() => handleCheckout(paymentMethod)}
+                onClick={() => {
+                    if (selectedItems.length === 0 || !selectedAddress) return;
+                    handleCheckout(paymentMethod);
+                }}
                 loading={loading}
-                disabled={selectedItems.length === 0 || !selectedAddress}
             >
                 Checkout
             </Button>

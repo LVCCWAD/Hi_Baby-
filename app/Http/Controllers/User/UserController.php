@@ -160,6 +160,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
+        // Load orders
         $orders = Order::with(['orderItems.product', 'orderItems.color', 'orderItems.size'])
             ->where('user_id', $user->id)
             ->latest()
@@ -184,13 +185,21 @@ class UserController extends Controller
                 ];
             });
 
+        // Load liked products correctly
+        $likedProducts = Product::whereHas('likes', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->with('reviews')
+            ->get();
+
         return Inertia::render('User/ProfileView', [
             'user' => $user,
-            'likedProducts' => $user->likedProducts,
+            'likedProducts' => $likedProducts,
             'orders' => $orders,
             'ordersCount' => $orders->count(),
         ]);
     }
+
 
     // public function userChats()
     // {

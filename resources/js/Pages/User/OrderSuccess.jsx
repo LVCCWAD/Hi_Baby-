@@ -423,7 +423,7 @@ function OrderSuccess({ order }) {
                         variant="outline"
                         color="blue"
                         leftIcon={<IconPackage size={20} />}
-                        onClick={() => router.visit("/profile/orders")}
+                        onClick={() => router.visit("/profile")}
                         style={{ minWidth: "200px" }}
                     >
                         View All Orders
