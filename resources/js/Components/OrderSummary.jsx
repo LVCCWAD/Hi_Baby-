@@ -160,7 +160,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
             {/* Delivery Fee */}
             <Group position="apart" mb="sm">
                 <Text size="sm">Delivery Fee</Text>
-                <Text weight={600}>₱990</Text>
+                <Text weight={600}>₱48</Text>
             </Group>
 
             <Divider my="sm" />
@@ -171,7 +171,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                     Total
                 </Text>
                 <Text size="xl" weight={700} color="blue">
-                    ₱{(total + 990).toLocaleString()}
+                    ₱{(total + 48).toLocaleString()}
                 </Text>
             </Group>
 

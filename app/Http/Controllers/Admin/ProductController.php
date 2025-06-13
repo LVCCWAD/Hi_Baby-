@@ -9,6 +9,7 @@ use App\Models\Color;
 use App\Models\Gender;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\SearchLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -272,10 +273,16 @@ class ProductController extends Controller
     public function index(Request $request, ProductSearchService $searchService)
     {
         $products = $searchService->search($request->input('q'));
+
+        // Optional: log search here too (if you want to track autocomplete searches)
+        SearchLog::create([
+            'search_term' => $request->input('q'),
+            'results_count' => count($products),
+            'user_id' => Auth::id(),
+        ]);
+
         return response()->json($products);
     }
-
-
 
     public function searchResultsPage(Request $request)
     {
@@ -289,11 +296,19 @@ class ProductController extends Controller
 
         $products = $this->addLikedStatus($products, $userId);
 
+        // ✅ Log search here
+        SearchLog::create([
+            'search_term' => $query,
+            'results_count' => $products->count(),
+            'user_id' => $userId,
+        ]);
+
         return Inertia::render('User/Search', [
             'products' => $products,
             'query' => $query,
         ]);
     }
+
 
     public function boysCollection($category = null)
     {
