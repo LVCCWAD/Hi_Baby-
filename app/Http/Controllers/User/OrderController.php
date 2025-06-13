@@ -155,7 +155,7 @@ class OrderController extends Controller
             // Send email, notify, etc...
 
             // 🔥 Here's the key line for Inertia + Railway compatibility
-            return redirect()->route('order.success', ['order' => $order->id]);
+            return Inertia::location(route('order.success', ['order' => $order->id]));
         } catch (\Throwable $e) {
             Log::error('Order error: ' . $e->getMessage());
             return back()->withErrors(['default' => 'Something went wrong.']);

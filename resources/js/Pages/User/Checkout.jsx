@@ -45,7 +45,7 @@ function Checkout({ product, address, initialData }) {
                 payment_method: paymentMethod,
             },
             {
-                onFinish: () => setLoading(false), // Simply remove onSuccess/onError for redirect
+                onFinish: () => setLoading(false),
             }
         );
     };
