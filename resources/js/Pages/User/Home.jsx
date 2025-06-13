@@ -11,12 +11,12 @@ import {
     MantineProvider,
     Select,
     Box,
+    Flex,
 } from "@mantine/core";
 import { useState, useMemo } from "react";
 import { Link } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
 import ProductCard from "../../Components/ProductCard";
-
 
 function Home({ products = [] }) {
     console.log("Products from Laravel:", products);
@@ -41,15 +41,28 @@ function Home({ products = [] }) {
         >
             {/* Girls Section */}
             <Box mb={40}>
-                <Group position="apart" mb={10}>
+                <Flex justify="space-between" align="center" mb={10}>
                     <Text
                         size="xl"
                         weight={700}
-                        style={{ fontSize: "28px", fontFamily: "WendyOne" }}
+                        color="gray.8"
+                        style={{ fontSize: "58px", fontFamily: "WendyOne" }}
                     >
                         Girl's Clothing
                     </Text>
-                </Group>
+
+                    <Button
+                        component="a"
+                        href="/girls-products"
+                        variant="filled"
+                        color="gray"
+                        radius="xl"
+                        size="md"
+                        style={{ backgroundColor: "#BAB86C" }}
+                    >
+                        View More
+                    </Button>
+                </Flex>
 
                 <Grid>
                     {girlsProducts.map((product) => (
@@ -67,31 +80,32 @@ function Home({ products = [] }) {
                         </Grid.Col>
                     ))}
                 </Grid>
-
-                <Center mt={20}>
-                    <Button
-                        component="a"
-                        href="/girls-products"
-                        variant="filled"
-                        color="gray"
-                        radius="xl"
-                        style={{ backgroundColor: "#c5c9a4" }}
-                    >
-                        View More
-                    </Button>
-                </Center>
             </Box>
 
             {/* Boys Section */}
             <Box>
-                <Text
-                    size="xl"
-                    weight={700}
-                    mb={10}
-                    style={{ fontSize: "28px", fontFamily: "WendyOne" }}
-                >
-                    Boy's Clothing
-                </Text>
+                <Flex justify="space-between" align="center" mb={10}>
+                    <Text
+                        size="xl"
+                        weight={700}
+                        color="gray.8"
+                        style={{ fontSize: "58px", fontFamily: "WendyOne" }}
+                    >
+                        Boy's Clothing
+                    </Text>
+
+                    <Button
+                        component="a"
+                        href="/boys-products"
+                        variant="filled"
+                        color="gray"
+                        radius="xl"
+                        size="md"
+                        style={{ backgroundColor: "#BAB86C" }}
+                    >
+                        View More
+                    </Button>
+                </Flex>
 
                 <Grid>
                     {boysProducts.map((product) => (
@@ -104,28 +118,14 @@ function Home({ products = [] }) {
                                 minWidth: "300px",
                                 minHeight: "400px",
                             }}
-                            >
+                        >
                             <ProductCard product={product} />
                         </Grid.Col>
                     ))}
                 </Grid>
-
-                <Center mt={20}>
-                    <Button
-                        component="a"
-                        href="/boys-products"
-                        variant="filled"
-                        color="gray"
-                        radius="xl"
-                        style={{ backgroundColor: "#c5c9a4" }}
-                    >
-                        View More
-                    </Button>
-                </Center>
             </Box>
         </Container>
     );
 }
-
 
 export default Home;
