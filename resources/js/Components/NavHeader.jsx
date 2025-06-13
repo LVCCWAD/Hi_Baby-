@@ -6,7 +6,6 @@ import {
     IconLogin,
     IconUserCircle,
     IconLogout,
-    IconFileText,
     IconMessageCircle,
 } from "@tabler/icons-react";
 import {
@@ -22,6 +21,7 @@ import {
     Menu,
     Divider,
     Indicator,
+    Tooltip,
 } from "@mantine/core";
 import { Link, usePage, router } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
@@ -40,21 +40,14 @@ function NavHeader() {
 
     const unreadNotifications = notifications.length > 0;
     const showBadge = unreadNotifications && !hasSeenNotifications;
+
     const handleOpenNotifications = () => {
         setModalOpen(true);
-        setHasSeenNotifications(true); // Hide badge after opening
+        setHasSeenNotifications(true);
     };
 
     const handleLogout = () => {
-        Inertia.post(
-            "/logout",
-            {},
-            {
-                onSuccess: () => {
-                    window.location.href = "/login"; // Full reload
-                },
-            }
-        );
+        Inertia.post("/logout", {}, { onSuccess: () => (window.location.href = "/login") });
     };
 
     const handleSearchSubmit = (e) => {
@@ -65,27 +58,24 @@ function NavHeader() {
     };
 
     return (
-        <Box bg="#FBF2E9" py="md" style={{ borderBottom: "1px solid #f0f0f0" }}>
+        <Box bg="#FBF2E9" py="sm" style={{ borderBottom: "1px solid #e0e0e0" }}>
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
+
                     {/* Logo */}
                     <Link href="/" style={{ textDecoration: "none" }}>
-                        <Image
-                            src={Logo}
-                            alt="HI, BABY!"
-                            h={40}
-                            fit="contain"
-                        />
+                        <Image src={Logo} alt="HI, BABY!" h={50} fit="contain" />
                     </Link>
 
                     {/* Navigation Links */}
-                    <Group gap={rem(40)}>
+                    <Group gap={rem(30)}>
                         <CollectionDropdown />
-                        <LinkStyle href="/aboutus">About Us</LinkStyle>
+                        <NavLink href="/aboutus">About Us</NavLink>
                     </Group>
 
                     {/* Right Side Icons and Search */}
                     <Flex align="center" gap={rem(20)}>
+
                         {/* Search Bar */}
                         <Flex
                             component="form"
@@ -122,89 +112,38 @@ function NavHeader() {
                                     },
                                 }}
                             />
-                            <ActionIcon
-                                type="submit"
-                                variant="filled"
-                                size={32}
-                                color="#BAB86C"
-                                radius="md"
-                                aria-label="Search"
-                            >
+                            <ActionIcon type="submit" variant="filled" size={32} color="#BAB86C" radius="md">
                                 <IconSearch size={18} />
                             </ActionIcon>
                         </Flex>
 
                         {/* Notification, Cart, User Menu */}
-                        <Group gap={rem(20)}>
-                            {/* Only show cart and notifications for authenticated users */}
+                        <Group gap={rem(15)}>
                             {isAuthenticated && (
                                 <>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        component={Link}
-                                        href="/cart"
-                                        style={{
-                                            color: "#555",
-                                            cursor: "pointer",
-                                        }} // <-- add cursor
-                                    >
-                                        <IconShoppingCart
-                                            size={20}
-                                            stroke={1.5}
-                                        />
-                                    </ActionIcon>
-
-                                    <NotificationModal
-                                        opened={modalOpen}
-                                        onClose={() => setModalOpen(false)}
-                                        notifications={notifications}
-                                    />
-
-                                    <Indicator
-                                        disabled={!showBadge}
-                                        color="red"
-                                        size={10}
-                                        offset={4}
-                                        position="top-end"
-                                        withBorder
-                                    >
-                                        <ActionIcon
-                                            variant="transparent"
-                                            style={{ color: "#555" }}
-                                            onClick={handleOpenNotifications}
-                                        >
-                                            <IconBell size={20} stroke={1.5} />
+                                    <Tooltip label="Cart">
+                                        <ActionIcon variant="light" component={Link} href="/cart" radius="xl" size="lg" color="gray">
+                                            <IconShoppingCart size={22} stroke={1.5} />
                                         </ActionIcon>
-                                    </Indicator>
+                                    </Tooltip>
+
+                                    <NotificationModal opened={modalOpen} onClose={() => setModalOpen(false)} notifications={notifications} />
+
+                                    <Tooltip label="Notifications">
+                                        <Indicator disabled={!showBadge} color="red" size={10} offset={4} position="top-end" withBorder>
+                                            <ActionIcon variant="light" onClick={handleOpenNotifications} radius="xl" size="lg" color="gray">
+                                                <IconBell size={22} stroke={1.5} />
+                                            </ActionIcon>
+                                        </Indicator>
+                                    </Tooltip>
                                 </>
                             )}
 
                             {/* User Menu */}
-                            <Menu
-                                position="bottom-end"
-                                shadow="md"
-                                width={200}
-                                styles={{
-                                    dropdown: {
-                                        borderRadius: rem(8),
-                                        boxShadow:
-                                            "0 2px 10px rgba(0, 0, 0, 0.1)",
-                                    },
-                                    item: {
-                                        fontSize: rem(14),
-                                        padding: `${rem(8)} ${rem(12)}`,
-                                        "&:hover": {
-                                            backgroundColor: "#f5f5f5",
-                                        },
-                                    },
-                                }}
-                            >
+                            <Menu position="bottom-end" shadow="md" width={200}>
                                 <Menu.Target>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        style={{ color: "#555" }}
-                                    >
-                                        <IconUser size={20} stroke={1.5} />
+                                    <ActionIcon variant="light" radius="xl" size="lg" color="gray">
+                                        <IconUser size={22} stroke={1.5} />
                                     </ActionIcon>
                                 </Menu.Target>
 
@@ -213,84 +152,31 @@ function NavHeader() {
                                         <>
                                             <Menu.Label>
                                                 Signed in as{" "}
-                                                <Text
-                                                    fw={500}
-                                                    size="sm"
-                                                    ml={4}
-                                                    span
-                                                >
-                                                    {auth.user.name ||
-                                                        auth.user.email}
+                                                <Text fw={500} size="sm" ml={4} span>
+                                                    {auth.user.name || auth.user.email}
                                                 </Text>
                                             </Menu.Label>
 
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/profile"
-                                                leftSection={
-                                                    <IconUserCircle
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                            >
+                                            <Menu.Item component={Link} href="/profile" leftSection={<IconUserCircle size={16} stroke={1.5} />}>
                                                 User Settings
                                             </Menu.Item>
 
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/chat"
-                                                leftSection={
-                                                    <IconMessageCircle
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                            >
+                                            <Menu.Item component={Link} href="/chat" leftSection={<IconMessageCircle size={16} stroke={1.5} />}>
                                                 Chats
                                             </Menu.Item>
 
                                             <Divider my="xs" />
 
-                                            <Menu.Item
-                                                component="a"
-                                                href="/"
-                                                onClick={handleLogout}
-                                                leftSection={
-                                                    <IconLogout
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                                color="red"
-                                            >
+                                            <Menu.Item onClick={handleLogout} leftSection={<IconLogout size={16} stroke={1.5} />} color="red">
                                                 Logout
                                             </Menu.Item>
                                         </>
                                     ) : (
                                         <>
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/login"
-                                                leftSection={
-                                                    <IconLogin
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                            >
+                                            <Menu.Item component={Link} href="/login" leftSection={<IconLogin size={16} stroke={1.5} />}>
                                                 Login
                                             </Menu.Item>
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/register"
-                                                leftSection={
-                                                    <IconUserCircle
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                            >
+                                            <Menu.Item component={Link} href="/register" leftSection={<IconUserCircle size={16} stroke={1.5} />}>
                                                 Register
                                             </Menu.Item>
                                         </>
@@ -305,18 +191,18 @@ function NavHeader() {
     );
 }
 
-const LinkStyle = styled(Link)`
-    font-size: 15px;
-    font-weight: 500;
+const NavLink = styled(Link)`
+    font-size: 16px;
+    font-weight: 600;
     color: #333;
     text-decoration: none;
-    transition: color 0.2s ease;
-    padding: 10px;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 20px;
 
     &:hover {
-        color: #fbf2e9;
+        color: #fff;
         background-color: #bab86c;
-        border-radius: 20px;
     }
 `;
 
