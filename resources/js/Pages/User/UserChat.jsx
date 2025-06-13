@@ -1,5 +1,3 @@
-// resources/js/Pages/User/UserChat.jsx
-
 import React, { useRef, useEffect, useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import {
@@ -13,9 +11,10 @@ import {
     Avatar,
     Stack,
     Title,
-    Flex
+    Flex,
+    Badge,
 } from "@mantine/core";
-import{IconArrowBack, IconSend2, IconUser} from "@tabler/icons-react";
+import { IconArrowBack, IconSend2, IconUser } from "@tabler/icons-react";
 import Pusher from "pusher-js";
 
 function UserChat() {
@@ -24,17 +23,17 @@ function UserChat() {
         authUserId,
         adminId,
         newMessage,
+        userProfile, // ✅ get profile data from Inertia props
     } = usePage().props;
+
     const [messages, setMessages] = useState(initialMessages || []);
     const viewport = useRef(null);
-
 
     const { data, setData, post, processing, reset } = useForm({
         message: "",
         receiver_id: adminId,
     });
 
-    // Handle new flash message after Inertia redirect
     useEffect(() => {
         if (newMessage) {
             setMessages((prev) => [
@@ -46,7 +45,6 @@ function UserChat() {
         }
     }, [newMessage]);
 
-    // Initialize Pusher and listen for admin messages
     useEffect(() => {
         const pusher = new Pusher(
             import.meta.env.VITE_PUSHER_APP_KEY || "your-pusher-key",
@@ -71,12 +69,9 @@ function UserChat() {
 
     const sendMessage = (e) => {
         e.preventDefault();
-
         if (!data.message.trim()) return;
 
-        // ensure receiver_id is set
         setData("receiver_id", adminId);
-
         const tempMessage = {
             id: "temp-" + Date.now(),
             message: data.message,
@@ -91,7 +86,7 @@ function UserChat() {
         post("/chat/send", data, {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => setData("message", ""), // Clear input field here
+            onSuccess: () => setData("message", ""),
             onError: (errors) => {
                 console.error("Error sending message:", errors);
                 setMessages((prev) =>
@@ -111,12 +106,36 @@ function UserChat() {
     }, [messages]);
 
     return (
-        <Box maw={600} mx="auto" p="md" style={{borderColor: "#BAB86C", borderWidth: "3px", borderRadius: "23px"}}>
-            <Flex justify="space-between" align="center" mb="md" >
-                <Title order={3} style={{flexDirection:"row", display: "flex", color: "#BAB86C"}} ><IconUser size={30} stroke={1.5} color="#BAB86C"  style={{border: "3px solid #BAB86C", borderRadius: "23px", marginRight:"10px"}}/> Admin</Title>
-                <div></div> {/* Empty div for flex spacing */}
+        <Box
+            maw={600}
+            mx="auto"
+            p="md"
+            style={{
+                borderColor: "#BAB86C",
+                borderWidth: "3px",
+                borderRadius: "23px",
+            }}
+        >
+            <Flex justify="space-between" align="center" mb="md">
+                <Flex align="center">
+                    <Avatar
+                        src={userProfile?.picture}
+                        radius="xl"
+                        size="md"
+                        style={{ marginRight: 10 }}
+                    />
+                    <Title order={3} style={{ color: "#BAB86C" }}>
+                        {userProfile?.username ?? "Admin"}
+                    </Title>
+                    {/* Optional badge if you want to show "Online" or "New" */}
+                    <Badge ml="sm" color="green">
+                        Online
+                    </Badge>
+                </Flex>
             </Flex>
-            <hr style={{marginBottom: "20px", border: "1px solid #BAB86C"}} />
+
+            <hr style={{ marginBottom: "20px", border: "1px solid #BAB86C" }} />
+
             <ScrollArea h={400} viewportRef={viewport}>
                 <Stack spacing="sm">
                     {messages.length === 0 ? (
@@ -126,7 +145,6 @@ function UserChat() {
                     ) : (
                         messages.map((msg) => {
                             const isSender = msg.sender_id === authUserId;
-
                             return (
                                 <Group
                                     key={msg.id}
@@ -145,7 +163,6 @@ function UserChat() {
                                             size="md"
                                         />
                                     )}
-
                                     <Paper
                                         shadow="xs"
                                         p="sm"
@@ -181,7 +198,6 @@ function UserChat() {
                                             ).toLocaleTimeString()}
                                         </Text>
                                     </Paper>
-
                                     {isSender && (
                                         <Avatar
                                             src={null}
@@ -197,17 +213,28 @@ function UserChat() {
             </ScrollArea>
 
             <form onSubmit={sendMessage}>
-                <Group mt="md" style={{border: "3px solid #BAB86C", borderRadius:"23px"}}>
+                <Group
+                    mt="md"
+                    style={{
+                        border: "3px solid #BAB86C",
+                        borderRadius: "23px",
+                    }}
+                >
                     <TextInput
                         value={data.message}
                         onChange={(e) => setData("message", e.target.value)}
                         placeholder="Type your message..."
-                        style={{flex: 1, padding: "5px"}}
+                        style={{ flex: 1, padding: "5px" }}
                         variant="unstyled"
                         required
                     />
-                    <Button type="submit" loading={processing} variant="subtle" color="#BAB86C">
-                    <IconSend2 size={20} stroke={1.5}/>
+                    <Button
+                        type="submit"
+                        loading={processing}
+                        variant="subtle"
+                        color="#BAB86C"
+                    >
+                        <IconSend2 size={20} stroke={1.5} />
                     </Button>
                 </Group>
             </form>

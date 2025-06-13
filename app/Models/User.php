@@ -96,4 +96,13 @@ class User extends Authenticatable
     {
         return $this->morphMany(DatabaseNotification::class, 'notifiable');
     }
+    public function getLatestMessageAttribute()
+    {
+        return Chat::where(function ($query) {
+            $query->where('sender_id', $this->id)
+                ->orWhere('receiver_id', $this->id);
+        })
+            ->orderByDesc('created_at')
+            ->first();
+    }
 }

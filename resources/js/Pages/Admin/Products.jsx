@@ -1,39 +1,49 @@
 import {
     Table,
     MantineProvider,
-    Grid,
+    Modal,
     Flex,
     Button,
     Image,
     Box,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { router } from "@inertiajs/react";
+import { router } from "@inertiajs/react"; // ✅ only this import, no useRouter
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 import classes from "../../../css/Components/AdminProducts.module.css";
 import { IconCheck, IconPencil, IconTrash } from "@tabler/icons-react"; // Optional icon
 
 function Products({ products = [] }) {
-    const handleDelete = (id) => {
-        if (confirm("Are you sure you want to delete this product?")) {
-            router.delete(`/products/${id}`, {
-                onSuccess: () => {
-                    showNotification({
-                        title: "Deleted",
-                        message: "Product has been deleted successfully.",
-                        color: "green",
-                        icon: <IconCheck />,
-                    });
-                },
-                onError: () => {
-                    showNotification({
-                        title: "Error",
-                        message: "Failed to delete product.",
-                        color: "red",
-                    });
-                },
-            });
-        }
+    const [opened, { open, close }] = useDisclosure(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const confirmDelete = (id) => {
+        setSelectedProduct(id);
+        open();
+    };
+
+    const handleDelete = () => {
+        router.delete(`/products/${selectedProduct}`, {
+            onSuccess: () => {
+                showNotification({
+                    title: "Deleted",
+                    message: "Product has been deleted successfully.",
+                    color: "green",
+                    icon: <IconCheck />,
+                });
+                close();
+            },
+            onError: () => {
+                showNotification({
+                    title: "Error",
+                    message: "Failed to delete product.",
+                    color: "red",
+                });
+                close();
+            },
+        });
     };
 
     const rows = products.map((product) => (
@@ -85,10 +95,7 @@ function Products({ products = [] }) {
                 <div className="flex flex-wrap gap-2">
                     {product.colors && product.colors.length > 0
                         ? product.colors.map((color, idx) => (
-                              <div
-                                  key={idx}
-                                  className="flex items-center gap-2"
-                              >
+                              <div key={idx} className="flex items-center gap-2">
                                   <span>{color.name}</span>
                                   <div
                                       style={{
@@ -132,7 +139,7 @@ function Products({ products = [] }) {
                 </a>
             </Table.Td>
             <Table.Td>
-                <a onClick={() => handleDelete(product.id)} color="red">
+                <a onClick={() => confirmDelete(product.id)} style={{ cursor: "pointer" }}>
                     <IconTrash size={16} stroke={1.5} color="black" />
                 </a>
             </Table.Td>
@@ -155,13 +162,7 @@ function Products({ products = [] }) {
     );
 
     return (
-        <div
-            style={{
-                backgroundColor: "#f9f5eb",
-                minHeight: "100vh",
-                padding: "2rem",
-            }}
-        >
+        <div style={{ backgroundColor: "#f9f5eb", minHeight: "100vh", padding: "2rem" }}>
             <MantineProvider>
                 <Flex justify="space-between" align="center" mb="md">
                     <Box className={classes.title}>
@@ -182,11 +183,21 @@ function Products({ products = [] }) {
                     </Button>
                 </Flex>
                 <Table captionSide="bottom">
-                    {/* <Table.Caption>Some elements from periodic table</Table.Caption> */}
                     <Table.Thead>{ths}</Table.Thead>
                     <Table.Tbody>{rows}</Table.Tbody>
-                    {/* <Table.Tfoot>{ths}</Table.Tfoot> */}
                 </Table>
+
+                <Modal opened={opened} onClose={close} title="Confirm Deletion" centered>
+                    <p>Are you sure you want to delete this product?</p>
+                    <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}>
+                        <Button variant="default" onClick={close}>
+                            Cancel
+                        </Button>
+                        <Button color="red" onClick={handleDelete}>
+                            Delete
+                        </Button>
+                    </div>
+                </Modal>
             </MantineProvider>
         </div>
     );
