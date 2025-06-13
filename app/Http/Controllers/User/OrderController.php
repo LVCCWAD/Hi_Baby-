@@ -173,7 +173,7 @@ class OrderController extends Controller
 
         // Redirect to order success page
         session()->flash('success', 'Order placed successfully!');
-        return Inertia::location(route('order.success', ['order' => $order->id]));
+        return redirect()->route('order.success', ['order' => $order->id]);
     }
 
 
