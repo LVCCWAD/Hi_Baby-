@@ -143,10 +143,17 @@ function NavHeader() {
                                         variant="transparent"
                                         component={Link}
                                         href="/cart"
-                                        style={{ color: "#555" }}
+                                        style={{
+                                            color: "#555",
+                                            cursor: "pointer",
+                                        }} // <-- add cursor
                                     >
-                                        <IconShoppingCart size={20} stroke={1.5} />
+                                        <IconShoppingCart
+                                            size={20}
+                                            stroke={1.5}
+                                        />
                                     </ActionIcon>
+
                                     <NotificationModal
                                         opened={modalOpen}
                                         onClose={() => setModalOpen(false)}
@@ -241,19 +248,6 @@ function NavHeader() {
                                                 }
                                             >
                                                 Chats
-                                            </Menu.Item>
-
-                                            <Menu.Item
-                                                component={Link}
-                                                href="/orders"
-                                                leftSection={
-                                                    <IconFileText
-                                                        size={16}
-                                                        stroke={1.5}
-                                                    />
-                                                }
-                                            >
-                                                Orders
                                             </Menu.Item>
 
                                             <Divider my="xs" />
