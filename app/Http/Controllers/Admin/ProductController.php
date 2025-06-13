@@ -111,9 +111,7 @@ class ProductController extends Controller
 
     public function storeCreatedProduct(Request $request)
     {
-
-        // dd($request->all());
-        $validated = request()->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0',
@@ -128,33 +126,34 @@ class ProductController extends Controller
             'color_ids.*' => 'exists:colors,id',
         ]);
 
-
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
         }
 
         try {
+            // Extract pivot arrays
             $categoryIds = $validated['category_ids'];
             $colorIds = $validated['color_ids'];
             $sizeIds = $validated['size_ids'];
 
+            // Remove pivot fields from main validated data
             unset($validated['category_ids'], $validated['color_ids'], $validated['size_ids']);
 
+            // Create product
             $product = Auth::user()->products()->create($validated);
 
             // Sync many-to-many
             $product->categories()->sync($categoryIds);
-
-            // One-to-many update
-            Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
-            Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
+            $product->colors()->sync($colorIds);
+            $product->sizes()->sync($sizeIds);
 
             return Inertia::location(route('admin.products'));
         } catch (\Throwable $e) {
             return redirect()->back()->with('error', 'An unexpected error occurred. Please try again.');
         }
     }
+
 
 
 

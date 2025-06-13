@@ -33,12 +33,12 @@ class Product extends Model
 
     public function sizes()
     {
-        return $this->hasMany(Size::class);
+        return $this->belongsToMany(Size::class, 'product_size_pivot');
     }
 
     public function colors()
     {
-        return $this->hasMany(Color::class);
+        return $this->belongsToMany(Color::class, 'product_color_pivot');
     }
 
     public function user()

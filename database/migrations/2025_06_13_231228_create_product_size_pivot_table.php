@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('product_size_pivot', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Color name
-            $table->string('hex_code', 7); // Color code in hex format (e.g., #FFFFFF for white)
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('size_id')->constrained()->onDelete('cascade');
+            $table->unique(['product_id', 'size_id']);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('product_size_pivot');
     }
 };
