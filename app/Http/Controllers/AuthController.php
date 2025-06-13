@@ -126,6 +126,6 @@ class AuthController extends Controller
     {
         Session::flush();
         Auth::logout();
-        return redirect('/')->with('success', 'You are logged out!');
+        return Inertia::location(route('login'));
     }
 }
