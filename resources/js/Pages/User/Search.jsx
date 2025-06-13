@@ -1,8 +1,8 @@
 import { Container, Grid, Text } from "@mantine/core";
 import { usePage } from "@inertiajs/react";
-import ProductCard from "../../Components/ProductCard"; // Make sure this path is correct
+import ProductCard from "../../Components/ProductCard";
 
-export default function Search() {
+function Search() {
     const { products, query } = usePage().props;
 
     console.log("Products:", products);
@@ -11,18 +11,35 @@ export default function Search() {
     return (
         <Container
             size="xl"
-            style={{ backgroundColor: "#f9f6f1", padding: "20px" }}
+            style={{ backgroundColor: "#f9f6f1", padding: "40px 20px" }}
         >
-            <Text size="xl" weight={700} mb={20}>
+            <Text
+                size="xl"
+                weight={700}
+                mb={30}
+                color="gray.8"
+                style={{ fontSize: "32px", fontFamily: "WendyOne" }}
+            >
                 Search results for "{query}"
             </Text>
 
             {products.length === 0 ? (
-                <Text>No products found.</Text>
+                <Text size="lg" color="dimmed">
+                    No products found.
+                </Text>
             ) : (
-                <Grid>
+                <Grid gutter="lg">
                     {products.map((product) => (
-                        <Grid.Col key={product.id} span={4}>
+                        <Grid.Col
+                            key={product.id}
+                            span={4}
+                            style={{
+                                minWidth: "300px",
+                                minHeight: "200px",
+                                maxWidth: "300px",
+                                maxHeight: "500px",
+                            }}
+                        >
                             <ProductCard product={product} />
                         </Grid.Col>
                     ))}
@@ -31,3 +48,5 @@ export default function Search() {
         </Container>
     );
 }
+
+export default Search;
