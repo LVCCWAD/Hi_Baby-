@@ -15,13 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             GenderSeeder::class,
-
             CategorySeeder::class,
-            // SizeSeeder::class,
-            // ColorSeeder::class,
+            SizeSeeder::class,
+            ColorSeeder::class,
             AdminSeeder::class,
-            ProductSeeder::class,
-            ReviewSeeder::class,
+            // ProductSeeder::class,
+            // ReviewSeeder::class,
 
 
 

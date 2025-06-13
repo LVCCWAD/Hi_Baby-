@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CategorySeeder extends Seeder
 {
@@ -13,33 +12,36 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $boysCategories = [
-            'Jackets and Sweaters',
-            'Pants and Jeans',
-            'Pajamas',
-            'Suits',
-        ];
-
         $girlsCategories = [
             'Dresses',
-            'Tops and Skirts',
+            'Skirts',
+            'Jackets & Sweaters',
             'Pajamas',
-            'Gowns',
+            'Shirts',
+            'Pants & Jeans',
         ];
 
-        // Create boys categories
-        foreach ($boysCategories as $name) {
-            Category::create([
-                'name' => $name,
-                'gender' => 'boy',  // or 'boys' depending on your convention
-            ]);
-        }
+        $boysCategories = [
+            'Polo & Suit',
+            'Pajamas',
+            'Shirts',
+            'Pants & Jeans',
+            'Shorts',
+        ];
 
         // Create girls categories
         foreach ($girlsCategories as $name) {
             Category::create([
                 'name' => $name,
-                'gender' => 'girl', // or 'girls'
+                'gender' => 'girl',
+            ]);
+        }
+
+        // Create boys categories
+        foreach ($boysCategories as $name) {
+            Category::create([
+                'name' => $name,
+                'gender' => 'boy',
             ]);
         }
     }

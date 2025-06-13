@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Color;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ColorSeeder extends Seeder
 {
@@ -19,6 +18,8 @@ class ColorSeeder extends Seeder
             ['name' => 'Green', 'hex_code' => '#00FF00'],
             ['name' => 'Black', 'hex_code' => '#000000'],
             ['name' => 'White', 'hex_code' => '#FFFFFF'],
+            ['name' => 'Pink', 'hex_code' => '#FFC0CB'],
+            ['name' => 'Yellow', 'hex_code' => '#FFFF00'],
         ];
 
         foreach ($colors as $color) {
