@@ -13,7 +13,7 @@ function Checkout({ product, address, initialData }) {
         initialData.payment_method || "cod"
     );
 
-    const price = Number(product.price);
+    const price = parseFloat(product?.price) || 0;
     const safePrice = isNaN(price) ? 0 : price;
     const total = safePrice * quantity;
     const colorId = initialData.color_id;
@@ -71,12 +71,9 @@ function Checkout({ product, address, initialData }) {
                             Product
                         </Text>
                         <Text>Name: {product.name}</Text>
-                        <Text>Price: ${Number(product.price).toFixed(2)}</Text>
+                        <Text>Price: ${safePrice.toFixed(2)}</Text>{" "}
                         <Text>Quantity: {quantity}</Text>
-                        <Text>
-                            Total: $
-                            {(Number(product.price) * quantity).toFixed(2)}
-                        </Text>
+                        <Text>Total: ${(safePrice * quantity).toFixed(2)}</Text>
                         {/* You can add inputs here to update quantity, select payment method, etc. */}
                     </Paper>
                 </Grid.Col>
