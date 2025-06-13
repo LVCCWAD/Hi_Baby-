@@ -47,7 +47,11 @@ function NavHeader() {
     };
 
     const handleLogout = () => {
-        Inertia.post("/logout", {}, { onSuccess: () => (window.location.href = "/login") });
+        Inertia.post(
+            "/logout",
+            {},
+            { onSuccess: () => (window.location.href = "/login") }
+        );
     };
 
     const handleSearchSubmit = (e) => {
@@ -61,10 +65,21 @@ function NavHeader() {
         <Box bg="#FBF2E9" py="sm" style={{ borderBottom: "1px solid #e0e0e0" }}>
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
-
                     {/* Logo */}
-                    <Link href="/" style={{ textDecoration: "none" }}>
-                        <Image src={Logo} alt="HI, BABY!" h={50} fit="contain" />
+                    <Link
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            Inertia.visit("/");
+                        }}
+                        style={{ textDecoration: "none" }}
+                    >
+                        <Image
+                            src={Logo}
+                            alt="HI, BABY!"
+                            h={50}
+                            fit="contain"
+                        />
                     </Link>
 
                     {/* Navigation Links */}
@@ -75,7 +90,6 @@ function NavHeader() {
 
                     {/* Right Side Icons and Search */}
                     <Flex align="center" gap={rem(20)}>
-
                         {/* Search Bar */}
                         <Flex
                             component="form"
@@ -112,7 +126,13 @@ function NavHeader() {
                                     },
                                 }}
                             />
-                            <ActionIcon type="submit" variant="filled" size={32} color="#BAB86C" radius="md">
+                            <ActionIcon
+                                type="submit"
+                                variant="filled"
+                                size={32}
+                                color="#BAB86C"
+                                radius="md"
+                            >
                                 <IconSearch size={18} />
                             </ActionIcon>
                         </Flex>
@@ -122,17 +142,49 @@ function NavHeader() {
                             {isAuthenticated && (
                                 <>
                                     <Tooltip label="Cart">
-                                        <ActionIcon variant="light" component={Link} href="/cart" radius="xl" size="lg" color="gray">
-                                            <IconShoppingCart size={22} stroke={1.5} />
+                                        <ActionIcon
+                                            variant="light"
+                                            component={Link}
+                                            href="/cart"
+                                            radius="xl"
+                                            size="lg"
+                                            color="gray"
+                                        >
+                                            <IconShoppingCart
+                                                size={22}
+                                                stroke={1.5}
+                                            />
                                         </ActionIcon>
                                     </Tooltip>
 
-                                    <NotificationModal opened={modalOpen} onClose={() => setModalOpen(false)} notifications={notifications} />
+                                    <NotificationModal
+                                        opened={modalOpen}
+                                        onClose={() => setModalOpen(false)}
+                                        notifications={notifications}
+                                    />
 
                                     <Tooltip label="Notifications">
-                                        <Indicator disabled={!showBadge} color="red" size={10} offset={4} position="top-end" withBorder>
-                                            <ActionIcon variant="light" onClick={handleOpenNotifications} radius="xl" size="lg" color="gray">
-                                                <IconBell size={22} stroke={1.5} />
+                                        <Indicator
+                                            disabled={!showBadge}
+                                            color="red"
+                                            size={10}
+                                            offset={4}
+                                            position="top-end"
+                                            withBorder
+                                        >
+                                            <ActionIcon
+                                                variant="light"
+                                                onClick={
+                                                    handleOpenNotifications
+                                                }
+                                                radius="xl"
+                                                size="lg"
+                                                color="gray"
+                                            >
+                                                <IconBell
+                                                    size={22}
+                                                    stroke={1.5}
+                                                />
                                             </ActionIcon>
                                         </Indicator>
                                     </Tooltip>
@@ -142,7 +194,12 @@ function NavHeader() {
                             {/* User Menu */}
                             <Menu position="bottom-end" shadow="md" width={200}>
                                 <Menu.Target>
-                                    <ActionIcon variant="light" radius="xl" size="lg" color="gray">
+                                    <ActionIcon
+                                        variant="light"
+                                        radius="xl"
+                                        size="lg"
+                                        color="gray"
+                                    >
                                         <IconUser size={22} stroke={1.5} />
                                     </ActionIcon>
                                 </Menu.Target>
@@ -152,31 +209,82 @@ function NavHeader() {
                                         <>
                                             <Menu.Label>
                                                 Signed in as{" "}
-                                                <Text fw={500} size="sm" ml={4} span>
-                                                    {auth.user.name || auth.user.email}
+                                                <Text
+                                                    fw={500}
+                                                    size="sm"
+                                                    ml={4}
+                                                    span
+                                                >
+                                                    {auth.user.name ||
+                                                        auth.user.email}
                                                 </Text>
                                             </Menu.Label>
 
-                                            <Menu.Item component={Link} href="/profile" leftSection={<IconUserCircle size={16} stroke={1.5} />}>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/profile"
+                                                leftSection={
+                                                    <IconUserCircle
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
                                                 User Settings
                                             </Menu.Item>
 
-                                            <Menu.Item component={Link} href="/chat" leftSection={<IconMessageCircle size={16} stroke={1.5} />}>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/chat"
+                                                leftSection={
+                                                    <IconMessageCircle
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
                                                 Chats
                                             </Menu.Item>
 
                                             <Divider my="xs" />
 
-                                            <Menu.Item onClick={handleLogout} leftSection={<IconLogout size={16} stroke={1.5} />} color="red">
+                                            <Menu.Item
+                                                onClick={handleLogout}
+                                                leftSection={
+                                                    <IconLogout
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                                color="red"
+                                            >
                                                 Logout
                                             </Menu.Item>
                                         </>
                                     ) : (
                                         <>
-                                            <Menu.Item component={Link} href="/login" leftSection={<IconLogin size={16} stroke={1.5} />}>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/login"
+                                                leftSection={
+                                                    <IconLogin
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
                                                 Login
                                             </Menu.Item>
-                                            <Menu.Item component={Link} href="/register" leftSection={<IconUserCircle size={16} stroke={1.5} />}>
+                                            <Menu.Item
+                                                component={Link}
+                                                href="/register"
+                                                leftSection={
+                                                    <IconUserCircle
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                }
+                                            >
                                                 Register
                                             </Menu.Item>
                                         </>

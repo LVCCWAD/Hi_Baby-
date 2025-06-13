@@ -46,7 +46,14 @@ function AdminHeader() {
         <Box bg="#FBF2E9" py="sm" style={{ borderBottom: "1px solid #e0e0e0" }}>
             <Container size="xl">
                 <Flex align="center" justify="space-between" wrap="nowrap">
-                    <Link href="/" style={{ textDecoration: "none" }}>
+                    <Link
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            Inertia.visit("/");
+                        }}
+                        style={{ textDecoration: "none" }}
+                    >
                         <Image
                             src={Logo}
                             alt="HI, BABY!"
