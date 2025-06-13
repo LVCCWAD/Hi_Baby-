@@ -118,62 +118,50 @@ class OrderController extends Controller
 
     public function placeOrder(Request $request)
     {
-        Log::info('PlaceOrder Request:', $request->all());
+        try {
+            $validated = $request->validate([
+                'address' => 'required|string|min:10',
+                'product_id' => 'required|exists:products,id',
+                'color_id' => 'required|exists:colors,id',
+                'size_id' => 'required|exists:sizes,id',
+                'quantity' => 'required|integer|min:1',
+                'payment_method' => 'required|string|in:cod',
+            ]);
 
-        // Validation rules
-        $rules = [
-            'address' => 'required|string|min:10',
-            'product_id' => 'required|exists:products,id',
-            'color_id' => 'required|exists:colors,id',
-            'size_id' => 'required|exists:sizes,id',
-            'quantity' => 'required|integer|min:1',
-            'payment_method' => 'required|string|in:cod', // extend this list as needed
-        ];
+            $user = Auth::user();
+            $product = Product::findOrFail($validated['product_id']);
 
-        // Validate request data
-        if ($request->expectsJson()) {
-            Validator::make($request->all(), $rules)->validate();
-        } else {
-            $request->validate($rules);
+            $totalAmount = $product->price * $validated['quantity'];
+
+            $order = Order::create([
+                'user_id' => $user->id,
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
+                'address' => $validated['address'],
+                'payment_status' => 'pending',
+                'payment_method' => $validated['payment_method'],
+            ]);
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'color_id' => $validated['color_id'],
+                'size_id' => $validated['size_id'],
+                'quantity' => $validated['quantity'],
+                'price' => $product->price,
+                'total' => $totalAmount,
+            ]);
+
+            Mail::to($user->email)->send(new OrderPlaced($order));
+
+            // 🚀 Inertia recommended way to redirect after post
+            return redirect()->route('order.success', ['order' => $order->id]);
+        } catch (\Throwable $e) {
+            \Log::error('Order error: ' . $e->getMessage());
+            return back()->withErrors([
+                'default' => 'Something went wrong. Please try again later.',
+            ]);
         }
-
-        $user = Auth::user();
-        $product = Product::find($request->product_id);
-
-        $totalAmount = $product->price * $request->quantity;
-
-        // Use payment method from request or default to 'cod'
-        $paymentMethod = $request->input('payment_method', 'cod');
-
-        // Create the order
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total_amount' => $totalAmount,
-            'status' => 'pending',
-            'address' => $request->address,
-            'payment_status' => 'pending',
-            'payment_method' => $paymentMethod,
-        ]);
-
-        // Create the order item
-        OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $product->id,
-            'color_id' => $request->color_id,
-            'size_id' => $request->size_id,
-            'quantity' => $request->quantity,
-            'price' => $product->price,
-            'total' => $totalAmount,
-        ]);
-
-        // Send order confirmation email
-        Mail::to($user->email)->send(new OrderPlaced($order));
-
-        $user->notify(new UserEventNotification('Order placed successfully.'));
-
-        // Redirect to order success page
-        session()->flash('success', 'Order placed successfully!');
-        return Inertia::location(route('order.success', ['order' => $order->id]));
     }
 
 
