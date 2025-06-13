@@ -17,13 +17,11 @@ class CategorySeeder extends Seeder
             'Skirts',
             'Jackets & Sweaters',
             'Pajamas',
-            'Shirts',
-            'Pants & Jeans',
+
         ];
 
         $boysCategories = [
             'Polo & Suit',
-            'Pajamas',
             'Shirts',
             'Pants & Jeans',
             'Shorts',

@@ -163,7 +163,7 @@ function AddProduct({
                     <Text
                         style={{
                             fontFamily: "WendyOne",
-                            fontSize: "clamp(2px, 5vw, 50px)",
+                            fontSize: "clamp(32px, 5vw, 50px)",
                             color: "#BAB86C",
                             textAlign: "center",
                             padding: "20px 0",
