@@ -4,24 +4,23 @@ import {
     TextInput,
     Textarea,
     NumberInput,
-    MultiSelect,
     Button,
     Paper,
     Stack,
-    FileInput,
-    Group,
     LoadingOverlay,
-    Box,
     Text,
-    Image,
-    ActionIcon,
-    Grid,
     Container,
-    Flex,
     Modal,
+    Flex,
+    MantineProvider,
+    Group,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconX } from "@tabler/icons-react";
+
+import SelectableButtonGroup from "@/Components/AddProduct/SelectableButtonGroup";
+import QuantityInput from "@/Components/AddProduct/QuantityInput";
+import ImageUploader from "@/Components/AddProduct/ImageUploader";
+import ColorSelector from "@/Components/AddProduct/ColorSelector";
 
 function AddProduct({
     categories = [],
@@ -32,6 +31,7 @@ function AddProduct({
     const [stockStatus, setStockStatus] = useState("in_stock");
     const [imagePreview, setImagePreview] = useState(null);
     const [showImageError, setShowImageError] = useState(false);
+    const MAX_FILE_SIZE_MB = 2;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
@@ -46,20 +46,16 @@ function AddProduct({
         stock_status: "in_stock",
     });
 
-    const MAX_FILE_SIZE_MB = 2;
-
     const handleImageUpload = (file) => {
         if (!file) {
             setData("image", null);
             setImagePreview(null);
             return;
         }
-
         if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
             setShowImageError(true);
             return;
         }
-
         setData("image", file);
         const reader = new FileReader();
         reader.onloadend = () => setImagePreview(reader.result);
@@ -73,10 +69,7 @@ function AddProduct({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            console.log("Submitting form...");
-
             const formData = new FormData();
             formData.append("name", data.name);
             formData.append("description", data.description);
@@ -84,26 +77,16 @@ function AddProduct({
             formData.append("quantity", data.quantity);
             formData.append("gender_id", data.gender_id);
             formData.append("stock_status", stockStatus);
-
-            if (data.image) {
-                formData.append("image", data.image);
-            }
-
+            if (data.image) formData.append("image", data.image);
             data.category_ids.forEach((id) =>
                 formData.append("category_ids[]", id)
             );
             data.color_ids.forEach((id) => formData.append("color_ids[]", id));
             data.size_ids.forEach((id) => formData.append("size_ids[]", id));
 
-            console.log("FormData entries:");
-            for (let pair of formData.entries()) {
-                console.log(`${pair[0]}: ${pair[1]}`);
-            }
-
             post("/add-product", formData, {
                 forceFormData: true,
                 onSuccess: () => {
-                    console.log("Submission successful");
                     notifications.show({
                         title: "Success",
                         message: "Product added successfully",
@@ -114,57 +97,45 @@ function AddProduct({
                     setImagePreview(null);
                 },
                 onError: (errors) => {
-                    console.error("Validation errors:", errors);
                     const errorMessages = Object.entries(errors)
                         .map(([field, message]) => `${field}: ${message}`)
                         .join("\n");
-
                     notifications.show({
                         title: "Validation Error",
                         message: errorMessages,
                         color: "red",
-                        autoClose: 5000,
                     });
-                },
-                onFinish: () => {
-                    console.log("Finished submitting");
                 },
             });
         } catch (err) {
-            console.error("Unexpected error:", err);
             notifications.show({
-                title: "Unexpected Error",
-                message: err.message || "An unknown error occurred",
+                title: "Error",
+                message: err.message || "Unknown error",
                 color: "red",
-                autoClose: 5000,
             });
         }
     };
 
-    const categoryOptions = categories.map((category) => ({
-        value: category.id.toString(),
-        label: category.name,
+    const categoryOptions = categories.map(({ id, name }) => ({
+        value: id.toString(),
+        label: name,
     }));
-
-    const colorOptions = colors.map((color) => ({
-        value: color.id.toString(),
-        label: color.name,
-        color: color.hex_code,
+    const colorOptions = colors.map(({ id, name, hex_code }) => ({
+        value: id.toString(),
+        label: name,
+        color: hex_code,
     }));
-
-    const sizeOptions = sizes.map((size) => ({
-        value: size.id.toString(),
-        label: size.name,
+    const sizeOptions = sizes.map(({ id, name }) => ({
+        value: id.toString(),
+        label: name,
     }));
-
-    const genderOptions = genders.map((gender) => ({
-        value: gender.id.toString(),
-        label: gender.name,
+    const genderOptions = genders.map(({ id, name }) => ({
+        value: id.toString(),
+        label: name,
     }));
 
     return (
-        <>
-            {/* Modal for file size exceeded */}
+        <MantineProvider>
             <Modal
                 opened={showImageError}
                 onClose={() => setShowImageError(false)}
@@ -176,59 +147,60 @@ function AddProduct({
             </Modal>
 
             <Container
-                size="xl"
-                p={0}
-                style={{ minHeight: "100vh", backgroundColor: "#FBF2E9" }}
+                size="md"
+                style={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
             >
                 <Paper
-                    p={0}
-                    shadow="sm"
-                    pos="relative"
-                    bg="#FBF2E9"
-                    style={{ minHeight: "100vh" }}
+                    radius="lg"
+                    p="xl"
+                    style={{ width: "100%", background: "#FDFDFD" }}
                 >
                     <Text
                         style={{
                             fontFamily: "WendyOne",
-                            fontSize: "clamp(32px, 5vw, 50px)",
+                            fontSize: "clamp(2px, 5vw, 50px)",
                             color: "#BAB86C",
                             textAlign: "center",
                             padding: "20px 0",
-                            margin: 0,
                         }}
                     >
-                        Product
+                        Add Product
                     </Text>
 
                     <LoadingOverlay visible={processing} blur={2} />
 
-                    <Container size="lg" px="md">
-                        <form onSubmit={handleSubmit}>
-                            <Grid gutter="xl">
-                                <Grid.Col xs={12} md={6}>
-                                    <Stack spacing="lg">
-                                        <TextInput
-                                            required
-                                            label="Name"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
-                                            error={errors.name}
-                                            disabled={processing}
-                                            size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
-                                        />
+                    <form onSubmit={handleSubmit}>
+                        <Stack spacing="xl">
+                            {/* Section 1 */}
+                            <Paper
+                                p="lg"
+                                shadow="sm"
+                                radius="md"
+                                style={{ background: "#FAFAFA" }}
+                            >
+                                <Stack spacing="lg">
+                                    <TextInput
+                                        label="Product Name"
+                                        required
+                                        value={data.name}
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
+                                        error={errors.name}
+                                        size="md"
+                                        radius="md"
+                                    />
 
+                                    {/* Price & Quantity side by side */}
+                                    <Group grow align="flex-end">
                                         <NumberInput
-                                            required
                                             label="Price"
+                                            required
                                             value={data.price}
                                             onChange={(value) =>
                                                 setData("price", value)
@@ -237,416 +209,113 @@ function AddProduct({
                                             precision={2}
                                             min={0}
                                             size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
-                                        />
-                                        <MultiSelect
-                                            required
-                                            label="Gender"
-                                            data={genderOptions}
-                                            value={
-                                                data.gender_id
-                                                    ? [
-                                                          data.gender_id.toString(),
-                                                      ]
-                                                    : []
-                                            }
-                                            onChange={(value) =>
-                                                setData(
-                                                    "gender_id",
-                                                    value.length > 0
-                                                        ? parseInt(value[0])
-                                                        : null
-                                                )
-                                            }
-                                            error={errors.gender_id}
-                                            placeholder="Select gender"
-                                            size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
+                                            radius="md"
                                         />
 
-                                        <MultiSelect
-                                            required
-                                            label="Categories"
-                                            data={categoryOptions}
-                                            value={data.category_ids.map(
-                                                String
-                                            )}
-                                            onChange={(value) =>
-                                                setData(
-                                                    "category_ids",
-                                                    value.map(Number)
-                                                )
-                                            }
-                                            error={errors.category_ids}
-                                            placeholder="Select categories"
-                                            size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
-                                        />
-
-                                        <Textarea
-                                            required
-                                            label="Description"
-                                            value={data.description}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "description",
-                                                    e.target.value
-                                                )
-                                            }
-                                            error={errors.description}
-                                            minRows={4}
-                                            size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
-                                        />
-                                    </Stack>
-                                </Grid.Col>
-
-                                <Grid.Col xs={12} md={6}>
-                                    <Stack spacing="lg">
-                                        <Box>
-                                            <Text
-                                                size="sm"
-                                                weight={500}
-                                                mb="xs"
-                                            >
-                                                Stock status
-                                            </Text>
-                                            <Group spacing="md">
-                                                <Button
-                                                    variant={
-                                                        stockStatus ===
-                                                        "in_stock"
-                                                            ? "filled"
-                                                            : "outline"
-                                                    }
-                                                    color={
-                                                        stockStatus ===
-                                                        "in_stock"
-                                                            ? "green"
-                                                            : "gray"
-                                                    }
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setStockStatus(
-                                                            "in_stock"
-                                                        )
-                                                    }
-                                                    style={{
-                                                        borderRadius: "20px",
-                                                    }}
-                                                >
-                                                    In Stock
-                                                </Button>
-
-                                                <Button
-                                                    variant={
-                                                        stockStatus ===
-                                                        "out_of_stock"
-                                                            ? "filled"
-                                                            : "outline"
-                                                    }
-                                                    color={
-                                                        stockStatus ===
-                                                        "out_of_stock"
-                                                            ? "red"
-                                                            : "gray"
-                                                    }
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        setStockStatus(
-                                                            "out_of_stock"
-                                                        )
-                                                    }
-                                                    style={{
-                                                        borderRadius: "20px",
-                                                    }}
-                                                >
-                                                    Out of Stock
-                                                </Button>
-                                            </Group>
-                                        </Box>
-
-                                        <NumberInput
-                                            required
-                                            label="Available quantity"
+                                        <QuantityInput
                                             value={data.quantity}
                                             onChange={(value) =>
                                                 setData("quantity", value)
                                             }
                                             error={errors.quantity}
-                                            min={0}
-                                            size="md"
-                                            styles={{
-                                                input: {
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #ddd",
-                                                    borderRadius: "8px",
-                                                },
-                                            }}
                                         />
+                                    </Group>
+                                    <Textarea
+                                        label="Description"
+                                        required
+                                        value={data.description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value
+                                            )
+                                        }
+                                        error={errors.description}
+                                        size="md"
+                                        radius="md"
+                                    />
 
-                                        <Box>
-                                            <Text
-                                                size="sm"
-                                                weight={500}
-                                                mb="xs"
-                                            >
-                                                Images
-                                            </Text>
-                                            <Group
-                                                spacing="md"
-                                                align="flex-start"
-                                            >
-                                                <FileInput
-                                                    onChange={handleImageUpload}
-                                                    accept="image/*"
-                                                    placeholder="Upload Image"
-                                                />
-                                                {imagePreview && (
-                                                    <Box
-                                                        style={{
-                                                            position:
-                                                                "relative",
-                                                        }}
-                                                    >
-                                                        <Image
-                                                            src={imagePreview}
-                                                            alt="Preview"
-                                                            width={80}
-                                                            height={80}
-                                                            fit="cover"
-                                                            radius="md"
-                                                        />
-                                                        <ActionIcon
-                                                            size="sm"
-                                                            color="red"
-                                                            variant="filled"
-                                                            style={{
-                                                                position:
-                                                                    "absolute",
-                                                                top: -8,
-                                                                right: -8,
-                                                            }}
-                                                            onClick={
-                                                                removeImage
-                                                            }
-                                                        >
-                                                            <IconX size={12} />
-                                                        </ActionIcon>
-                                                    </Box>
-                                                )}
-                                            </Group>
-                                            {errors.image && (
-                                                <Text
-                                                    size="xs"
-                                                    color="red"
-                                                    mt="xs"
-                                                >
-                                                    {errors.image}
-                                                </Text>
-                                            )}
-                                        </Box>
+                                    <SelectableButtonGroup
+                                        label="Categories"
+                                        options={categoryOptions}
+                                        selectedValues={data.category_ids}
+                                        single={false}
+                                        onChange={(updated) =>
+                                            setData("category_ids", updated)
+                                        }
+                                        error={errors.category_ids}
+                                    />
+                                </Stack>
+                            </Paper>
 
-                                        {/* Colors */}
-                                        <Box>
-                                            <Text
-                                                size="sm"
-                                                weight={500}
-                                                mb="xs"
-                                            >
-                                                Colors
-                                            </Text>
-                                            <Group spacing="sm">
-                                                {colorOptions.map((color) => {
-                                                    const isSelected =
-                                                        data.color_ids.includes(
-                                                            parseInt(
-                                                                color.value
-                                                            )
-                                                        );
-                                                    return (
-                                                        <Box
-                                                            key={color.value}
-                                                            onClick={() => {
-                                                                const colorId =
-                                                                    parseInt(
-                                                                        color.value
-                                                                    );
-                                                                const newColors =
-                                                                    isSelected
-                                                                        ? data.color_ids.filter(
-                                                                              (
-                                                                                  id
-                                                                              ) =>
-                                                                                  id !==
-                                                                                  colorId
-                                                                          )
-                                                                        : [
-                                                                              ...data.color_ids,
-                                                                              colorId,
-                                                                          ];
-                                                                setData(
-                                                                    "color_ids",
-                                                                    newColors
-                                                                );
-                                                            }}
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                backgroundColor:
-                                                                    color.color ||
-                                                                    "#ccc",
-                                                                cursor: "pointer",
-                                                                border: isSelected
-                                                                    ? "3px solid #333"
-                                                                    : "2px solid #ddd",
-                                                                transition:
-                                                                    "all 0.2s",
-                                                            }}
-                                                        />
-                                                    );
-                                                })}
-                                            </Group>
-                                            {errors.color_ids && (
-                                                <Text
-                                                    size="xs"
-                                                    color="red"
-                                                    mt="xs"
-                                                >
-                                                    {errors.color_ids}
-                                                </Text>
-                                            )}
-                                        </Box>
+                            {/* Section 2 */}
+                            <Paper
+                                p="lg"
+                                shadow="sm"
+                                radius="md"
+                                style={{ background: "#FAFAFA" }}
+                            >
+                                <Stack spacing="lg">
+                                    <SelectableButtonGroup
+                                        label="Gender"
+                                        options={genderOptions}
+                                        selectedValues={data.gender_id}
+                                        single={true}
+                                        onChange={(value) =>
+                                            setData("gender_id", value)
+                                        }
+                                        error={errors.gender_id}
+                                    />
 
-                                        {/* Sizes */}
-                                        <Box>
-                                            <Text
-                                                size="sm"
-                                                weight={500}
-                                                mb="xs"
-                                            >
-                                                Sizes
-                                            </Text>
-                                            <Group spacing="sm">
-                                                {sizeOptions.map((size) => {
-                                                    const isSelected =
-                                                        data.size_ids.includes(
-                                                            parseInt(size.value)
-                                                        );
-                                                    return (
-                                                        <Button
-                                                            key={size.value}
-                                                            variant={
-                                                                isSelected
-                                                                    ? "filled"
-                                                                    : "outline"
-                                                            }
-                                                            color={
-                                                                isSelected
-                                                                    ? "blue"
-                                                                    : "gray"
-                                                            }
-                                                            size="sm"
-                                                            onClick={() => {
-                                                                const sizeId =
-                                                                    parseInt(
-                                                                        size.value
-                                                                    );
-                                                                const newSizes =
-                                                                    isSelected
-                                                                        ? data.size_ids.filter(
-                                                                              (
-                                                                                  id
-                                                                              ) =>
-                                                                                  id !==
-                                                                                  sizeId
-                                                                          )
-                                                                        : [
-                                                                              ...data.size_ids,
-                                                                              sizeId,
-                                                                          ];
-                                                                setData(
-                                                                    "size_ids",
-                                                                    newSizes
-                                                                );
-                                                            }}
-                                                            style={{
-                                                                minWidth: 40,
-                                                                height: 40,
-                                                                borderRadius:
-                                                                    "8px",
-                                                            }}
-                                                        >
-                                                            {size.label}
-                                                        </Button>
-                                                    );
-                                                })}
-                                            </Group>
-                                            {errors.size_ids && (
-                                                <Text
-                                                    size="xs"
-                                                    color="red"
-                                                    mt="xs"
-                                                >
-                                                    {errors.size_ids}
-                                                </Text>
-                                            )}
-                                        </Box>
-                                    </Stack>
-                                </Grid.Col>
-                            </Grid>
+                                    <ImageUploader
+                                        handleImageUpload={handleImageUpload}
+                                        imagePreview={imagePreview}
+                                        removeImage={removeImage}
+                                        error={errors.image}
+                                    />
 
-                            {/* Submit Button */}
-                            <Flex justify="center" mt="xl" mb="xl">
+                                    <ColorSelector
+                                        colorOptions={colorOptions}
+                                        selectedColors={data.color_ids}
+                                        setSelectedColors={(colors) =>
+                                            setData("color_ids", colors)
+                                        }
+                                        error={errors.color_ids}
+                                    />
+
+                                    <SelectableButtonGroup
+                                        label="Sizes"
+                                        options={sizeOptions}
+                                        selectedValues={data.size_ids}
+                                        single={false}
+                                        onChange={(updated) =>
+                                            setData("size_ids", updated)
+                                        }
+                                        error={errors.size_ids}
+                                    />
+                                </Stack>
+                            </Paper>
+
+                            {/* Submit */}
+                            <Flex justify="left" mt="md" ml="md">
                                 <Button
                                     type="submit"
                                     size="lg"
+                                    radius="md"
                                     loading={processing}
-                                    disabled={processing}
                                     style={{
                                         backgroundColor: "#2C3E50",
-                                        color: "white",
-                                        borderRadius: "8px",
-                                        minWidth: 200,
-                                        height: 48,
+                                        padding: "0 50px",
                                     }}
                                 >
-                                    {processing
-                                        ? "Adding Product..."
-                                        : "Add Product"}
+                                    {processing ? "Adding..." : "Add Product"}
                                 </Button>
                             </Flex>
-                        </form>
-                    </Container>
+                        </Stack>
+                    </form>
                 </Paper>
             </Container>
-        </>
+        </MantineProvider>
     );
 }
 
