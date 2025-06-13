@@ -149,11 +149,12 @@ class ProductController extends Controller
             Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
             Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
 
-            return redirect()->route('admin.products')->with('success', 'Product added successfully!');
+            return Inertia::location(route('admin.products'));
         } catch (\Throwable $e) {
-            dd($e->getMessage());
+            return redirect()->back()->with('error', 'An unexpected error occurred. Please try again.');
         }
     }
+
 
 
     public function editProduct(Product $product)
