@@ -152,15 +152,13 @@ class OrderController extends Controller
                 'total' => $totalAmount,
             ]);
 
-            Mail::to($user->email)->send(new OrderPlaced($order));
+            // Send email, notify, etc...
 
-            // 🚀 Inertia recommended way to redirect after post
+            // 🔥 Here's the key line for Inertia + Railway compatibility
             return redirect()->route('order.success', ['order' => $order->id]);
         } catch (\Throwable $e) {
-            \Log::error('Order error: ' . $e->getMessage());
-            return back()->withErrors([
-                'default' => 'Something went wrong. Please try again later.',
-            ]);
+            Log::error('Order error: ' . $e->getMessage());
+            return back()->withErrors(['default' => 'Something went wrong.']);
         }
     }
 

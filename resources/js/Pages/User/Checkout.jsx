@@ -20,14 +20,6 @@ function Checkout({ product, address, initialData }) {
     const sizeId = initialData.size_id;
 
     const handleCheckout = (paymentMethod) => {
-        console.log("Starting checkout with:");
-        console.log("Address:", address);
-        console.log("Product ID:", product.id);
-        console.log("Color ID:", colorId);
-        console.log("Size ID:", sizeId);
-        console.log("Quantity:", quantity);
-        console.log("Payment method:", paymentMethod);
-
         if (!address) {
             alert("Please select a shipping address.");
             return;
@@ -53,15 +45,7 @@ function Checkout({ product, address, initialData }) {
                 payment_method: paymentMethod,
             },
             {
-                onSuccess: () => {
-                    setLoading(false);
-                    // router.visit("/order/success");
-                },
-                onError: (errors) => {
-                    setLoading(false);
-                    console.error("Order failed:", errors);
-                    alert("Failed to place order.");
-                },
+                onFinish: () => setLoading(false), // Simply remove onSuccess/onError for redirect
             }
         );
     };
