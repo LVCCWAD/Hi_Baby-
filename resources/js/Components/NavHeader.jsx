@@ -84,7 +84,7 @@ function NavHeader() {
 
                     {/* Navigation Links */}
                     <Group gap={rem(30)}>
-                        <CollectionDropdown />
+                        {/* <CollectionDropdown /> */}
                         <NavLink href="/aboutus">About Us</NavLink>
                     </Group>
 

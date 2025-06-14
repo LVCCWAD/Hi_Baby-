@@ -1,64 +1,38 @@
-import { Grid } from "@mantine/core";
+import { Paper, Group, Text, Tabs, Box } from "@mantine/core";
 import { LineChart } from "@mantine/charts";
 
-const jobColors = {
-    engineer: "blue",
-    manager: "cyan",
-    designer: "pink",
-};
-
-const dataCharts = [
-    {
-        date: "Mar 22",
-        Apples: 2890,
-        Oranges: 2338,
-        Tomatoes: 2452,
-    },
-    {
-        date: "Mar 23",
-        Apples: 2756,
-        Oranges: 2103,
-        Tomatoes: 2402,
-    },
-    {
-        date: "Mar 24",
-        Apples: 3322,
-        Oranges: 986,
-        Tomatoes: 1821,
-    },
-    {
-        date: "Mar 25",
-        Apples: 3470,
-        Oranges: 2108,
-        Tomatoes: 2809,
-    },
-    {
-        date: "Mar 26",
-        Apples: 3129,
-        Oranges: 1726,
-        Tomatoes: 2290,
-    },
-];
-function LineGraph() {
+function LineGraph({ chartData, timeFilter, setTimeFilter }) {
     return (
-        <div>
-            <Grid>
-                <Grid.Col span={6}>
-                    <LineChart
-                        h={300}
-                        data={dataCharts}
-                        dataKey="date"
-                        series={[
-                            { name: "Apples", color: "indigo.6" },
-                            { name: "Oranges", color: "blue.6" },
-                            { name: "Tomatoes", color: "teal.6" },
-                        ]}
-                        curveType="bump"
-                        gridAxis="y"
-                    />
-                </Grid.Col>
-            </Grid>
-        </div>
+        <Paper p="md" radius="md" withBorder mb="md">
+            <Group justify="space-between" mb="md">
+                <Text fw={500}>Sales Report</Text>
+                <Tabs value={timeFilter} onChange={setTimeFilter}>
+                    <Tabs.List>
+                        <Tabs.Tab value="12 Months">12 Months</Tabs.Tab>
+                        <Tabs.Tab value="6 Months">6 Months</Tabs.Tab>
+                        <Tabs.Tab value="30 Days">30 Days</Tabs.Tab>
+                        <Tabs.Tab value="7 Days">7 Days</Tabs.Tab>
+                    </Tabs.List>
+                </Tabs>
+            </Group>
+
+            <Box mt="md">
+                <LineChart
+                    h={300}
+                    data={chartData}
+                    dataKey="date"
+                    series={[
+                        { name: "Sales", color: "blue.6" },
+                        { name: "Orders", color: "blue.3" }
+                    ]}
+                    curveType="natural"
+                    gridAxis="y"
+                    withLegend
+                    withTooltip
+                    withDots
+                />
+            </Box>
+        </Paper>
     );
 }
 

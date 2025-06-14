@@ -111,8 +111,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'updateReview'])->name('reviews.update');
     Route::delete('/user/products/{product}/reviews/{review}', [ReviewsController::class, 'destroyReview'])->name('reviews.destroy');
 
+
     // Collections
     Route::get('/collection/boys/{category?}', [ProductController::class, 'boysCollection'])->name('collection.boys');
+    Route::get('/collection/girls/{category?}', [ProductController::class, 'girlsCollection'])->name('collection.girls');
 
     // Likes
     Route::get('/girls-products', [LikeController::class, 'likedProductsInGirls'])->name('girls.products');

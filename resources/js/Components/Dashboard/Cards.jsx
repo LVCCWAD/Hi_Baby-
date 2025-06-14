@@ -1,107 +1,29 @@
-import { Text, Grid, Card, Group } from "@mantine/core";
+import { Grid, Paper, Text, Group } from "@mantine/core";
+import { IconArrowUpRight, IconArrowDownRight } from "@tabler/icons-react";
 
-function Cards() {
+function Cards({ statCards }) {
     return (
-        <div>
-                <Grid grow gutter="xl">
-                    <Grid.Col span={3}>
-                        {" "}
-                        <Card
-                            shadow="sm"
-                            padding="lg"
-                            style={{ maxWidth: 300 }}
-                        >
-                            <Text
-                                weight={500}
-                                size="lg"
-                                style={{ marginBottom: 10 }}
-                            >
-                                TODAY'S SALE
+        <Grid mb="xl">
+            {statCards.map((card, index) => (
+                <Grid.Col span={{ base: 12, sm: 6, md: 3 }} key={index}>
+                    <Paper p="md" radius="md" withBorder>
+                        <Text size="xs" c="dimmed" fw={500}>{card.title}</Text>
+                        <Group justify="space-between" align="flex-end" mt={5}>
+                            <Text fw={700} size="xl">{card.value}</Text>
+                            <Text c={card.isPositive ? "teal" : "red"} fw={700} size="sm" style={{ display: "flex", alignItems: "center" }}>
+                                {card.isPositive ? "+ " : "- "}
+                                {card.change}%
+                                {card.isPositive ? (
+                                    <IconArrowUpRight size={16} style={{ marginLeft: 5 }} />
+                                ) : (
+                                    <IconArrowDownRight size={16} style={{ marginLeft: 5 }} />
+                                )}
                             </Text>
-                            <Group position="apart" style={{ marginBottom: 5 }}>
-                                <Text size="xl" weight={700} style={{}}>
-                                    ₱12,426
-                                </Text>
-                                <Text size="xl" weight={700} color="green">
-                                    + 36%
-                                </Text>
-                            </Group>
-                        </Card>
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                        {" "}
-                        <Card
-                            shadow="sm"
-                            padding="lg"
-                            style={{ maxWidth: 300 }}
-                        >
-                            <Text
-                                weight={500}
-                                size="lg"
-                                style={{ marginBottom: 10 }}
-                            >
-                                TODAY'S SALE
-                            </Text>
-                            <Group position="apart" style={{ marginBottom: 5 }}>
-                                <Text size="xl" weight={700} style={{}}>
-                                    ₱12,426
-                                </Text>
-                                <Text size="xl" weight={700} color="green">
-                                    + 36%
-                                </Text>
-                            </Group>
-                        </Card>
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                        {" "}
-                        <Card
-                            shadow="sm"
-                            padding="lg"
-                            style={{ maxWidth: 300 }}
-                        >
-                            <Text
-                                weight={500}
-                                size="lg"
-                                style={{ marginBottom: 10 }}
-                            >
-                                TODAY'S SALE
-                            </Text>
-                            <Group position="apart" style={{ marginBottom: 5 }}>
-                                <Text size="xl" weight={700} style={{}}>
-                                    ₱12,426
-                                </Text>
-                                <Text size="xl" weight={700} color="green">
-                                    + 36%
-                                </Text>
-                            </Group>
-                        </Card>
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                        {" "}
-                        <Card
-                            shadow="sm"
-                            padding="lg"
-                            style={{ maxWidth: 300 }}
-                        >
-                            <Text
-                                weight={500}
-                                size="lg"
-                                style={{ marginBottom: 10 }}
-                            >
-                                TODAY'S SALE
-                            </Text>
-                            <Group position="apart" style={{ marginBottom: 5 }}>
-                                <Text size="xl" weight={700} style={{}}>
-                                    ₱12,426
-                                </Text>
-                                <Text size="xl" weight={700} color="green">
-                                    + 36%
-                                </Text>
-                            </Group>
-                        </Card>
-                    </Grid.Col>
-                </Grid>
-        </div>
+                        </Group>
+                    </Paper>
+                </Grid.Col>
+            ))}
+        </Grid>
     );
 }
 

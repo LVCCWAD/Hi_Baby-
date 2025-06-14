@@ -13,7 +13,12 @@ class ReviewsController extends Controller
 {
     public function showReviews(Product $product)
     {
-        $product->load(['reviews.user', 'categories', 'colors', 'sizes']);
+        $product = Product::with([
+            'reviews.user:id,id,username,picture',
+            'categories',
+            'colors',
+            'sizes'
+        ])->findOrFail($product->id);
 
         return Inertia::render('User/ProductDetail', [
             'product' => $product,
@@ -26,8 +31,8 @@ class ReviewsController extends Controller
     public function storeReviews(Request $request, Product $product)
     {
         $request->validate([
-            'review' => 'required|string',
-            'rating' => 'required|numeric|min:0|max:5',
+            'review' => 'nullable|string',  // <-- allow empty review
+            'rating' => 'required|numeric|min:1|max:5',
         ]);
 
         $product->reviews()->create([
@@ -36,7 +41,6 @@ class ReviewsController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        // Redirect to the same page but make sure fresh data is reloaded
         session()->flash('success', 'Product updated!');
         return Inertia::location(route('products.show', $product->id));
     }
@@ -49,8 +53,8 @@ class ReviewsController extends Controller
         }
 
         $request->validate([
-            'review' => 'required|string',
-            'rating' => 'required|numeric|min:0|max:5',
+            'review' => 'nullable|string',
+            'rating' => 'required|numeric|min:1|max:5',
         ]);
 
         $review->update([
@@ -60,6 +64,7 @@ class ReviewsController extends Controller
 
         return redirect()->back()->with('success', 'Review updated successfully!');
     }
+
 
     public function destroyReview(Product $product, Review $review)
     {

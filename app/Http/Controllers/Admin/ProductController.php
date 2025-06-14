@@ -256,9 +256,14 @@ class ProductController extends Controller
 
     public function productDetail(Product $product)
     {
-        $product->load(['categories', 'colors', 'sizes', 'gender']);
+        $product->load([
+            'categories',
+            'colors',
+            'sizes',
+            'gender',
+            'reviews.user' // ✅ this loads review with its user!
+        ]);
 
-        // Load the authenticated user's address
         $address = Auth::user()->address;
 
         return Inertia::render('User/ProductDetail', [
@@ -267,6 +272,7 @@ class ProductController extends Controller
             'auth' => ['user' => Auth::user()]
         ]);
     }
+
 
 
     public function index(Request $request, ProductSearchService $searchService)
@@ -288,25 +294,49 @@ class ProductController extends Controller
         $query = $request->query('q');
         $userId = Auth::id();
 
+        if (empty($query) || trim($query) === '') {
+            return Inertia::render('User/Search', [
+                'products' => collect([]),
+                'query' => $query ?? '',
+            ]);
+        }
+
+        // Sanitize the search query (remove special characters, lowercase)
+        $searchTerm = trim($query);
+        $sanitizedTerm = strtolower(preg_replace('/[^A-Za-z0-9 ]/', '', $searchTerm));
+
         $products = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
-            ->where('name', 'like', "%{$query}%")
+            ->where(function ($q) use ($searchTerm, $sanitizedTerm) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$sanitizedTerm}%"])
+                    ->orWhereRaw('LOWER(description) LIKE ?', ["%{$sanitizedTerm}%"])
+                    ->orWhereHas('categories', function ($categoryQuery) use ($sanitizedTerm) {
+                        $categoryQuery->whereRaw("LOWER(REPLACE(name, '&', '')) LIKE ?", ["%{$sanitizedTerm}%"]);
+                    })
+                    ->orWhereHas('gender', function ($genderQuery) use ($sanitizedTerm) {
+                        $genderQuery->whereRaw('LOWER(name) LIKE ?', ["%{$sanitizedTerm}%"]);
+                    });
+            })
             ->withCount('likes')
+            ->orderBy('name', 'asc')
             ->get();
 
         $products = $this->addLikedStatus($products, $userId);
 
-        // ✅ Log search here
-        SearchLog::create([
-            'search_term' => $query,
-            'results_count' => $products->count(),
-            'user_id' => $userId,
-        ]);
+        // Log only non-empty search terms
+        if (!empty($searchTerm)) {
+            SearchLog::create([
+                'search_term' => $searchTerm,
+                'results_count' => $products->count(),
+                'user_id' => $userId,
+            ]);
+        }
 
         return Inertia::render('User/Search', [
             'products' => $products,
-            'query' => $query,
+            'query' => $searchTerm,
         ]);
     }
+
 
 
     public function boysCollection($category = null)
@@ -325,6 +355,27 @@ class ProductController extends Controller
         }
 
         return Inertia::render('User/BoysCollectionPage', [
+            'products' => $products->get(),
+            'category' => $category,
+        ]);
+    }
+
+    public function girlsCollection($category = null)
+    {
+        $products = Product::query()
+            ->whereHas('gender', function ($query) {
+                $query->whereRaw("LOWER(name) = 'girl'");
+            });
+
+        if ($category) {
+            $categoryName = ucwords(str_replace(['-', 'and'], [' ', '&'], strtolower($category)));
+
+            $products = $products->whereHas('categories', function ($query) use ($categoryName) {
+                $query->whereRaw('LOWER(name) = ?', [strtolower($categoryName)]);
+            });
+        }
+
+        return Inertia::render('User/GirlsCollectionPage', [
             'products' => $products->get(),
             'category' => $category,
         ]);

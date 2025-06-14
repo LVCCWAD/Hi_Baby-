@@ -2,7 +2,7 @@ import { usePage } from '@inertiajs/react';
 import { Container, Text, Grid } from '@mantine/core';
 import ProductCard from '../../Components/ProductCard';
 
-function BoysCollectionPage() {
+function GirlsCollectionPage() {
   const { products, category } = usePage().props;
 
   return (
@@ -17,7 +17,7 @@ function BoysCollectionPage() {
         color="gray.8"
         style={{ fontSize: "32px", fontFamily: "WendyOne" }}
       >
-        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} - Boys Collection` : 'All Boys Collection'}
+        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} - Girls Collection` : 'All Girls Collection'}
       </Text>
 
       {products.length === 0 ? (
@@ -46,4 +46,4 @@ function BoysCollectionPage() {
   );
 }
 
-export default BoysCollectionPage;
+export default GirlsCollectionPage;

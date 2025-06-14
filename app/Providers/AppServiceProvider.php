@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             },
         ]);
 
+
         Inertia::share([
             'notifications' => function () {
                 if ($user = Auth::user()) {
