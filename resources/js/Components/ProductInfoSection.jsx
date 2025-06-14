@@ -1,4 +1,4 @@
-import { Stack, Text } from "@mantine/core";
+import { Stack, Text, Box } from "@mantine/core";
 import ColorSelector from "./ColorSelector";
 import SizeSelector from "./SizeSelector";
 import QuantitySelector from "./QuantitySelector";
@@ -18,37 +18,43 @@ const ProductInfoSection = ({
     canAddToCart,
     processing,
 }) => (
-    <Stack spacing="lg">
-        <Text size="xl" weight={700}>
-            {product.name}
-        </Text>
-        <Text color="dimmed">{product.description}</Text>
-        <Text size="xl" weight={700} color="blue">
-            ₱{product.price}
-        </Text>
+    <Box p="xl" style={{ backgroundColor: "#f8f9fa", borderRadius: "12px" }}>
+        <Stack spacing="xl">
+            <Box>
+                <Text size="xl" weight={700} color="#333" mb="sm">
+                    {product.name}
+                </Text>
+                <Text color="#666" size="md" mb="lg" style={{ lineHeight: 1.6 }}>
+                    {product.description}
+                </Text>
+                <Text size="xl" weight={700} color="#c4a853" mb="xl">
+                    ₱{product.price}
+                </Text>
+            </Box>
 
-        <ColorSelector
-            colors={product.colors}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-        />
+            <ColorSelector
+                colors={product.colors}
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+            />
 
-        <SizeSelector
-            sizes={product.sizes}
-            selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
-        />
+            <SizeSelector
+                sizes={product.sizes}
+                selectedSize={selectedSize}
+                setSelectedSize={setSelectedSize}
+            />
 
-        <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
+            <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
 
-        <ActionButtons
-            handleAddToCart={handleAddToCart}
-            handleBuyNow={handleBuyNow}
-            canAddToCart={canAddToCart}
-            processing={processing}
-        />
-        {/* <CategoryBadges categories={product.categories} /> */}
-    </Stack>
+            <ActionButtons
+                handleAddToCart={handleAddToCart}
+                handleBuyNow={handleBuyNow}
+                canAddToCart={canAddToCart}
+                processing={processing}
+            />
+            {/* <CategoryBadges categories={product.categories} /> */}
+        </Stack>
+    </Box>
 );
 
 export default ProductInfoSection;

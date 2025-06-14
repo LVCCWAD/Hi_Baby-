@@ -1,26 +1,30 @@
-import { Paper, Image, Group } from "@mantine/core";
+import { Box, Image } from "@mantine/core";
 
 const ProductImageSection = ({ product }) => (
-    <Paper shadow="sm" radius="md" p="md">
+    <Box
+        style={{
+            backgroundColor: "#f5f5f0",
+            borderRadius: "12px",
+            padding: "3rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "500px",
+            position: "relative"
+        }}
+    >
         <Image
             src={product.image}
             alt={product.name}
-            height={300}
-            fit="cover"
+            style={{
+                maxWidth: "100%",
+                maxHeight: "450px",
+                objectFit: "contain",
+                borderRadius: "8px",
+                filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))"
+            }}
         />
-        <Group mt="md" position="center">
-            <Image
-                src={product.image}
-                alt={product.name}
-                height={200}
-                width={200}
-                style={{
-                    maxWidth: "300px",
-                    maxHeight: "200px",
-                }}
-            />
-        </Group>
-    </Paper>
+    </Box>
 );
 
 export default ProductImageSection;

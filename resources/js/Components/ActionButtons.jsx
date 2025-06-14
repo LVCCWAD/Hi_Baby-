@@ -1,4 +1,4 @@
-import { Group, Button } from "@mantine/core";
+import { Group, Button, ActionIcon } from "@mantine/core";
 import { IconShoppingCart } from "@tabler/icons-react";
 
 const ActionButtons = ({
@@ -7,38 +7,41 @@ const ActionButtons = ({
     canAddToCart,
     processing,
 }) => (
-    <Group mt="xl">
-        <Button
-            variant="light"
-            color="blue"
-            size="lg"
-            style={{ flex: 1 }}
+    <Group spacing="md" mt="xl">
+        <ActionIcon
+            variant="outline"
+            size="xl"
             onClick={handleAddToCart}
             disabled={!canAddToCart}
-            loading={processing}
+            style={{
+                width: "50px",
+                height: "50px",
+                borderColor: "#ddd",
+                borderRadius: "8px",
+                backgroundColor: "white",
+                color: "#333"
+            }}
         >
-            <IconShoppingCart
-                size={16}
-                stroke={1.5}
-                style={{ marginRight: 8 }}
-            />
-            Add to Cart
-        </Button>
+            <IconShoppingCart size={24} stroke={1.5} />
+        </ActionIcon>
 
         <Button
-            bg="#BAB86C"
             size="lg"
-            style={{
-                flex: 1,
-                color: "black",
-                borderRadius: 10,
-                width: 150,
-                height: 50,
-            }}
             onClick={handleBuyNow}
             loading={processing}
+            style={{
+                flex: 1,
+                backgroundColor: "#c4d4a3",
+                color: "#333",
+                borderRadius: "8px",
+                height: "50px",
+                fontSize: "16px",
+                fontWeight: 600,
+                border: "none"
+            }}
+            variant="filled"
         >
-            Buy Now
+            Buy now
         </Button>
     </Group>
 );
