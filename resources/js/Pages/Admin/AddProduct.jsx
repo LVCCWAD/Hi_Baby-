@@ -136,17 +136,45 @@ function AddProduct({
 
     return (
         <MantineProvider>
-                <Head>
-                    <title>Add Product - Hi Baby!</title>
-                </Head>
+            <Head>
+                <title>Add Product - Hi Baby!</title>
+            </Head>
             <Modal
                 opened={showImageError}
                 onClose={() => setShowImageError(false)}
-                title="File too large"
+                withCloseButton={false}
+                centered
+                size="sm"
+                overlayProps={{
+                    blur: 3,
+                    backgroundOpacity: 0.4,
+                }}
+                styles={{
+                    header: {
+                        backgroundColor: "#BAB86C",
+                        color: "white",
+                        padding: "16px",
+                        fontSize: "18px",
+                        fontWeight: 600,
+                    },
+                    body: { padding: "24px" },
+                }}
             >
-                <Text>
+                <Text align="center" color="#333" size="md" mb="md">
                     The maximum image size allowed is {MAX_FILE_SIZE_MB} MB.
                 </Text>
+
+                <Flex justify="center">
+                    <Button
+                        onClick={() => setShowImageError(false)}
+                        style={{ backgroundColor: "#BAB86C" }}
+                        radius="md"
+                        size="md"
+                        px="40px"
+                    >
+                        OK
+                    </Button>
+                </Flex>
             </Modal>
 
             <Container
