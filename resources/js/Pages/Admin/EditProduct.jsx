@@ -22,8 +22,16 @@ import QuantityInput from "@/Components/AddProduct/QuantityInput";
 import ImageUploader from "@/Components/AddProduct/ImageUploader";
 import ColorSelector from "@/Components/AddProduct/ColorSelector";
 
-function EditProduct({ product, categories = [], colors = [], sizes = [], genders = [] }) {
-    const [imagePreview, setImagePreview] = useState(`http://localhost:8000/storage/${product.image}`);
+function EditProduct({
+    product,
+    categories = [],
+    colors = [],
+    sizes = [],
+    genders = [],
+}) {
+    const [imagePreview, setImagePreview] = useState(
+        product.image ? `/storage/${product.image}` : null
+    );
     const [showImageError, setShowImageError] = useState(false);
     const MAX_FILE_SIZE_MB = 2;
 
@@ -34,15 +42,15 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
         quantity: product.quantity || null,
         image: null,
         gender_id: product.gender_id?.toString() || null,
-        category_ids: product.categories?.map(c => c.id) || [],
-        color_ids: product.colors?.map(c => c.id) || [],
-        size_ids: product.sizes?.map(s => s.id) || [],
+        category_ids: product.categories?.map((c) => c.id) || [],
+        color_ids: product.colors?.map((c) => c.id) || [],
+        size_ids: product.sizes?.map((s) => s.id) || [],
     });
 
     const handleImageUpload = (file) => {
         if (!file) {
             setData("image", null);
-            setImagePreview(`http://localhost:8000/storage/${product.image}`);
+            setImagePreview(product.image ? `/storage/${product.image}` : null);
             return;
         }
         if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
@@ -71,7 +79,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
             formData.append("gender_id", data.gender_id);
             formData.append("_method", "put");
             if (data.image) formData.append("image", data.image);
-            data.category_ids.forEach((id) => formData.append("category_ids[]", id));
+            data.category_ids.forEach((id) =>
+                formData.append("category_ids[]", id)
+            );
             data.color_ids.forEach((id) => formData.append("color_ids[]", id));
             data.size_ids.forEach((id) => formData.append("size_ids[]", id));
 
@@ -127,27 +137,46 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
 
     return (
         <MantineProvider>
-<Head>
-                <title>{product?.name ? `Edit ${product.name} - Hi Baby!` : 'Edit Product - Hi Baby!'}</title>
+            <Head>
+                <title>
+                    {product?.name
+                        ? `Edit ${product.name} - Hi Baby!`
+                        : "Edit Product - Hi Baby!"}
+                </title>
             </Head>
-            <Modal opened={showImageError} onClose={() => setShowImageError(false)} title="File too large">
-                <Text>The maximum image size allowed is {MAX_FILE_SIZE_MB} MB.</Text>
+            <Modal
+                opened={showImageError}
+                onClose={() => setShowImageError(false)}
+                title="File too large"
+            >
+                <Text>
+                    The maximum image size allowed is {MAX_FILE_SIZE_MB} MB.
+                </Text>
             </Modal>
 
-            <Container size="md" style={{
-                minHeight: "100vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}>
-                <Paper radius="lg" p="xl" style={{ width: "100%", background: "#FDFDFD" }}>
-                    <Text style={{
-                        fontFamily: "WendyOne",
-                        fontSize: "clamp(32px, 5vw, 50px)",
-                        color: "#BAB86C",
-                        textAlign: "center",
-                        padding: "20px 0",
-                    }}>
+            <Container
+                size="md"
+                style={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Paper
+                    radius="lg"
+                    p="xl"
+                    style={{ width: "100%", background: "#FDFDFD" }}
+                >
+                    <Text
+                        style={{
+                            fontFamily: "WendyOne",
+                            fontSize: "clamp(32px, 5vw, 50px)",
+                            color: "#BAB86C",
+                            textAlign: "center",
+                            padding: "20px 0",
+                        }}
+                    >
                         Edit Product
                     </Text>
 
@@ -155,15 +184,21 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
 
                     <form onSubmit={handleSubmit}>
                         <Stack spacing="xl">
-
                             {/* Section 1 */}
-                            <Paper p="lg" shadow="sm" radius="md" style={{ background: "#FAFAFA" }}>
+                            <Paper
+                                p="lg"
+                                shadow="sm"
+                                radius="md"
+                                style={{ background: "#FAFAFA" }}
+                            >
                                 <Stack spacing="lg">
                                     <TextInput
                                         label="Product Name"
                                         required
                                         value={data.name}
-                                        onChange={(e) => setData("name", e.target.value)}
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
                                         error={errors.name}
                                         size="md"
                                         radius="md"
@@ -174,7 +209,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                             label="Price"
                                             required
                                             value={data.price}
-                                            onChange={(value) => setData("price", value)}
+                                            onChange={(value) =>
+                                                setData("price", value)
+                                            }
                                             error={errors.price}
                                             precision={2}
                                             min={0}
@@ -184,7 +221,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
 
                                         <QuantityInput
                                             value={data.quantity}
-                                            onChange={(value) => setData("quantity", value)}
+                                            onChange={(value) =>
+                                                setData("quantity", value)
+                                            }
                                             error={errors.quantity}
                                         />
                                     </Group>
@@ -193,7 +232,12 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                         label="Description"
                                         required
                                         value={data.description}
-                                        onChange={(e) => setData("description", e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value
+                                            )
+                                        }
                                         error={errors.description}
                                         size="md"
                                         radius="md"
@@ -204,21 +248,30 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                         options={categoryOptions}
                                         selectedValues={data.category_ids}
                                         single={false}
-                                        onChange={(updated) => setData("category_ids", updated)}
+                                        onChange={(updated) =>
+                                            setData("category_ids", updated)
+                                        }
                                         error={errors.category_ids}
                                     />
                                 </Stack>
                             </Paper>
 
                             {/* Section 2 */}
-                            <Paper p="lg" shadow="sm" radius="md" style={{ background: "#FAFAFA" }}>
+                            <Paper
+                                p="lg"
+                                shadow="sm"
+                                radius="md"
+                                style={{ background: "#FAFAFA" }}
+                            >
                                 <Stack spacing="lg">
                                     <SelectableButtonGroup
                                         label="Gender"
                                         options={genderOptions}
                                         selectedValues={data.gender_id}
                                         single={true}
-                                        onChange={(value) => setData("gender_id", value)}
+                                        onChange={(value) =>
+                                            setData("gender_id", value)
+                                        }
                                         error={errors.gender_id}
                                     />
 
@@ -232,7 +285,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                     <ColorSelector
                                         colorOptions={colorOptions}
                                         selectedColors={data.color_ids}
-                                        setSelectedColors={(colors) => setData("color_ids", colors)}
+                                        setSelectedColors={(colors) =>
+                                            setData("color_ids", colors)
+                                        }
                                         error={errors.color_ids}
                                     />
 
@@ -241,7 +296,9 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                         options={sizeOptions}
                                         selectedValues={data.size_ids}
                                         single={false}
-                                        onChange={(updated) => setData("size_ids", updated)}
+                                        onChange={(updated) =>
+                                            setData("size_ids", updated)
+                                        }
                                         error={errors.size_ids}
                                     />
                                 </Stack>
@@ -253,9 +310,14 @@ function EditProduct({ product, categories = [], colors = [], sizes = [], gender
                                     size="lg"
                                     radius="md"
                                     loading={processing}
-                                    style={{ backgroundColor: "#2C3E50", padding: "0 50px" }}
+                                    style={{
+                                        backgroundColor: "#2C3E50",
+                                        padding: "0 50px",
+                                    }}
                                 >
-                                    {processing ? "Updating..." : "Update Product"}
+                                    {processing
+                                        ? "Updating..."
+                                        : "Update Product"}
                                 </Button>
                             </Flex>
                         </Stack>
