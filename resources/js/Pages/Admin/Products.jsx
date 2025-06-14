@@ -262,20 +262,65 @@ function Products({ products = [] }) {
                 <Modal
                     opened={opened}
                     onClose={close}
-                    title="Confirm Deletion"
+                    withCloseButton={false}
                     centered
+                    size="xs"
+                    radius="md"
+                    overlayProps={{
+                        blur: 1,
+                        backgroundOpacity: 0.4,
+                    }}
+                    styles={{
+                        content: {
+                            backgroundColor: "#F9F1E7", // close to your cream color
+                      
+                            borderRadius: "16px",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        },
+                    }}
                 >
-                    <Text size="md" fw={500}>
-                        Are you sure you want to delete this product?
+                    <Text
+                        size="lg"
+                        fw={600}
+                        color="#222"
+                        align="center"
+                        mb="lg"
+                    >
+                        Delete item?
                     </Text>
-                    <Flex justify="flex-end" gap="md" mt="md">
-                        <Button variant="default" onClick={close}>
-                            Cancel
+
+                    <div
+                        style={{
+                            borderTop: "1px solid #ccc",
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Button
+                            variant="subtle"
+                            fullWidth
+                            style={{
+                                borderRight: "1px solid #ccc",
+                                borderRadius: 0,
+                                fontWeight: 500,
+                            }}
+                            onClick={close}
+                        >
+                            No
                         </Button>
-                        <Button color="red" onClick={handleDelete}>
-                            Delete
+                        <Button
+                            variant="subtle"
+                            fullWidth
+                            style={{
+                                borderRadius: 0,
+                                fontWeight: 500,
+                            }}
+                            color="red"
+                            onClick={handleDelete}
+                        >
+                            Yes
                         </Button>
-                    </Flex>
+                    </div>
                 </Modal>
             </MantineProvider>
         </div>
