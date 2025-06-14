@@ -194,9 +194,11 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
 
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
+            // Delete old image if exists
+            if (File::exists(public_path($product->image))) {
+                File::delete(public_path($product->image));
             }
+
             $file = $request->file('image');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('storage/products'), $fileName);
@@ -209,25 +211,21 @@ class ProductController extends Controller
         $colorIds = $validated['color_ids'];
         $sizeIds = $validated['size_ids'];
 
-        // Remove relationship fields before updating the product
+        // Remove relationship fields before updating product
         unset($validated['category_ids'], $validated['color_ids'], $validated['size_ids']);
 
         // Update product fields
         $product->update($validated);
 
-        // Sync many-to-many (categories)
+        // Sync many-to-many relationships
         $product->categories()->sync($categoryIds);
-
-        $product->colors()->update(['product_id' => null]);
-        $product->sizes()->update(['product_id' => null]);
-
-        // One-to-many update
-        Color::whereIn('id', $colorIds)->update(['product_id' => $product->id]);
-        Size::whereIn('id', $sizeIds)->update(['product_id' => $product->id]);
+        $product->colors()->sync($colorIds);
+        $product->sizes()->sync($sizeIds);
 
         session()->flash('success', 'Product updated successfully!');
         return Inertia::location(route('admin.products'));
     }
+
 
 
     public function deleteProduct(Product $product)
@@ -294,49 +292,25 @@ class ProductController extends Controller
         $query = $request->query('q');
         $userId = Auth::id();
 
-        if (empty($query) || trim($query) === '') {
-            return Inertia::render('User/Search', [
-                'products' => collect([]),
-                'query' => $query ?? '',
-            ]);
-        }
-
-        // Sanitize the search query (remove special characters, lowercase)
-        $searchTerm = trim($query);
-        $sanitizedTerm = strtolower(preg_replace('/[^A-Za-z0-9 ]/', '', $searchTerm));
-
         $products = Product::with(['reviews', 'categories', 'colors', 'gender', 'sizes'])
-            ->where(function ($q) use ($searchTerm, $sanitizedTerm) {
-                $q->whereRaw('LOWER(name) LIKE ?', ["%{$sanitizedTerm}%"])
-                    ->orWhereRaw('LOWER(description) LIKE ?', ["%{$sanitizedTerm}%"])
-                    ->orWhereHas('categories', function ($categoryQuery) use ($sanitizedTerm) {
-                        $categoryQuery->whereRaw("LOWER(REPLACE(name, '&', '')) LIKE ?", ["%{$sanitizedTerm}%"]);
-                    })
-                    ->orWhereHas('gender', function ($genderQuery) use ($sanitizedTerm) {
-                        $genderQuery->whereRaw('LOWER(name) LIKE ?', ["%{$sanitizedTerm}%"]);
-                    });
-            })
+            ->where('name', 'like', "%{$query}%")
             ->withCount('likes')
-            ->orderBy('name', 'asc')
             ->get();
 
         $products = $this->addLikedStatus($products, $userId);
 
-        // Log only non-empty search terms
-        if (!empty($searchTerm)) {
-            SearchLog::create([
-                'search_term' => $searchTerm,
-                'results_count' => $products->count(),
-                'user_id' => $userId,
-            ]);
-        }
+        // ✅ Log search here
+        SearchLog::create([
+            'search_term' => $query,
+            'results_count' => $products->count(),
+            'user_id' => $userId,
+        ]);
 
         return Inertia::render('User/Search', [
             'products' => $products,
-            'query' => $searchTerm,
+            'query' => $query,
         ]);
     }
-
 
 
     public function boysCollection($category = null)
@@ -355,27 +329,6 @@ class ProductController extends Controller
         }
 
         return Inertia::render('User/BoysCollectionPage', [
-            'products' => $products->get(),
-            'category' => $category,
-        ]);
-    }
-
-    public function girlsCollection($category = null)
-    {
-        $products = Product::query()
-            ->whereHas('gender', function ($query) {
-                $query->whereRaw("LOWER(name) = 'girl'");
-            });
-
-        if ($category) {
-            $categoryName = ucwords(str_replace(['-', 'and'], [' ', '&'], strtolower($category)));
-
-            $products = $products->whereHas('categories', function ($query) use ($categoryName) {
-                $query->whereRaw('LOWER(name) = ?', [strtolower($categoryName)]);
-            });
-        }
-
-        return Inertia::render('User/GirlsCollectionPage', [
             'products' => $products->get(),
             'category' => $category,
         ]);
