@@ -43,17 +43,25 @@ function ProductCard({ product }) {
 
     return (
         <MantineProvider>
-            <Link href={`/user/products/${product.id}`} style={{ textDecoration: "none" }}>
+            <Link
+                href={`/user/products/${product.id}`}
+                style={{ textDecoration: "none" }}
+            >
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                     <Card.Section>
                         <Image
-                            src={product.image}
+                            src={
+                                product.image
+                                    ? `/storage/${product.image}`
+                                    : "/default-image.jpg"
+                            }
                             alt={product.name}
                             height={200}
                             width={200}
                             style={{
                                 maxWidth: "300px",
                                 maxHeight: "200px",
+                                objectFit: "contain",
                             }}
                         />
                     </Card.Section>
@@ -80,7 +88,10 @@ function ProductCard({ product }) {
                                 })}
                             >
                                 {isLiked ? (
-                                    <IconHeartFilled size={18} color="#ff6b6b" />
+                                    <IconHeartFilled
+                                        size={18}
+                                        color="#ff6b6b"
+                                    />
                                 ) : (
                                     <IconHeart size={18} color="#adb5bd" />
                                 )}
