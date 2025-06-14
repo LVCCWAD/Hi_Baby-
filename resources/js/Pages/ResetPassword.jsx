@@ -3,7 +3,6 @@ import { useForm, Head } from "@inertiajs/react";
 import {
     Anchor,
     Button,
-    Checkbox,
     Container,
     Flex,
     Grid,
@@ -15,30 +14,28 @@ import {
     Image,
     Box,
     Stack,
-    Alert,
 } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import image from "../Assets/Login.png";
-import Logo from "../Assets/Logo.png";
 import HandleError from "../Components/HandleError.jsx";
 
-function Login({ status }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: "",
+function ResetPassword({ token, email }) {
+    const { data, setData, post, processing, errors } = useForm({
+        token: token,
+        email: email,
         password: "",
-        remember: false,
+        password_confirmation: "",
     });
 
-    // Handle form submission
     const submit = (e) => {
         e.preventDefault();
-        post("/login");
+        post("/reset-password");
     };
 
     return (
         <>
             <Head>
-                <title>Login - Hi Baby!</title>
+                <title>Reset Password - Hi Baby!</title>
             </Head>
             <Box
                 style={{
@@ -61,16 +58,6 @@ function Login({ status }) {
                                     padding: "0 20px",
                                 }}
                             >
-                                {/* Logo */}
-                                <Flex justify="flex-start" mb={30}>
-                                    {/* <Image
-                                        src={Logo}
-                                        alt="Hi, Baby!"
-                                        h={50}
-                                        fit="contain"
-                                    /> */}
-                                </Flex>
-
                                 <Paper
                                     shadow="lg"
                                     radius={24}
@@ -84,26 +71,25 @@ function Login({ status }) {
                                         <Title
                                             order={2}
                                             style={{
-                                                fontSize: "42px",
-                                                // fontFamily: "WendyOne",
+                                                fontSize: "36px",
                                                 color: "#333",
                                                 textAlign: "center",
                                                 marginBottom: "10px",
                                             }}
                                         >
-                                            Login
+                                            Reset Password
                                         </Title>
 
-                                        {status && (
-                                            <Alert
-                                                icon={<IconCheck size={16} />}
-                                                title="Success!"
-                                                color="green"
-                                                style={{ marginBottom: "20px" }}
-                                            >
-                                                {status}
-                                            </Alert>
-                                        )}
+                                        <Text
+                                            size="sm"
+                                            style={{
+                                                color: "#666",
+                                                textAlign: "center",
+                                                marginBottom: "20px",
+                                            }}
+                                        >
+                                            Enter your new password below.
+                                        </Text>
 
                                         <form onSubmit={submit}>
                                             <Stack gap={16}>
@@ -111,65 +97,57 @@ function Login({ status }) {
                                                     <Text
                                                         size="sm"
                                                         fw={500}
-                                                        mb={5}
-                                                        style={{ color: "#333" }}
+                                                        style={{
+                                                            marginBottom: "8px",
+                                                            color: "#333",
+                                                        }}
                                                     >
-                                                        Email address
+                                                        Email Address
                                                     </Text>
                                                     <TextInput
-                                                        placeholder="Your email"
-                                                        name="email"
-                                                        id="email"
-                                                        autoComplete="email"
-                                                        required
                                                         value={data.email}
-                                                        onChange={(e) =>
-                                                            setData("email", e.target.value)
-                                                        }
+                                                        disabled
+                                                        radius={10}
                                                         size="md"
-                                                        radius={8}
-                                                        styles={{
+                                                        style={{
                                                             input: {
                                                                 border: "1px solid #ddd",
+                                                                fontSize: "16px",
+                                                                padding: "12px 16px",
+                                                                height: "48px",
                                                                 backgroundColor: "#f8f9fa",
-                                                                "&:focus": {
-                                                                    borderColor: "#abc32f",
-                                                                },
                                                             },
                                                         }}
                                                     />
-                                                    {errors.email && (
-                                                        <HandleError message={errors.email} />
-                                                    )}
                                                 </Box>
 
                                                 <Box>
                                                     <Text
                                                         size="sm"
                                                         fw={500}
-                                                        mb={5}
-                                                        style={{ color: "#333" }}
+                                                        style={{
+                                                            marginBottom: "8px",
+                                                            color: "#333",
+                                                        }}
                                                     >
-                                                        Password
+                                                        New Password
                                                     </Text>
                                                     <PasswordInput
-                                                        placeholder="Password"
+                                                        placeholder="Enter new password"
                                                         name="password"
                                                         id="password"
-                                                        required
                                                         value={data.password}
                                                         onChange={(e) =>
                                                             setData("password", e.target.value)
                                                         }
+                                                        radius={10}
                                                         size="md"
-                                                        radius={8}
-                                                        styles={{
+                                                        style={{
                                                             input: {
                                                                 border: "1px solid #ddd",
-                                                                backgroundColor: "#f8f9fa",
-                                                                "&:focus": {
-                                                                    borderColor: "#abc32f",
-                                                                },
+                                                                fontSize: "16px",
+                                                                padding: "12px 16px",
+                                                                height: "48px",
                                                             },
                                                         }}
                                                     />
@@ -178,34 +156,46 @@ function Login({ status }) {
                                                     )}
                                                 </Box>
 
-                                                <Flex justify="space-between" align="center" mt={10}>
-                                                    <Checkbox
-                                                        label="Remember me"
+                                                <Box>
+                                                    <Text
                                                         size="sm"
-                                                        checked={data.remember}
-                                                        onChange={(event) =>
-                                                            setData("remember", event.currentTarget.checked)
+                                                        fw={500}
+                                                        style={{
+                                                            marginBottom: "8px",
+                                                            color: "#333",
+                                                        }}
+                                                    >
+                                                        Confirm New Password
+                                                    </Text>
+                                                    <PasswordInput
+                                                        placeholder="Confirm new password"
+                                                        name="password_confirmation"
+                                                        id="password_confirmation"
+                                                        value={data.password_confirmation}
+                                                        onChange={(e) =>
+                                                            setData("password_confirmation", e.target.value)
                                                         }
-                                                        styles={{
+                                                        radius={10}
+                                                        size="md"
+                                                        style={{
                                                             input: {
-                                                                "&:checked": {
-                                                                    backgroundColor: "#abc32f",
-                                                                    borderColor: "#abc32f",
-                                                                },
+                                                                border: "1px solid #ddd",
+                                                                fontSize: "16px",
+                                                                padding: "12px 16px",
+                                                                height: "48px",
                                                             },
                                                         }}
                                                     />
-                                                    <Anchor
-                                                        href="/forgot-password"
-                                                        size="sm"
-                                                        style={{ color: "#abc32f" }}
-                                                    >
-                                                        Forgot Password?
-                                                    </Anchor>
-                                                </Flex>
+                                                    {errors.password_confirmation && (
+                                                        <HandleError message={errors.password_confirmation} />
+                                                    )}
+                                                </Box>
 
-                                                {errors.default && (
-                                                    <HandleError message={errors.default} />
+                                                {errors.token && (
+                                                    <HandleError message={errors.token} />
+                                                )}
+                                                {errors.email && (
+                                                    <HandleError message={errors.email} />
                                                 )}
 
                                                 <Button
@@ -223,19 +213,24 @@ function Login({ status }) {
                                                         fontWeight: 600,
                                                     }}
                                                 >
-                                                    Login
+                                                    Reset Password
                                                 </Button>
 
-                                                <Text ta="center" mt={20} size="sm">
-                                                    Don&apos;t have an account?{" "}
+                                                <Flex justify="center" mt={20}>
                                                     <Anchor
-                                                        href="/register"
-                                                        fw={600}
-                                                        style={{ color: "#abc32f" }}
+                                                        href="/login"
+                                                        size="sm"
+                                                        style={{
+                                                            color: "#abc32f",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "8px",
+                                                        }}
                                                     >
-                                                        Register
+                                                        <IconArrowLeft size={16} />
+                                                        Back to Login
                                                     </Anchor>
-                                                </Text>
+                                                </Flex>
                                             </Stack>
                                         </form>
                                     </Stack>
@@ -248,7 +243,7 @@ function Login({ status }) {
                             <Flex justify="center" align="center" h="100%">
                                 <Image
                                     src={image}
-                                    alt="Login illustration"
+                                    alt="Reset Password illustration"
                                     style={{
                                         maxWidth: "100%",
                                         height: "auto",
@@ -265,4 +260,4 @@ function Login({ status }) {
     );
 }
 
-export default Login;
+export default ResetPassword;

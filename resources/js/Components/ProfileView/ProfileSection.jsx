@@ -285,9 +285,21 @@ function ProfileSection({
                             <IconLock size={20} color="#B9BD7E" />
                             <Text weight={500}>Password</Text>
                         </Group>
-                        <Text ml={28} color="dimmed">
-                            ••••••••
-                        </Text>
+                        <Group ml={28} position="apart" align="center">
+                            <Text color="dimmed">
+                                ••••••••
+                            </Text>
+                            <Button
+                                variant="subtle"
+                                size="xs"
+                                color="green"
+                                component="a"
+                                href="/forgot-password"
+                                style={{ fontSize: "12px" }}
+                            >
+                                Change Password
+                            </Button>
+                        </Group>
                         <Divider />
 
                         <Group align="center" spacing="xs">

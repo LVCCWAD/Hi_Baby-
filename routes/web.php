@@ -11,14 +11,15 @@ use Illuminate\Support\Facades\Route;
 use App\Services\ProductSearchService;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\LikeController;
-use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\OrderController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\ReviewsController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\User\UserController;
 
 
 // Health Check Route
@@ -31,6 +32,12 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'loginPost'])->name('loginPost');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'registerPost'])->name('registerPost');
+
+    // Forgot Password routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 });
 
 // About Us (public)
@@ -87,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');
     Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::post('/profile/change-password', [ForgotPasswordController::class, 'changePasswordFromProfile'])->name('user.profile.change-password');
     // Route::get('/profile/orders', [UserController::class, 'showOrdersToProfileView'])->name('profile.orders');
     Route::get('/profile', [UserController::class, 'showOrdersToProfileView'])->name('user.profile');
 
