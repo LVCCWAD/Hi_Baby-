@@ -142,19 +142,23 @@ function NavHeader() {
                             {isAuthenticated && (
                                 <>
                                     <Tooltip label="Cart">
-                                        <ActionIcon
-                                            variant="light"
-                                            component={Link}
+                                        <Link
                                             href="/cart"
-                                            radius="xl"
-                                            size="lg"
-                                            color="gray"
+                                            style={{ textDecoration: "none" }}
                                         >
-                                            <IconShoppingCart
-                                                size={22}
-                                                stroke={1.5}
-                                            />
-                                        </ActionIcon>
+                                            <ActionIcon
+                                                variant="light"
+                                                radius="xl"
+                                                size="lg"
+                                                color="gray"
+                                                style={{ cursor: "pointer" }} // <- Explicit pointer cursor
+                                            >
+                                                <IconShoppingCart
+                                                    size={22}
+                                                    stroke={1.5}
+                                                />
+                                            </ActionIcon>
+                                        </Link>
                                     </Tooltip>
 
                                     <NotificationModal

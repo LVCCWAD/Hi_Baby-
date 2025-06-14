@@ -221,6 +221,7 @@ function Login({ status }) {
                                                         height: "48px",
                                                         fontSize: "16px",
                                                         fontWeight: 600,
+                                                        cursor: "pointer",
                                                     }}
                                                 >
                                                     Login

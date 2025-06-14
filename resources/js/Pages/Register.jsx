@@ -244,6 +244,7 @@ function Register() {
                                                         height: "48px",
                                                         fontSize: "16px",
                                                         fontWeight: 600,
+                                                        cursor: "pointer"
                                                     }}
                                                 >
                                                     Register
