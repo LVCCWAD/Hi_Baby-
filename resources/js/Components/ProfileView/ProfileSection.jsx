@@ -20,10 +20,8 @@ import {
     IconEdit,
     IconUserCircle,
     IconMail,
-    IconLock,
     IconPhone,
-    IconMapPin,
-    IconTrash, // using trash icon for delete
+    IconTrash,
 } from "@tabler/icons-react";
 
 import { router } from "@inertiajs/react";
@@ -41,15 +39,17 @@ function ProfileSection({
     handlePictureUpload,
     previewImage = null,
 }) {
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [currentPasswordError, setCurrentPasswordError] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
-
     const handleDeleteAccount = () => {
         if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
             router.delete("/delete-account");
         }
+    };
+
+    // Numeric only + limit to 11 digits for phone
+    const handlePhoneNumberChange = (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+        setData("phone_number", value);
     };
 
     return (
@@ -141,16 +141,9 @@ function ProfileSection({
                                 label="Contact Number"
                                 icon={<IconPhone size={16} />}
                                 value={data.phone_number}
-                                onChange={(e) => setData("phone_number", e.target.value)}
+                                onChange={handlePhoneNumberChange}
                                 error={errors.phone_number}
-                            />
-
-                            <TextInput
-                                label="Address"
-                                icon={<IconMapPin size={16} />}
-                                value={data.address}
-                                onChange={(e) => setData("address", e.target.value)}
-                                error={errors.address}
+                                maxLength={11}
                             />
 
                             <PasswordInput
@@ -166,6 +159,7 @@ function ProfileSection({
                                 onChange={(e) => setData("password", e.target.value)}
                                 error={errors.password}
                             />
+
                             <PasswordInput
                                 label="Confirm Password"
                                 value={data.password_confirmation}
@@ -248,15 +242,6 @@ function ProfileSection({
                         </Group>
                         <Text ml={28} color="dimmed">
                             {user.phone_number || "Not provided"}
-                        </Text>
-                        <Divider />
-
-                        <Group align="center" spacing="xs">
-                            <IconMapPin size={20} color="#B9BD7E" />
-                            <Text weight={500}>Address</Text>
-                        </Group>
-                        <Text ml={28} color="dimmed">
-                            {user.address_id ? "Address linked" : "No address linked"}
                         </Text>
                     </Stack>
 

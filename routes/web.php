@@ -94,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User Profile
     Route::get('/profile', [UserController::class, 'profileView'])->name('user.profile');
-    Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
+    // Route::get('/profile/edit', [UserController::class, 'profileEdit'])->name('user.profile.edit');
     Route::post('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
     Route::post('/profile/change-password', [ForgotPasswordController::class, 'changePasswordFromProfile'])->name('user.profile.change-password');
     // Route::get('/profile/orders', [UserController::class, 'showOrdersToProfileView'])->name('profile.orders');

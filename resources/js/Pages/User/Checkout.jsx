@@ -16,6 +16,7 @@ import OrderSummary from "../../Components/OrderSummary";
 import { router, Head } from "@inertiajs/react";
 
 function Checkout({ product, address, initialData, colors, sizes }) {
+    const primaryColor = "#BAB86C";
     const [loading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(initialData.quantity || 1);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
@@ -44,9 +45,7 @@ function Checkout({ product, address, initialData, colors, sizes }) {
         router.post(
             "/order-checkout",
             {
-                address: `${address.street}, ${address.city}, ${
-                    address.state ?? ""
-                } ${address.zip ?? ""}`.trim(),
+                address: `${address.street}, ${address.city}, ${address.state ?? ""} ${address.zip ?? ""}`.trim(),
                 product_id: product.id,
                 quantity,
                 color_id: colorId,
@@ -69,22 +68,18 @@ function Checkout({ product, address, initialData, colors, sizes }) {
                 />
             </Head>
 
-            <Text size="xl" fw={700} mb="lg">
+            <Text size="xl" fw={700} mb="lg" style={{ color: primaryColor }}>
                 Checkout Confirmation
             </Text>
 
             <Grid gutter="lg">
                 <Grid.Col span={8}>
-                    <Paper shadow="md" radius="md" p="lg" withBorder>
+                    <Paper shadow="md" radius="lg" p="lg" withBorder>
                         <Group align="flex-start" spacing="lg" noWrap>
-                            <Box w={200} h={200} bg="gray.0" p="xs" style={{ borderRadius: 12 }}>
+                            <Box w={200} h={200} bg="gray.0" p="xs" style={{ borderRadius: 16 }}>
                                 <Center style={{ width: '100%', height: '100%' }}>
                                     <Image
-                                        src={
-                                            product.image
-                                                ? `/storage/${product.image}`
-                                                : "/default-image.jpg"
-                                        }
+                                        src={product.image ? `/storage/${product.image}` : "/default-image.jpg"}
                                         alt={product.name}
                                         fit="contain"
                                         height="100%"
@@ -94,8 +89,8 @@ function Checkout({ product, address, initialData, colors, sizes }) {
                                 </Center>
                             </Box>
 
-                            <Stack spacing="xs" style={{ flex: 1 }}>
-                                <Text fw={600} size="lg" mb={5}>
+                            <Stack spacing="sm" style={{ flex: 1 }}>
+                                <Text fw={700} size="lg" mb={5} style={{ color: "#333" }}>
                                     {product.name}
                                 </Text>
 
@@ -113,14 +108,14 @@ function Checkout({ product, address, initialData, colors, sizes }) {
 
                                 <Group spacing="sm">
                                     <Text size="sm" color="dimmed" fw={500}>Color:</Text>
-                                    <Badge size="sm" color="pink" variant="light">
+                                    <Badge size="sm" style={{ backgroundColor: primaryColor, color: "black" }}>
                                         {initialData.color_name || "N/A"}
                                     </Badge>
                                 </Group>
 
                                 <Group spacing="sm">
                                     <Text size="sm" color="dimmed" fw={500}>Size:</Text>
-                                    <Badge size="sm" color="blue" variant="light">
+                                    <Badge size="sm" style={{ backgroundColor: primaryColor, color: "black" }}>
                                         {initialData.size_name || "N/A"}
                                     </Badge>
                                 </Group>
@@ -129,7 +124,7 @@ function Checkout({ product, address, initialData, colors, sizes }) {
 
                                 <Group spacing="sm">
                                     <Text fw={600} size="md">Total:</Text>
-                                    <Text fw={700} size="lg" color="teal">
+                                    <Text fw={700} size="lg" style={{ color: primaryColor }}>
                                         ₱{total.toFixed(2)}
                                     </Text>
                                 </Group>

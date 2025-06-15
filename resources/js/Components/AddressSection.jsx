@@ -10,6 +10,8 @@ function AddressSection({
     editingAddress,
     onAddressSubmit,
 }) {
+    const primaryColor = "#BAB86C";
+
     return (
         <div>
             {selectedAddress ? (
@@ -22,16 +24,14 @@ function AddressSection({
                         gap="xs"
                     >
                         <Text size="sm">
-                            {selectedAddress.street}, {selectedAddress.barangay}
-                            , {selectedAddress.city}, {selectedAddress.province}
-                            , {selectedAddress.country},{" "}
-                            {selectedAddress.zip_code}
+                            {selectedAddress.street}, {selectedAddress.barangay}, {selectedAddress.city},
+                            {selectedAddress.province}, {selectedAddress.country}, {selectedAddress.zip_code}
                         </Text>
 
                         <Button
                             variant="subtle"
                             size="sm"
-                            style={{ color: "#BAB86C" }}
+                            style={{ color: primaryColor }}
                             onClick={() => {
                                 setEditingAddress(selectedAddress);
                                 setAddressModalOpened(true);
@@ -45,6 +45,7 @@ function AddressSection({
                 <Button
                     variant="light"
                     fullWidth
+                    style={{ backgroundColor: primaryColor, color: "white" }}
                     onClick={() => setAddressModalOpened(true)}
                 >
                     Add Delivery Address

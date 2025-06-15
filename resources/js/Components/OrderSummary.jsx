@@ -13,6 +13,8 @@ import AddressSection from "./AddressSection";
 import { usePage, router } from "@inertiajs/react";
 
 function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
+    const primaryColor = "#BAB86C";
+
     const { props } = usePage();
     const [addressModalOpened, setAddressModalOpened] = useState(false);
     const [editingAddress, setEditingAddress] = useState(null);
@@ -20,6 +22,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
         props.address ?? null
     );
     const [paymentMethod, setPaymentMethod] = useState("cod");
+
     const handleAddressSubmit = async (values) => {
         try {
             if (editingAddress) {
@@ -34,7 +37,7 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                         if (page.props.address) {
                             setSelectedAddress(page.props.address);
                         } else {
-                            setSelectedAddress(values); // fallback
+                            setSelectedAddress(values);
                         }
                     },
                 });
@@ -42,7 +45,6 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
 
             setAddressModalOpened(false);
             setEditingAddress(null);
-
             return true;
         } catch (error) {
             console.error("Submission error:", error);
@@ -51,15 +53,8 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
     };
 
     return (
-        <Paper
-            shadow="sm"
-            radius="md"
-            p="md"
-            style={{ position: "sticky", top: 20 }}
-        >
-            <Text size="xl" fw={700}>
-                Delivery
-            </Text>
+        <Paper shadow="sm" radius="md" p="md" style={{ position: "sticky", top: 20 }}>
+            <Text size="xl" fw={700}>Delivery</Text>
 
             <AddressSection
                 selectedAddress={selectedAddress}
@@ -81,7 +76,6 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
             >
                 <Stack spacing="xs">
                     <Radio value="cod" label="Cash on Delivery" />
-                    {/* If you want to add more methods in the future, add here */}
                 </Stack>
             </Radio.Group>
 
@@ -94,15 +88,11 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                 mb="xs"
                 gap="xs"
             ></Flex>
+
             <Stack spacing="md" sx={{ maxHeight: 300, overflowY: "auto" }}>
-                {/* Selected Items */}
-                <Text size="xl" fw={700}>
-                    Items
-                </Text>
+                <Text size="xl" fw={700}>Items</Text>
                 {selectedItems.length === 0 && (
-                    <Text color="dimmed" size="sm">
-                        No items selected.
-                    </Text>
+                    <Text color="dimmed" size="sm">No items selected.</Text>
                 )}
                 {selectedItems.map((item) => (
                     <Group
@@ -113,33 +103,17 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
                         sx={(theme) => ({
                             padding: theme.spacing.xs,
                             borderRadius: theme.radius.sm,
-                            backgroundColor:
-                                theme.colorScheme === "dark"
-                                    ? theme.colors.dark[7]
-                                    : theme.colors.gray[0],
+                            backgroundColor: theme.colorScheme === "dark"
+                                ? theme.colors.dark[7]
+                                : theme.colors.gray[0],
                             width: "100%",
                         })}
                     >
-                        <Stack
-                            spacing={0}
-                            sx={{ maxWidth: "calc(100% - 110px)" }}
-                        >
-                            <Text size="sm" weight={600} truncate>
-                                {item.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                Qty: {item.quantity}
-                            </Text>
+                        <Stack spacing={0} sx={{ maxWidth: "calc(100% - 110px)" }}>
+                            <Text size="sm" weight={600} truncate>{item.name}</Text>
+                            <Text size="xs" color="dimmed">Qty: {item.quantity}</Text>
                         </Stack>
-                        <Text
-                            weight={600}
-                            size="sm"
-                            sx={{
-                                width: 100,
-                                textAlign: "right",
-                                whiteSpace: "nowrap",
-                            }}
-                        >
+                        <Text weight={600} size="sm" sx={{ width: 100, textAlign: "right", whiteSpace: "nowrap" }}>
                             ₱{(item.price * item.quantity).toLocaleString()}
                         </Text>
                     </Group>
@@ -148,16 +122,13 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
 
             <Divider my="sm" />
 
-            {/* Subtotal */}
-            <Text size="xl" fw={700} mb="md">
-                Summary
-            </Text>
+            <Text size="xl" fw={700} mb="md">Summary</Text>
+
             <Group position="apart" mb="xs">
                 <Text size="sm">Subtotal</Text>
                 <Text weight={600}>₱{total.toLocaleString()}</Text>
             </Group>
 
-            {/* Delivery Fee */}
             <Group position="apart" mb="sm">
                 <Text size="sm">Delivery Fee</Text>
                 <Text weight={600}>₱48</Text>
@@ -165,32 +136,25 @@ function OrderSummary({ total, handleCheckout, loading, selectedItems }) {
 
             <Divider my="sm" />
 
-            {/* Total */}
             <Group position="apart" mb="md">
-                <Text size="lg" weight={700}>
-                    Total
-                </Text>
-                <Text size="xl" weight={700} color="blue">
+                <Text size="lg" weight={700}>Total</Text>
+                <Text size="xl" weight={700} style={{ color: primaryColor }}>
                     ₱{(total + 48).toLocaleString()}
                 </Text>
             </Group>
 
-            {/* Checkout Button */}
             <Button
                 style={{
                     color: "black",
-                    backgroundColor:
-                        selectedItems.length === 0 || !selectedAddress
-                            ? "#E0E0E0"
-                            : "#BAB86C",
-                    cursor:
-                        selectedItems.length === 0 || !selectedAddress
-                            ? "default"
-                            : "pointer",
-                    opacity:
-                        selectedItems.length === 0 || !selectedAddress
-                            ? 0.6
-                            : 1,
+                    backgroundColor: (selectedItems.length === 0 || !selectedAddress)
+                        ? "#E0E0E0"
+                        : primaryColor,
+                    cursor: (selectedItems.length === 0 || !selectedAddress)
+                        ? "default"
+                        : "pointer",
+                    opacity: (selectedItems.length === 0 || !selectedAddress)
+                        ? 0.6
+                        : 1,
                     transition: "background-color 0.3s ease, opacity 0.3s ease",
                 }}
                 size="lg"

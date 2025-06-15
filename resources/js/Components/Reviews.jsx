@@ -1,9 +1,26 @@
 import { useForm } from "@inertiajs/react";
 import {
-    Textarea, Button, Stack, Paper, Text, Title, Group,
-    ActionIcon, Divider, Rating, Box, Avatar, Notification, Badge
+    Textarea,
+    Button,
+    Stack,
+    Paper,
+    Text,
+    Title,
+    Group,
+    ActionIcon,
+    Divider,
+    Rating,
+    Box,
+    Avatar,
+    Notification,
+    Badge,
 } from "@mantine/core";
-import { IconTrash, IconEdit, IconUserCircle, IconStar } from "@tabler/icons-react";
+import {
+    IconTrash,
+    IconEdit,
+    IconUserCircle,
+    IconStar,
+} from "@tabler/icons-react";
 import { useState } from "react";
 
 const primaryColor = "#BAB86C";
@@ -12,13 +29,24 @@ function Reviews({ product, auth }) {
     const [editingReview, setEditingReview] = useState(null);
     const [showSuccess, setShowSuccess] = useState(false);
 
-    const { data, setData, post, put, delete: destroy, processing, reset, errors } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        put,
+        delete: destroy,
+        processing,
+        reset,
+        errors,
+    } = useForm({
         review: "",
         rating: 0,
     });
 
     const currentUserId = auth?.user?.id;
-    const existingReview = product.reviews?.find(review => review.user_id === currentUserId);
+    const existingReview = product.reviews?.find(
+        (review) => review.user_id === currentUserId
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -65,20 +93,33 @@ function Reviews({ product, auth }) {
             </Title>
 
             {showSuccess && (
-                <Notification color="teal" withCloseButton onClose={() => setShowSuccess(false)}>
+                <Notification
+                    color="teal"
+                    withCloseButton
+                    onClose={() => setShowSuccess(false)}
+                >
                     {editingReview ? "Review updated!" : "Review submitted!"}
                 </Notification>
             )}
 
             {!existingReview || editingReview ? (
-                <Paper shadow="md" p="lg" radius="lg" mt="md" withBorder style={{ borderColor: primaryColor }}>
+                <Paper
+                    shadow="md"
+                    p="lg"
+                    radius="lg"
+                    mt="md"
+                    withBorder
+                    style={{ borderColor: primaryColor }}
+                >
                     <form onSubmit={handleSubmit}>
                         <Stack spacing="md">
                             <Textarea
                                 label="Your Review"
                                 placeholder="Share your thoughts..."
                                 value={data.review}
-                                onChange={(e) => setData("review", e.target.value)}
+                                onChange={(e) =>
+                                    setData("review", e.target.value)
+                                }
                                 error={errors.review}
                                 autosize
                                 minRows={3}
@@ -90,33 +131,53 @@ function Reviews({ product, auth }) {
                                 </Text>
                                 <Rating
                                     value={data.rating}
-                                    onChange={(value) => setData("rating", value)}
+                                    onChange={(value) =>
+                                        setData("rating", value)
+                                    }
                                     count={5}
                                     size="xl"
                                     color={primaryColor}
                                     required
                                     emptySymbol={<IconStar size={24} />}
                                 />
-                                {errors.rating && <Text size="xs" color="red">{errors.rating}</Text>}
+                                {errors.rating && (
+                                    <Text size="xs" color="red">
+                                        {errors.rating}
+                                    </Text>
+                                )}
                             </Stack>
 
-                            <Button type="submit" loading={processing} fullWidth radius="lg" size="md" style={{ backgroundColor: primaryColor }}>
-                                {editingReview ? "Update Review" : "Submit Review"}
+                            <Button
+                                type="submit"
+                                loading={processing}
+                                fullWidth
+                                radius="lg"
+                                size="md"
+                                style={{ backgroundColor: primaryColor,  cursor: "pointer"}}
+
+                            >
+                                {editingReview
+                                    ? "Update Review"
+                                    : "Submit Review"}
                             </Button>
                         </Stack>
                     </form>
                 </Paper>
             ) : (
                 <Text color="dimmed" size="sm" mt="sm">
-                    You have already submitted a review. You can edit or delete it below.
+                    You have already submitted a review. You can edit or delete
+                    it below.
                 </Text>
             )}
 
             <Stack mt="xl">
-                {Array.isArray(product.reviews) && product.reviews.length > 0 ? (
+                {Array.isArray(product.reviews) &&
+                product.reviews.length > 0 ? (
                     product.reviews.map((review) => {
                         const user = review.user;
-                        const imageUrl = user?.picture ? `/storage/${user.picture}` : null;
+                        const imageUrl = user?.picture
+                            ? `/storage/${user.picture}`
+                            : null;
 
                         return (
                             <Paper
@@ -125,35 +186,77 @@ function Reviews({ product, auth }) {
                                 p="lg"
                                 radius="lg"
                                 withBorder
-                                style={{ backgroundColor: "#fafafa", borderColor: primaryColor }}
+                                style={{
+                                    backgroundColor: "#fafafa",
+                                    borderColor: primaryColor,
+                                }}
                             >
                                 <Group position="apart" align="flex-start">
                                     <Group>
-                                        <Avatar src={imageUrl} radius="xl" size="lg" color="gray">
-                                            {!imageUrl && <IconUserCircle size={28} />}
+                                        <Avatar
+                                            src={imageUrl}
+                                            radius="xl"
+                                            size="lg"
+                                            color="gray"
+                                        >
+                                            {!imageUrl && (
+                                                <IconUserCircle size={28} />
+                                            )}
                                         </Avatar>
                                         <Box>
                                             <Group spacing="xs">
-                                                <Text weight={600}>{user?.username || "Anonymous"}</Text>
-                                                <Badge color="yellow" variant="light">
+                                                <Text weight={600}>
+                                                    {user?.username ||
+                                                        "Anonymous"}
+                                                </Text>
+                                                <Badge
+                                                    color="yellow"
+                                                    variant="light"
+                                                >
                                                     {review.rating} / 5
                                                 </Badge>
                                             </Group>
 
-                                            <Rating value={review.rating} readOnly size="sm" color={primaryColor} mt={4} />
+                                            <Rating
+                                                value={review.rating}
+                                                readOnly
+                                                size="sm"
+                                                color={primaryColor}
+                                                mt={4}
+                                            />
 
                                             {review.review && (
-                                                <Text mt={8} size="sm" color="gray.8">{review.review}</Text>
+                                                <Text
+                                                    mt={8}
+                                                    size="sm"
+                                                    color="gray.8"
+                                                >
+                                                    {review.review}
+                                                </Text>
                                             )}
                                         </Box>
                                     </Group>
 
                                     {review.user_id === currentUserId && (
                                         <Group spacing={8}>
-                                            <ActionIcon color="blue" variant="light" onClick={() => handleEdit(review)}>
+                                            <ActionIcon
+                                                color="blue"
+                                                variant="light"
+                                                onClick={() =>
+                                                    handleEdit(review)
+                                                }
+                                                style={{ cursor: "pointer" }}
+                                            >
                                                 <IconEdit size={20} />
                                             </ActionIcon>
-                                            <ActionIcon color="red" variant="light" onClick={() => handleDelete(review.id)}>
+                                            <ActionIcon
+                                                color="red"
+                                                variant="light"
+                                                onClick={() =>
+                                                    handleDelete(review.id)
+                                                }
+                                                style={{ cursor: "pointer" }}
+                                            >
                                                 <IconTrash size={20} />
                                             </ActionIcon>
                                         </Group>
