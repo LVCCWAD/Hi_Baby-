@@ -77,7 +77,11 @@ function Search() {
                         </Text>
                         <Button
                             component={Link}
-                            href={`${BASE_URL}`}
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                Inertia.visit("/");
+                            }}
                             leftSection={<IconArrowLeft size={16} />}
                             variant="outline"
                             color="#BAB86C"
