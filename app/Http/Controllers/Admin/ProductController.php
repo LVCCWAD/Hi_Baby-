@@ -293,18 +293,21 @@ class ProductController extends Controller
 
     public function index(Request $request, ProductSearchService $searchService)
     {
-        $products = $searchService->search($request->input('q'));
+        $query = $request->input('q');
+        $products = $searchService->search($query);
 
         SearchLog::create([
-            'search_term' => $request->input('q'),
+            'search_term' => $query,
             'results_count' => count($products),
             'user_id' => Auth::id(),
         ]);
 
         return inertia('Products/SearchResults', [
             'products' => $products,
+            'query' => $query, 
         ]);
     }
+
 
 
     public function searchResultsPage(Request $request)

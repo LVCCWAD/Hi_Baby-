@@ -6,13 +6,17 @@ import ProductCard from "../../Components/ProductCard";
 function Search() {
     const { products, query } = usePage().props;
 
-    const hasQuery = query && query.trim() !== '';
+    const hasQuery = query && query.trim() !== "";
     const hasResults = products && products.length > 0;
 
     return (
         <Container
             size="xl"
-            style={{ backgroundColor: "#f9f6f1", padding: "40px 20px", minHeight: "60vh" }}
+            style={{
+                backgroundColor: "#f9f6f1",
+                padding: "40px 20px",
+                minHeight: "60vh",
+            }}
         >
             {hasQuery ? (
                 <Text
@@ -68,11 +72,12 @@ function Search() {
                             No products found for "{query}"
                         </Text>
                         <Text size="sm" color="dimmed" ta="center">
-                            Try searching with different keywords or browse our collections
+                            Try searching with different keywords or browse our
+                            collections
                         </Text>
                         <Button
                             component={Link}
-                            href="/"
+                            href={`${BASE_URL}`}
                             leftSection={<IconArrowLeft size={16} />}
                             variant="outline"
                             color="#BAB86C"
@@ -90,7 +95,8 @@ function Search() {
             ) : (
                 <>
                     <Text size="md" color="dimmed" mb={20}>
-                        Found {products.length} product{products.length !== 1 ? 's' : ''}
+                        Found {products.length} product
+                        {products.length !== 1 ? "s" : ""}
                     </Text>
                     <Grid gutter="lg">
                         {products.map((product) => (
