@@ -2,7 +2,6 @@ import {
     Grid,
     Container,
     Center,
-    Select,
     Text,
     Group,
     Box,
@@ -12,14 +11,25 @@ import {
 } from "@mantine/core";
 import { useState, useMemo } from "react";
 import { Head } from "@inertiajs/react";
-import ProductCard from "../../Components/ProductCard";  // <-- import reusable component
+import ProductCard from "../../Components/ProductCard";
 
 function Girls({ products = [] }) {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedSizes, setSelectedSizes] = useState([]);
-    const [sortBy, setSortBy] = useState("trending");
 
-    // Filter products by gender (only girls products)
+    const normalize = (value) => value?.trim().toLowerCase();
+
+    const categoryList = [
+        "Dresses",
+        "Skirts",
+        "Jackets & Sweaters",
+        "Pajamas",
+        "Shirts",
+        "Pants & Jeans",
+    ];
+
+    const sizeList = ["XS", "S", "M", "L", "XL"];
+
     const girlsProducts = useMemo(() => {
         return products.filter((product) => product.gender?.name === "Girls");
     }, [products]);
@@ -30,7 +40,7 @@ function Girls({ products = [] }) {
         if (selectedCategories.length > 0) {
             filtered = filtered.filter((product) =>
                 product.categories?.some((category) =>
-                    selectedCategories.includes(category.name)
+                    selectedCategories.includes(normalize(category.name))
                 )
             );
         }
@@ -38,49 +48,29 @@ function Girls({ products = [] }) {
         if (selectedSizes.length > 0) {
             filtered = filtered.filter((product) =>
                 product.sizes?.some((size) =>
-                    selectedSizes.includes(size.name)
+                    selectedSizes.includes(normalize(size.name))
                 )
             );
         }
 
-        if (sortBy === "price-low") {
-            filtered.sort((a, b) => a.price - b.price);
-        } else if (sortBy === "price-high") {
-            filtered.sort((a, b) => b.price - a.price);
-        }
-
         return filtered;
-    }, [girlsProducts, selectedCategories, selectedSizes, sortBy]);
-
-    const categories = useMemo(() => {
-        const categorySet = new Set();
-        girlsProducts.forEach((product) => {
-            product.categories?.forEach((category) =>
-                categorySet.add(category.name)
-            );
-        });
-        return Array.from(categorySet);
-    }, [girlsProducts]);
-
-    const sizes = useMemo(() => {
-        const sizeSet = new Set();
-        girlsProducts.forEach((product) => {
-            product.sizes?.forEach((size) => sizeSet.add(size.name));
-        });
-        return Array.from(sizeSet);
-    }, [girlsProducts]);
+    }, [girlsProducts, selectedCategories, selectedSizes]);
 
     const toggleCategory = (category) => {
+        const normalized = normalize(category);
         setSelectedCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((c) => c !== category)
-                : [...prev, category]
+            prev.includes(normalized)
+                ? prev.filter((c) => c !== normalized)
+                : [...prev, normalized]
         );
     };
 
     const toggleSize = (size) => {
+        const normalized = normalize(size);
         setSelectedSizes((prev) =>
-            prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
+            prev.includes(normalized)
+                ? prev.filter((s) => s !== normalized)
+                : [...prev, normalized]
         );
     };
 
@@ -94,18 +84,6 @@ function Girls({ products = [] }) {
                 <Text size="xl" weight={700} style={{ fontSize: "28px", fontFamily: "WendyOne" }}>
                     Girl's Clothing
                 </Text>
-                <Select
-                    placeholder="Sort By"
-                    value={sortBy}
-                    onChange={setSortBy}
-                    data={[
-                        { value: "trending", label: "Trending" },
-                        { value: "price-low", label: "Price: Low to High" },
-                        { value: "price-high", label: "Price: High to Low" },
-                    ]}
-                    style={{ width: 150 }}
-                    size="xs"
-                />
             </Group>
 
             <Grid>
@@ -118,13 +96,23 @@ function Girls({ products = [] }) {
                                 </Accordion.Control>
                                 <Accordion.Panel>
                                     <Stack spacing="xs">
-                                        {categories.map((category) => (
+                                        {categoryList.map((category) => (
                                             <Checkbox
                                                 key={category}
                                                 label={category}
-                                                checked={selectedCategories.includes(category)}
+                                                checked={selectedCategories.includes(normalize(category))}
                                                 onChange={() => toggleCategory(category)}
-                                                styles={{ label: { fontSize: "14px" } }}
+                                                styles={(theme, params) => ({
+                                                    input: {
+                                                        borderColor: "#BAB86C",
+                                                        backgroundColor: params.checked ? "#BAB86C" : "#fff",
+                                                    },
+                                                    label: {
+                                                        fontSize: "14px",
+                                                        color: "#000",
+                                                    },
+                                                    icon: { color: "#fff" },
+                                                })}
                                             />
                                         ))}
                                     </Stack>
@@ -137,13 +125,23 @@ function Girls({ products = [] }) {
                                 </Accordion.Control>
                                 <Accordion.Panel>
                                     <Stack spacing="xs">
-                                        {sizes.map((size) => (
+                                        {sizeList.map((size) => (
                                             <Checkbox
                                                 key={size}
                                                 label={size}
-                                                checked={selectedSizes.includes(size)}
+                                                checked={selectedSizes.includes(normalize(size))}
                                                 onChange={() => toggleSize(size)}
-                                                styles={{ label: { fontSize: "14px" } }}
+                                                styles={(theme, params) => ({
+                                                    input: {
+                                                        borderColor: "#BAB86C",
+                                                        backgroundColor: params.checked ? "#BAB86C" : "#fff",
+                                                    },
+                                                    label: {
+                                                        fontSize: "14px",
+                                                        color: "#000",
+                                                    },
+                                                    icon: { color: "#fff" },
+                                                })}
                                             />
                                         ))}
                                     </Stack>
