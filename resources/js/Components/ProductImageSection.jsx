@@ -10,18 +10,22 @@ const ProductImageSection = ({ product }) => (
             alignItems: "center",
             justifyContent: "center",
             minHeight: "500px",
-            position: "relative"
+            position: "relative",
         }}
     >
         <Image
-            src={product.image}
+            src={
+                product.image
+                    ? `/storage/${product.image}`
+                    : "/default-image.jpg"
+            }
             alt={product.name}
             style={{
                 maxWidth: "100%",
                 maxHeight: "450px",
                 objectFit: "contain",
                 borderRadius: "8px",
-                filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))"
+                filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.1))",
             }}
         />
     </Box>

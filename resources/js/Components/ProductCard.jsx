@@ -47,28 +47,48 @@ function ProductCard({ product }) {
                 href={`/user/products/${product.id}`}
                 style={{ textDecoration: "none" }}
             >
-                <Card shadow="sm" padding="lg" radius="md" withBorder>
-                    <Card.Section>
+                <Card
+                    shadow="sm"
+                    padding="lg"
+                    radius="md"
+                    withBorder
+                    style={{
+                        width: 250,
+                        height: 380,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        position: "relative",
+                    }}
+                >
+                    <Box
+                        style={{
+                            height: 200,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            overflow: "hidden",
+                            borderRadius: "8px",
+                            backgroundColor: "#fff", // keep white background if image smaller
+                        }}
+                    >
                         <Image
                             src={
                                 product.image
-                                    ? `/storage/${product.image}`
+                                    ? product.image.startsWith("http")
+                                        ? product.image
+                                        : `/storage/${product.image}`
                                     : "/default-image.jpg"
                             }
                             alt={product.name}
                             height={200}
                             width={200}
-                            style={{
-                                maxWidth: "300px",
-                                maxHeight: "200px",
-                                objectFit: "contain",
-                            }}
+                            fit="contain"
                         />
-                    </Card.Section>
+                    </Box>
 
-                    {/* Name and Like Button with Like Count */}
                     <Flex justify="space-between" align="center" mt="md">
-                        <Text weight={600} lineClamp={1}>
+                        <Text weight={600} lineClamp={1} size="sm">
                             {product.name}
                         </Text>
 
@@ -103,7 +123,6 @@ function ProductCard({ product }) {
                         </Flex>
                     </Flex>
 
-                    {/* Pricing Section */}
                     <Box mt={5}>
                         <Text weight={900} size="lg" color="#6b8e23">
                             ₱{product.price}

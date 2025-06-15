@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { Container, Text, Grid, Paper } from "@mantine/core";
-import OrderSummary from "../../Components/OrderSummary"; // reuse your order summary component
-import { router, usePage, Head } from "@inertiajs/react";
+import {
+    Container,
+    Text,
+    Grid,
+    Paper,
+    Image,
+    Group,
+    Badge,
+    Stack,
+    Divider,
+    Box,
+    Center,
+} from "@mantine/core";
+import OrderSummary from "../../Components/OrderSummary";
+import { router, Head } from "@inertiajs/react";
 
-function Checkout({ product, address, initialData }) {
-    console.log("Checkout props:", { product, address, initialData });
-    console.log("product.price:", product.price, "type:", typeof product.price);
-
+function Checkout({ product, address, initialData, colors, sizes }) {
     const [loading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(initialData.quantity || 1);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
@@ -51,7 +60,7 @@ function Checkout({ product, address, initialData }) {
     };
 
     return (
-        <Container size="xl" mt="xl">
+        <Container size="lg" my="xl">
             <Head>
                 <title>Checkout Confirmation - Hi Baby!</title>
                 <meta
@@ -64,17 +73,68 @@ function Checkout({ product, address, initialData }) {
                 Checkout Confirmation
             </Text>
 
-            <Grid>
+            <Grid gutter="lg">
                 <Grid.Col span={8}>
-                    <Paper shadow="sm" radius="md" p="md">
-                        <Text weight={500} mb="md">
-                            Product
-                        </Text>
-                        <Text>Name: {product.name}</Text>
-                        <Text>Price: ${safePrice.toFixed(2)}</Text>{" "}
-                        <Text>Quantity: {quantity}</Text>
-                        <Text>Total: ${(safePrice * quantity).toFixed(2)}</Text>
-                        {/* You can add inputs here to update quantity, select payment method, etc. */}
+                    <Paper shadow="md" radius="md" p="lg" withBorder>
+                        <Group align="flex-start" spacing="lg" noWrap>
+                            <Box w={200} h={200} bg="gray.0" p="xs" style={{ borderRadius: 12 }}>
+                                <Center style={{ width: '100%', height: '100%' }}>
+                                    <Image
+                                        src={
+                                            product.image
+                                                ? `/storage/${product.image}`
+                                                : "/default-image.jpg"
+                                        }
+                                        alt={product.name}
+                                        fit="contain"
+                                        height="100%"
+                                        width="100%"
+                                        radius="md"
+                                    />
+                                </Center>
+                            </Box>
+
+                            <Stack spacing="xs" style={{ flex: 1 }}>
+                                <Text fw={600} size="lg" mb={5}>
+                                    {product.name}
+                                </Text>
+
+                                <Divider />
+
+                                <Group spacing="sm">
+                                    <Text size="sm" color="dimmed" fw={500}>Price:</Text>
+                                    <Text size="sm">₱{safePrice.toFixed(2)}</Text>
+                                </Group>
+
+                                <Group spacing="sm">
+                                    <Text size="sm" color="dimmed" fw={500}>Quantity:</Text>
+                                    <Text size="sm">{quantity}</Text>
+                                </Group>
+
+                                <Group spacing="sm">
+                                    <Text size="sm" color="dimmed" fw={500}>Color:</Text>
+                                    <Badge size="sm" color="pink" variant="light">
+                                        {initialData.color_name || "N/A"}
+                                    </Badge>
+                                </Group>
+
+                                <Group spacing="sm">
+                                    <Text size="sm" color="dimmed" fw={500}>Size:</Text>
+                                    <Badge size="sm" color="blue" variant="light">
+                                        {initialData.size_name || "N/A"}
+                                    </Badge>
+                                </Group>
+
+                                <Divider my="sm" />
+
+                                <Group spacing="sm">
+                                    <Text fw={600} size="md">Total:</Text>
+                                    <Text fw={700} size="lg" color="teal">
+                                        ₱{total.toFixed(2)}
+                                    </Text>
+                                </Group>
+                            </Stack>
+                        </Group>
                     </Paper>
                 </Grid.Col>
 
@@ -91,7 +151,6 @@ function Checkout({ product, address, initialData }) {
                                 quantity,
                             },
                         ]}
-                        // optionally pass setters for payment method if your OrderSummary supports it
                     />
                 </Grid.Col>
             </Grid>

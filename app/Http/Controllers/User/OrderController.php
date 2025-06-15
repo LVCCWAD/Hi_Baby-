@@ -31,7 +31,6 @@ class OrderController extends Controller
 
         $user = Auth::user();
 
-        // ✅ Only get selected items
         $cartItems = $user->carts()
             ->with(['product', 'color', 'size'])
             ->whereIn('id', $request->items)
@@ -72,13 +71,19 @@ class OrderController extends Controller
                 ]);
             }
 
-            // ✅ Only delete selected cart items
             $user->carts()->whereIn('id', $request->items)->delete();
 
             $order->load('items.product', 'items.color', 'items.size', 'user');
 
             Mail::to($user->email)->send(new OrderPlaced($order));
-            $user->notify(new UserEventNotification('Order placed successfully.'));
+
+            // ✅ Proper notification
+            $productNames = $cartItems->pluck('product.name')->implode(', ');
+            $user->notify(new UserEventNotification(
+                'Order Placed',
+                'Your order has been successfully placed. Thank you for shopping!',
+                $productNames
+            ));
 
             return Inertia::location(route('order.success', ['order' => $order->id]));
         } catch (\Exception $e) {
@@ -86,10 +91,6 @@ class OrderController extends Controller
             return back()->with('error', 'Failed to create order. Please try again.');
         }
     }
-
-
-
-
 
 
 
@@ -176,7 +177,6 @@ class OrderController extends Controller
         ]);
     }
 
-
     public function checkoutConfirmation(Request $request)
     {
         $user = $request->user();
@@ -187,8 +187,8 @@ class OrderController extends Controller
         $colorId = $request->input('color_id');
         $sizeId = $request->input('size_id');
 
-        $color = Color::find($colorId);
-        $size = Size::find($sizeId);
+        $color = $product->colors()->find($colorId);
+        $size = $product->sizes()->find($sizeId);
 
         $initialData = [
             'quantity' => (int) $request->input('quantity', 1),
@@ -212,6 +212,66 @@ class OrderController extends Controller
 
 
 
+
+
+
+
+    public function showUserOrders()
+    {
+        $orders = Order::with(['items.product', 'items.color', 'items.size'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return Inertia::render('User/Orders', [
+            'orders' => $orders,
+        ]);
+    }
+
+    public function showOrderDetails(Order $order)
+    {
+        // Ensure user can only view their own orders
+        if ($order->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to order details.');
+        }
+
+        $order->load(['items.product', 'items.color', 'items.size', 'user']);
+
+        return Inertia::render('User/OrderDetails', [
+            'order' => $order,
+        ]);
+    }
+
+    public function cancelOrder(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to cancel order.');
+        }
+
+        if ($order->status !== 'pending') {
+            return redirect()->back()->withErrors(['error' => 'Only pending orders can be cancelled.']);
+        }
+
+        try {
+            $order->update([
+                'status' => 'cancelled',
+                'payment_status' => 'failed'
+            ]);
+
+            if ($order->user) {
+                $order->user->notify(new UserEventNotification(
+                    'Order Cancelled',
+                    'Your order #' . $order->id . ' has been cancelled successfully.',
+                    null
+                ));
+            }
+
+            return redirect()->route('user.orders')->with('success', 'Order cancelled successfully.');
+        } catch (\Exception $e) {
+            Log::error('Order cancellation error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Failed to cancel order. Please try again.']);
+        }
+    }
 
 
 

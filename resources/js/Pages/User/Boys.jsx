@@ -298,7 +298,11 @@ function ProductCard({ product }) {
 
                 <Card.Section style={{ height: "150px", overflow: "hidden" }}>
                     <Image
-                        src={product.image}
+                        src={
+                            product.image
+                                ? `/storage/${product.image}`
+                                : "/default-image.jpg"
+                        }
                         alt={product.name}
                         height={200}
                         width={200}

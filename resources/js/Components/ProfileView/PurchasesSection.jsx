@@ -20,7 +20,9 @@ import {
     IconX,
     IconCalendar,
     IconId,
+    IconEye,
 } from "@tabler/icons-react";
+import { Link } from "@inertiajs/react";
 
 function PurchasesSection({
     orderFilter,
@@ -31,8 +33,7 @@ function PurchasesSection({
     if (!Array.isArray(orders)) {
         return (
             <Text color="red" align="center">
-                Error loading orders. Please refresh the page or try again
-                later.
+                Error loading orders. Please refresh the page or try again later.
             </Text>
         );
     }
@@ -55,45 +56,19 @@ function PurchasesSection({
                 <Tabs value={orderFilter} onChange={setOrderFilter}>
                     <Tabs.List>
                         {[
-                            {
-                                value: "all",
-                                label: `All (${ordersCount})`,
-                                icon: IconShoppingCart,
-                            },
-                            {
-                                value: "pending",
-                                label: "Pending",
-                                icon: IconPackage,
-                            },
-                            {
-                                value: "shipped",
-                                label: "Shipped",
-                                icon: IconPackage,
-                            },
-                            {
-                                value: "delivered",
-                                label: "Delivered",
-                                icon: IconCheck,
-                            },
-                            {
-                                value: "cancelled",
-                                label: "Cancelled",
-                                icon: IconX,
-                            },
+                            { value: "all", label: `All (${ordersCount})`, icon: IconShoppingCart },
+                            { value: "pending", label: "Pending", icon: IconPackage },
+                            { value: "shipped", label: "Shipped", icon: IconPackage },
+                            { value: "delivered", label: "Delivered", icon: IconCheck },
+                            { value: "cancelled", label: "Cancelled", icon: IconX },
                         ].map(({ value, label, icon: Icon }) => (
                             <Tabs.Tab
                                 key={value}
                                 value={value}
                                 icon={<Icon size={16} />}
                                 style={{
-                                    backgroundColor:
-                                        orderFilter === value
-                                            ? "#B9BD7E"
-                                            : "transparent",
-                                    color:
-                                        orderFilter === value
-                                            ? "white"
-                                            : "inherit",
+                                    backgroundColor: orderFilter === value ? "#B9BD7E" : "transparent",
+                                    color: orderFilter === value ? "white" : "inherit",
                                     borderRadius: 0,
                                 }}
                             >
@@ -114,43 +89,29 @@ function PurchasesSection({
                         <Paper key={order.id} shadow="xs" p="md" withBorder>
                             <Grid>
                                 <Grid.Col span={12}>
-                                    <Group
-                                        position="apart"
-                                        mb="md"
-                                        align="center"
-                                    >
+                                    <Group position="apart" mb="md" align="center">
                                         <Group>
                                             <IconCalendar size={16} />
                                             <Text size="sm">
                                                 Ordered on:{" "}
-                                                {new Date(
-                                                    order.created_at
-                                                ).toLocaleDateString()}
+                                                {new Date(order.created_at).toLocaleDateString()}
                                             </Text>
                                         </Group>
                                         <Group>
                                             <IconId size={16} />
-                                            <Text size="sm">
-                                                Order #: {order.id}
-                                            </Text>
+                                            <Text size="sm">Order #: {order.id}</Text>
                                         </Group>
                                         <Group>
                                             <Text weight={500}>Total:</Text>
-                                            <Text weight={700}>
-                                                ₱{order.total_amount}
-                                            </Text>
+                                            <Text weight={700}>₱{order.total_amount}</Text>
                                         </Group>
                                         <Button
-                                            variant="light"
-                                            color="green"
-                                            radius="xl"
-                                            compact
-                                            leftIcon={<IconCheck size={16} />}
+                                            component={Link}
+                                            href={`/orders/${order.id}`}
+                                            variant="outline"
+                                            leftSection={<IconEye size={16} />}
                                         >
-                                            {order.status
-                                                .charAt(0)
-                                                .toUpperCase() +
-                                                order.status.slice(1)}
+                                            View Details
                                         </Button>
                                     </Group>
                                 </Grid.Col>
@@ -159,52 +120,33 @@ function PurchasesSection({
                                     <Grid.Col key={item.id} span={12}>
                                         <Group position="apart" align="center">
                                             <Group>
-                                                <Box
-                                                    style={{
-                                                        width: 80,
-                                                        height: 80,
-                                                        overflow: "hidden",
-                                                    }}
-                                                >
+                                                <Box style={{ width: 80, height: 80, overflow: "hidden" }}>
                                                     <Image
                                                         src={
-                                                            item.image ??
-                                                            item.product?.image
+                                                            item?.product?.image
+                                                                ? item.product.image.startsWith("http")
+                                                                    ? item.product.image
+                                                                    : `/storage/${item.product.image}`
+                                                                : "/images/placeholder.png"
                                                         }
                                                         width={80}
                                                         height={80}
                                                         fit="contain"
-                                                        withPlaceholder
                                                     />
                                                 </Box>
                                                 <div>
                                                     <Text weight={500}>
-                                                        {item.product_name ??
-                                                            item.product
-                                                                ?.name ??
-                                                            "Unnamed Product"}
+                                                        {item.product_name ?? item.product?.name ?? "Unnamed Product"}
                                                     </Text>
-                                                    <Text
-                                                        size="sm"
-                                                        color="dimmed"
-                                                    >
-                                                        Color:{" "}
-                                                        {item.color || "N/A"} |
-                                                        Size:{" "}
-                                                        {item.size || "N/A"}
+                                                    <Text size="sm" color="dimmed">
+                                                        Color: {item.color || "N/A"} | Size: {item.size || "N/A"}
                                                     </Text>
-                                                    <Text
-                                                        size="sm"
-                                                        color="dimmed"
-                                                    >
-                                                        Quantity:{" "}
-                                                        {item.quantity}
+                                                    <Text size="sm" color="dimmed">
+                                                        Quantity: {item.quantity}
                                                     </Text>
                                                 </div>
                                             </Group>
-                                            <Text weight={700}>
-                                                ₱{item.price}
-                                            </Text>
+                                            <Text weight={700}>₱{item.price}</Text>
                                         </Group>
                                         <Divider my="sm" />
                                     </Grid.Col>

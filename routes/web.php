@@ -85,7 +85,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Orders
     Route::post('/order/create', [OrderController::class, 'createOrder'])->name('order.create');
-    Route::get('/orders', [OrderController::class, 'showUserOrders'])->name('user.orders');
+    // Route::get('/orders', [OrderController::class, 'showUserOrders'])->name('user.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'showOrderDetails'])->name('order.details');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::post('/order-checkout', [OrderController::class, 'placeOrder'])->name('orders.store');
     Route::get('/order-success/{order}', [OrderController::class, 'showSuccess'])->name('order.success');
     Route::get('/checkout-confirmation', [OrderController::class, 'checkoutConfirmation']);
@@ -128,6 +130,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Search
     Route::get('/search', [ProductController::class, 'searchResultsPage'])->name('user.search');
+
+    //  Delete Account
+    Route::delete('/delete-account', [UserController::class, 'destroy'])->name('account.destroy');
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

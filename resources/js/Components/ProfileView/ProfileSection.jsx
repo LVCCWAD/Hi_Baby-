@@ -23,8 +23,10 @@ import {
     IconLock,
     IconPhone,
     IconMapPin,
-    IconLogout,
+    IconTrash, // using trash icon for delete
 } from "@tabler/icons-react";
+
+import { router } from "@inertiajs/react";
 
 function ProfileSection({
     user,
@@ -44,6 +46,12 @@ function ProfileSection({
     const [currentPasswordError, setCurrentPasswordError] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
+    const handleDeleteAccount = () => {
+        if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+            router.delete("/delete-account");
+        }
+    };
+
     return (
         <Card shadow="sm" padding="lg" radius="md" withBorder>
             {isEditing ? (
@@ -55,7 +63,6 @@ function ProfileSection({
 
                         <Divider my="sm" />
 
-                        {/* Avatar Upload */}
                         <Center>
                             <Box style={{ position: "relative" }}>
                                 <Avatar
@@ -94,18 +101,11 @@ function ProfileSection({
                             </Box>
                         </Center>
 
-                        {/* Form Fields */}
-                        <SimpleGrid
-                            cols={2}
-                            spacing="lg"
-                            breakpoints={[{ maxWidth: "md", cols: 1 }]}
-                        >
+                        <SimpleGrid cols={2} spacing="lg" breakpoints={[{ maxWidth: "md", cols: 1 }]}>
                             <TextInput
                                 label="Username"
                                 value={data.username}
-                                onChange={(e) =>
-                                    setData("username", e.target.value)
-                                }
+                                onChange={(e) => setData("username", e.target.value)}
                                 error={errors.username}
                                 required
                             />
@@ -114,9 +114,7 @@ function ProfileSection({
                                 label="Email"
                                 icon={<IconMail size={16} />}
                                 value={data.email}
-                                onChange={(e) =>
-                                    setData("email", e.target.value)
-                                }
+                                onChange={(e) => setData("email", e.target.value)}
                                 error={errors.email}
                                 required
                             />
@@ -125,9 +123,7 @@ function ProfileSection({
                                 label="First Name"
                                 icon={<IconUserCircle size={16} />}
                                 value={data.first_name}
-                                onChange={(e) =>
-                                    setData("first_name", e.target.value)
-                                }
+                                onChange={(e) => setData("first_name", e.target.value)}
                                 error={errors.first_name}
                                 required
                             />
@@ -136,9 +132,7 @@ function ProfileSection({
                                 label="Last Name"
                                 icon={<IconUserCircle size={16} />}
                                 value={data.last_name}
-                                onChange={(e) =>
-                                    setData("last_name", e.target.value)
-                                }
+                                onChange={(e) => setData("last_name", e.target.value)}
                                 error={errors.last_name}
                                 required
                             />
@@ -147,9 +141,7 @@ function ProfileSection({
                                 label="Contact Number"
                                 icon={<IconPhone size={16} />}
                                 value={data.phone_number}
-                                onChange={(e) =>
-                                    setData("phone_number", e.target.value)
-                                }
+                                onChange={(e) => setData("phone_number", e.target.value)}
                                 error={errors.phone_number}
                             />
 
@@ -157,68 +149,43 @@ function ProfileSection({
                                 label="Address"
                                 icon={<IconMapPin size={16} />}
                                 value={data.address}
-                                onChange={(e) =>
-                                    setData("address", e.target.value)
-                                }
+                                onChange={(e) => setData("address", e.target.value)}
                                 error={errors.address}
                             />
 
                             <PasswordInput
                                 label="Current Password"
                                 value={data.current_password}
-                                onChange={(e) =>
-                                    setData("current_password", e.target.value)
-                                }
+                                onChange={(e) => setData("current_password", e.target.value)}
                                 error={errors.current_password}
                             />
 
                             <PasswordInput
                                 label="New Password"
                                 value={data.password}
-                                onChange={(e) =>
-                                    setData("password", e.target.value)
-                                }
+                                onChange={(e) => setData("password", e.target.value)}
                                 error={errors.password}
                             />
                             <PasswordInput
                                 label="Confirm Password"
                                 value={data.password_confirmation}
-                                onChange={(e) =>
-                                    setData(
-                                        "password_confirmation",
-                                        e.target.value
-                                    )
-                                }
+                                onChange={(e) => setData("password_confirmation", e.target.value)}
                                 error={errors.password_confirmation}
                             />
                         </SimpleGrid>
 
                         <Group>
-                            <Button
-                                variant="outline"
-                                color="gray"
-                                onClick={() => setIsEditing(false)}
-                                type="button"
-                            >
+                            <Button variant="outline" color="gray" onClick={() => setIsEditing(false)} type="button">
                                 Cancel
                             </Button>
-                            <Button
-                                type="submit"
-                                loading={processing}
-                                color="olive"
-                                disabled={processing}
-                            >
+                            <Button type="submit" loading={processing} color="olive" disabled={processing}>
                                 Save Changes
                             </Button>
                         </Group>
                     </Stack>
                 </form>
             ) : (
-                <Stack
-                    spacing="md"
-                    as="section"
-                    aria-labelledby="profile-view-title"
-                >
+                <Stack spacing="md" as="section" aria-labelledby="profile-view-title">
                     <Group position="apart">
                         <Title order={3} id="profile-view-title">
                             Your Profile
@@ -247,13 +214,7 @@ function ProfileSection({
                         />
 
                         <Stack mb="md" style={{ textAlign: "left" }}>
-                            <Text
-                                style={{
-                                    fontSize: 24,
-                                    fontWeight: 700,
-                                    lineHeight: 0.2,
-                                }}
-                            >
+                            <Text style={{ fontSize: 24, fontWeight: 700, lineHeight: 0.2 }}>
                                 {user.first_name} {user.last_name}
                             </Text>
                             <Text color="dimmed">{user.email}</Text>
@@ -282,27 +243,6 @@ function ProfileSection({
                         <Divider />
 
                         <Group align="center" spacing="xs">
-                            <IconLock size={20} color="#B9BD7E" />
-                            <Text weight={500}>Password</Text>
-                        </Group>
-                        <Group ml={28} position="apart" align="center">
-                            <Text color="dimmed">
-                                ••••••••
-                            </Text>
-                            <Button
-                                variant="subtle"
-                                size="xs"
-                                color="green"
-                                component="a"
-                                href="/forgot-password"
-                                style={{ fontSize: "12px" }}
-                            >
-                                Change Password
-                            </Button>
-                        </Group>
-                        <Divider />
-
-                        <Group align="center" spacing="xs">
                             <IconPhone size={20} color="#B9BD7E" />
                             <Text weight={500}>Contact</Text>
                         </Group>
@@ -316,25 +256,20 @@ function ProfileSection({
                             <Text weight={500}>Address</Text>
                         </Group>
                         <Text ml={28} color="dimmed">
-                            {user.address_id
-                                ? "Address linked"
-                                : "No address linked"}
+                            {user.address_id ? "Address linked" : "No address linked"}
                         </Text>
                     </Stack>
 
                     <Button
                         fullWidth
-                        color="#B9BD7E"
-                        style={{
-                            backgroundColor: "#B9BD7E",
-                            marginTop: 20,
-                        }}
-                        onClick={handleLogout}
-                        leftIcon={<IconLogout size={18} />}
+                        color="red"
+                        style={{ marginTop: 20 }}
+                        onClick={handleDeleteAccount}
+                        leftIcon={<IconTrash size={18} />}
                         type="button"
-                        aria-label="Logout"
+                        aria-label="Delete Account"
                     >
-                        Logout
+                        Delete Account
                     </Button>
                 </Stack>
             )}

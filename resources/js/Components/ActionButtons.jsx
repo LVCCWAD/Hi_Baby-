@@ -19,7 +19,10 @@ const ActionButtons = ({
                 borderColor: "#ddd",
                 borderRadius: "8px",
                 backgroundColor: "white",
-                color: "#333"
+                color: "#333",
+                // Remove cursor not-allowed effect
+                cursor: canAddToCart ? "pointer" : "default",
+                opacity: canAddToCart ? 1 : 0.5,
             }}
         >
             <IconShoppingCart size={24} stroke={1.5} />
@@ -29,6 +32,7 @@ const ActionButtons = ({
             size="lg"
             onClick={handleBuyNow}
             loading={processing}
+            disabled={!canAddToCart || processing}
             style={{
                 flex: 1,
                 backgroundColor: "#c4d4a3",
@@ -37,7 +41,10 @@ const ActionButtons = ({
                 height: "50px",
                 fontSize: "16px",
                 fontWeight: 600,
-                border: "none"
+                border: "none",
+                // Remove cursor not-allowed effect
+                cursor: canAddToCart ? "pointer" : "default",
+                opacity: canAddToCart ? 1 : 0.5,
             }}
             variant="filled"
         >

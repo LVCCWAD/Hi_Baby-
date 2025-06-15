@@ -33,7 +33,19 @@ class UserController extends Controller
         return  Inertia::render('User/Home');
     }
 
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
 
+        // Delete the user
+        $user->delete();
+
+        // Logout the user
+        Auth::logout();
+
+        // Redirect to homepage or login
+        return redirect()->route('login')->with('success', 'Your account has been deleted.');
+    }
     public function profileView()
     {
         $user = Auth::user();
@@ -176,8 +188,10 @@ class UserController extends Controller
                             'id' => $item->id,
                             'price' => $item->price,
                             'quantity' => $item->quantity,
-                            'product_name' => $item->product->name ?? 'Unnamed Product',
-                            'image' => $item->product->image ?? null,
+                            'product' => [
+                                'name' => $item->product->name ?? 'Unnamed Product',
+                                'image' => $item->product->image ?? null,
+                            ],
                             'color' => $item->color->name ?? null,
                             'size' => $item->size->name ?? null,
                         ];
@@ -199,6 +213,7 @@ class UserController extends Controller
             'ordersCount' => $orders->count(),
         ]);
     }
+
 
 
     // public function userChats()

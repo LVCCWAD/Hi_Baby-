@@ -49,6 +49,12 @@ function Search() {
                             leftSection={<IconArrowLeft size={16} />}
                             variant="outline"
                             color="#BAB86C"
+                            style={{
+                                borderRadius: "8px",
+                                height: "45px",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                            }}
                         >
                             Back to Home
                         </Button>
@@ -70,6 +76,12 @@ function Search() {
                             leftSection={<IconArrowLeft size={16} />}
                             variant="outline"
                             color="#BAB86C"
+                            style={{
+                                borderRadius: "8px",
+                                height: "45px",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                            }}
                         >
                             Back to Home
                         </Button>

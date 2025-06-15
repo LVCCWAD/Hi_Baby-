@@ -14,7 +14,7 @@ const SizeSelector = ({ sizes, selectedSize, setSelectedSize }) => (
           style={{
             minWidth: "50px",
             height: "40px",
-            borderRadius: "8px",
+            borderRadius: "4px",
             fontWeight: 500,
             backgroundColor: selectedSize === size.id.toString() ? "#333" : "transparent",
             borderColor: "#ddd",

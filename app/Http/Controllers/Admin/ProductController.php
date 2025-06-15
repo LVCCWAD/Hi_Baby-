@@ -239,17 +239,36 @@ class ProductController extends Controller
     //USER
     public function showGirlsProducts()
     {
+        $products = Product::with(['categories', 'colors', 'gender', 'sizes'])
+            ->get()
+            ->map(function ($product) {
+                $product->image_url = $product->image_url;
+                return $product;
+            });
+
         return Inertia::render('User/Girls', [
-            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+            'products' => $products,
         ]);
     }
 
+
+
     public function showBoysProducts()
     {
+        $products = Product::with(['categories', 'colors', 'gender', 'sizes'])->get();
+
+        // Add full image URL for each product
+        $products->each(function ($product) {
+            $product->image_url = $product->image
+                ? asset('storage/' . $product->image)
+                : asset('default-image.jpg'); // fallback if image is null
+        });
+
         return Inertia::render('User/Boys', [
-            'products' => Product::with(['categories', 'colors', 'gender', 'sizes'])->get(),
+            'products' => $products,
         ]);
     }
+
 
 
     public function productDetail(Product $product)
