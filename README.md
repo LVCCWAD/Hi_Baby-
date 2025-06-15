@@ -6,18 +6,6 @@ At Hi, Baby, we believe every little giggle, snuggle, and step deserves to be wr
 
 ---
 
-## 🛠 Tech Stack
-
-- **Backend:** Laravel (PHP)
-- **Frontend:** React + Inertia.js + Mantine UI
-- **Database:** MySQL / MariaDB
-- **Package Manager:** Composer, NPM
-- **Server:** Apache / Nginx (Production), Artisan Serve (Local)
-- **Deployment:** Railway / Vercel / Any VPS
-- **Version Control:** Git / GitHub
-
----
-
 ## ✨ Features
 
 - ✅ User authentication & registration
@@ -32,7 +20,8 @@ At Hi, Baby, we believe every little giggle, snuggle, and step deserves to be wr
 
 ## 📸 Screenshots
 
-> *Add screenshots or demo gifs here if available.*
+> ![image](https://github.com/user-attachments/assets/34839c3a-08f6-4976-91e8-0a700a2a9fb9)
+
 
 ---
 
