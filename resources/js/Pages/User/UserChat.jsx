@@ -14,18 +14,11 @@ import {
     Flex,
     Badge,
 } from "@mantine/core";
-import { IconArrowBack, IconSend2, IconUser } from "@tabler/icons-react";
+import { IconSend2 } from "@tabler/icons-react";
 import Pusher from "pusher-js";
 
 function UserChat() {
-    const {
-        messages: initialMessages,
-        authUserId,
-        adminId,
-        newMessage,
-        userProfile, // ✅ get profile data from Inertia props
-    } = usePage().props;
-
+    const { messages: initialMessages, authUserId, adminId, newMessage, userProfile } = usePage().props;
     const [messages, setMessages] = useState(initialMessages || []);
     const viewport = useRef(null);
 
@@ -37,22 +30,17 @@ function UserChat() {
     useEffect(() => {
         if (newMessage) {
             setMessages((prev) => [
-                ...prev.filter(
-                    (m) => !(m.id && String(m.id).startsWith("temp-"))
-                ),
+                ...prev.filter((m) => !(m.id && String(m.id).startsWith("temp-"))),
                 newMessage,
             ]);
         }
     }, [newMessage]);
 
     useEffect(() => {
-        const pusher = new Pusher(
-            import.meta.env.VITE_PUSHER_APP_KEY || "your-pusher-key",
-            {
-                cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || "ap1",
-                forceTLS: true,
-            }
-        );
+        const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY || "your-pusher-key", {
+            cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || "ap1",
+            forceTLS: true,
+        });
 
         const channel = pusher.subscribe("admin-messages");
 
@@ -71,7 +59,6 @@ function UserChat() {
         e.preventDefault();
         if (!data.message.trim()) return;
 
-        setData("receiver_id", adminId);
         const tempMessage = {
             id: "temp-" + Date.now(),
             message: data.message,
@@ -81,16 +68,18 @@ function UserChat() {
             sender: { picture: null },
         };
 
-        setMessages((prevMessages) => [...prevMessages, tempMessage]);
+        setMessages((prev) => [...prev, tempMessage]);
+
+        setData("message", "");
 
         post("/chat/send", data, {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => setData("message", ""),
+            onSuccess: () => reset("message"),
             onError: (errors) => {
                 console.error("Error sending message:", errors);
                 setMessages((prev) =>
-                    prev.filter((m) => !String(m.id).startsWith("temp-"))
+                    prev.filter((m) => !(m.id && String(m.id).startsWith("temp-")))
                 );
             },
         });
@@ -105,35 +94,20 @@ function UserChat() {
         }
     }, [messages]);
 
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    };
+
     return (
-        <Box
-            maw={600}
-            mx="auto"
-            p="md"
-            style={{
-                borderColor: "#BAB86C",
-                borderWidth: "3px",
-                borderRadius: "23px",
-            }}
-        >
-            <Head>
-                <title>Chat Support - Hi Baby!</title>
-            </Head>
+        <Box maw={600} mx="auto" p="md" style={{ borderColor: "#BAB86C", borderWidth: "3px", borderRadius: "23px" }}>
+            <Head><title>Chat Support - Hi Baby!</title></Head>
+
             <Flex justify="space-between" align="center" mb="md">
                 <Flex align="center">
-                    <Avatar
-                        src={userProfile?.picture}
-                        radius="xl"
-                        size="md"
-                        style={{ marginRight: 10 }}
-                    />
-                    <Title order={3} style={{ color: "#BAB86C" }}>
-                        {userProfile?.username ?? "Admin"}
-                    </Title>
-                    {/* Optional badge if you want to show "Online" or "New" */}
-                    <Badge ml="sm" color="green">
-                        Online
-                    </Badge>
+                    <Avatar src={userProfile?.picture} radius="xl" size="md" style={{ marginRight: 10 }} />
+                    <Title order={3} style={{ color: "#BAB86C" }}>{userProfile?.username ?? "Admin"}</Title>
+                    <Badge ml="sm" color="green">Online</Badge>
                 </Flex>
             </Flex>
 
@@ -149,22 +123,9 @@ function UserChat() {
                         messages.map((msg) => {
                             const isSender = msg.sender_id === authUserId;
                             return (
-                                <Group
-                                    key={msg.id}
-                                    align="flex-end"
-                                    noWrap
-                                    style={{
-                                        justifyContent: isSender
-                                            ? "flex-end"
-                                            : "flex-start",
-                                    }}
-                                >
+                                <Group key={msg.id} align="flex-end" noWrap style={{ justifyContent: isSender ? "flex-end" : "flex-start" }}>
                                     {!isSender && (
-                                        <Avatar
-                                            src={msg.sender?.picture}
-                                            radius="xl"
-                                            size="md"
-                                        />
+                                        <Avatar src={msg.sender?.picture} radius="xl" size="md" />
                                     )}
                                     <Paper
                                         shadow="xs"
@@ -172,42 +133,20 @@ function UserChat() {
                                         radius="xl"
                                         withBorder
                                         style={{
-                                            backgroundColor: isSender
-                                                ? "#dbeafe"
-                                                : "#f1f5f9",
+                                            backgroundColor: isSender ? "#dbeafe" : "#f1f5f9",
                                             maxWidth: "70%",
-                                            marginLeft: isSender
-                                                ? "auto"
-                                                : undefined,
-                                            marginRight: isSender
-                                                ? 0
-                                                : undefined,
-                                            borderTopRightRadius: isSender
-                                                ? 0
-                                                : undefined,
-                                            borderTopLeftRadius: !isSender
-                                                ? 0
-                                                : undefined,
+                                            marginLeft: isSender ? "auto" : undefined,
+                                            marginRight: isSender ? 0 : undefined,
+                                            borderTopRightRadius: isSender ? 0 : undefined,
+                                            borderTopLeftRadius: !isSender ? 0 : undefined,
                                         }}
                                     >
                                         <Text size="sm">{msg.message}</Text>
-                                        <Text
-                                            size="xs"
-                                            color="dimmed"
-                                            align="right"
-                                        >
-                                            {new Date(
-                                                msg.created_at
-                                            ).toLocaleTimeString()}
+                                        <Text size="xs" color="dimmed" align="right">
+                                            {formatTime(msg.created_at)}
                                         </Text>
                                     </Paper>
-                                    {isSender && (
-                                        <Avatar
-                                            src={null}
-                                            radius="xl"
-                                            size="md"
-                                        />
-                                    )}
+                                    {isSender && <Avatar src={null} radius="xl" size="md" />}
                                 </Group>
                             );
                         })
@@ -216,13 +155,7 @@ function UserChat() {
             </ScrollArea>
 
             <form onSubmit={sendMessage}>
-                <Group
-                    mt="md"
-                    style={{
-                        border: "3px solid #BAB86C",
-                        borderRadius: "23px",
-                    }}
-                >
+                <Group mt="md" style={{ border: "3px solid #BAB86C", borderRadius: "23px" }}>
                     <TextInput
                         value={data.message}
                         onChange={(e) => setData("message", e.target.value)}
@@ -231,12 +164,7 @@ function UserChat() {
                         variant="unstyled"
                         required
                     />
-                    <Button
-                        type="submit"
-                        loading={processing}
-                        variant="subtle"
-                        color="#BAB86C"
-                    >
+                    <Button type="submit" variant="subtle" color="#BAB86C">
                         <IconSend2 size={20} stroke={1.5} />
                     </Button>
                 </Group>

@@ -1,5 +1,3 @@
-// resources/js/Pages/Admin/AdminChats.jsx
-
 import React, { useRef, useEffect, useState } from "react";
 import { Head, useForm, usePage, Link } from "@inertiajs/react";
 import {
@@ -33,11 +31,7 @@ function AdminChat() {
         receiver_id: targetUserId,
     });
 
-    // Initialize Pusher
     useEffect(() => {
-        // Enable pusher logging - don't include this in production
-        // Pusher.logToConsole = true;
-
         const pusher = new Pusher(
             import.meta.env.VITE_PUSHER_APP_KEY || "5a7697f73e3c287f4892",
             {
@@ -48,7 +42,6 @@ function AdminChat() {
 
         const channel = pusher.subscribe("admin-messages");
 
-        // Listen for user messages
         channel.bind("user-message", function (data) {
             if (
                 data.receiver_id === authUserId &&
@@ -84,7 +77,7 @@ function AdminChat() {
         post("admin/chat/send", data, {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => reset("message"), // You can actually remove this now if you want
+            onSuccess: () => reset("message"),
             onError: (errors) => {
                 console.error("Error sending message:", errors);
                 setMessages((prev) =>
@@ -143,7 +136,7 @@ function AdminChat() {
                     />{" "}
                     {targetUser?.username || "User"}
                 </Title>
-                <div></div> {/* Empty div for flex spacing */}
+                <div></div>
             </Flex>
             <hr style={{ marginBottom: "20px", border: "1px solid #BAB86C" }} />
             <ScrollArea h={400} viewportRef={viewport}>
@@ -227,7 +220,6 @@ function AdminChat() {
                     />
                     <Button
                         type="submit"
-                        loading={processing}
                         variant="subtle"
                         color="#BAB86C"
                     >
@@ -236,16 +228,6 @@ function AdminChat() {
                 </Group>
             </form>
         </Box>
-    );
-}
-
-function AdminChats() {
-    return (
-        <>
-            <Head>
-                <title>Customer Support - Hi Baby!</title>
-            </Head>
-        </>
     );
 }
 
