@@ -291,20 +291,21 @@ class ProductController extends Controller
     }
 
 
-
     public function index(Request $request, ProductSearchService $searchService)
     {
         $products = $searchService->search($request->input('q'));
 
-        // Optional: log search here too (if you want to track autocomplete searches)
         SearchLog::create([
             'search_term' => $request->input('q'),
             'results_count' => count($products),
             'user_id' => Auth::id(),
         ]);
 
-        return response()->json($products);
+        return inertia('Products/SearchResults', [
+            'products' => $products,
+        ]);
     }
+
 
     public function searchResultsPage(Request $request)
     {
