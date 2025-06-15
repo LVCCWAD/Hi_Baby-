@@ -111,7 +111,7 @@ class ForgotPasswordController extends Controller
         // Delete the reset token
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('login')->with('status', 'Your password has been reset successfully!');
+        return Inertia::location(route('login') . '?status=Your password has been reset successfully!');
     }
 
     public function changePasswordFromProfile(Request $request)
