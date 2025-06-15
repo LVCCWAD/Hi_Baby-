@@ -170,10 +170,30 @@ class OrderController extends Controller
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
-        $order->load('items.product', 'items.color', 'items.size');
+
+        $order->load('items.product', 'items.color', 'items.size', 'user');
 
         return Inertia::render('User/OrderSuccess', [
-            'order' => $order->load('items.product', 'items.color', 'items.size', 'user'),
+            'order' => [
+                'id' => $order->id,
+                'user' => [
+                    'name' => $order->user->name,
+                    'email' => $order->user->email,
+                ],
+                'items' => $order->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'product' => [
+                            'name' => $item->product->name,
+                            'price' => $item->product->price,
+                        ],
+                        'color' => $item->color->name ?? null,
+                        'size' => $item->size->name ?? null,
+                        'quantity' => $item->quantity,
+                    ];
+                }),
+                'created_at' => $order->created_at->toDateTimeString(),
+            ],
         ]);
     }
 
