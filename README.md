@@ -20,7 +20,11 @@ At Hi, Baby, we believe every little giggle, snuggle, and step deserves to be wr
 
 ## 📸 Screenshots
 
+> ![image](https://github.com/user-attachments/assets/0975a0c3-b088-4be9-8a70-80df3d87c5fa)
+> ![image](https://github.com/user-attachments/assets/3f2b7f17-c807-4fe2-87f4-99acd37a6601)
 > ![image](https://github.com/user-attachments/assets/34839c3a-08f6-4976-91e8-0a700a2a9fb9)
+
+
 
 
 ---
